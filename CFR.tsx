@@ -52,7 +52,7 @@ const CFR: React.FC = () => {
       }}>
       <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
         <StatusBar backgroundColor="black" barStyle="light-content" />
-        <MainNavigator />
+        {snoowrap ? <MainNavigator /> : null}
       </SafeAreaView>
     </SnooContext.Provider>
   );

@@ -16,14 +16,8 @@ const TabBar: React.FC<any> = (props) => {
       case "Search": {
         return "search";
       }
-      case "Inbox": {
-        return "mail";
-      }
-      case "Teams": {
-        return "group";
-      }
-      case "Matches": {
-        return "close-fullscreen";
+      case "CreatePost": {
+        return "add";
       }
       default: {
         return "close";
