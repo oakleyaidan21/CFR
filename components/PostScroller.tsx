@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 import SubmissionListingContext from "../context/SubmissionListingContext";
-import SubmissionListingProvider from "../providers/ListingProvider";
 import PostListItem from "./PostListItem";
 import Text from "./style/Text";
 
-type Props = {};
+type Props = {
+  header: any;
+};
 
 const PostScroller: React.FC<Props> = (props) => {
   const { listing } = useContext(SubmissionListingContext);
@@ -19,10 +20,16 @@ const PostScroller: React.FC<Props> = (props) => {
       {listing ? (
         listing.length > 0 ? (
           <FlatList
-            style={{ flex: 1 }}
+            style={{ flex: 1, width: "100%" }}
             renderItem={renderItem}
             data={listing}
             keyExtractor={(item) => item.id}
+            getItemLayout={(data, index) => ({
+              length: 120,
+              offset: 120 * index,
+              index,
+            })}
+            ListHeaderComponent={props.header}
           />
         ) : (
           <Text>No results!</Text>

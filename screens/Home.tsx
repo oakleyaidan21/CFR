@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
+import HomeHeader from "../components/HomeHeader";
 import PostScroller from "../components/PostScroller";
 import Text from "../components/style/Text";
 import SubmissionListingProvider from "../providers/ListingProvider";
@@ -11,14 +12,12 @@ const Home: React.FC = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* HEADER */}
-      <Text>Home!</Text>
       {/* POST SCROLLER */}
       <SubmissionListingProvider
         subreddit={currentSub}
         category={currentCategory}
         timeframe={currentTimeframe}>
-        <PostScroller />
+        <PostScroller header={HomeHeader} />
       </SubmissionListingProvider>
     </View>
   );
