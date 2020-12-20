@@ -1,5 +1,6 @@
 const initialPersistingState = {
-  authTokens: [],
+  refreshTokens: [],
+  authCode: null,
 };
 
 const persistingReducer = (state = initialPersistingState, action: any) => {
