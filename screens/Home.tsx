@@ -14,14 +14,21 @@ const Home: React.FC = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* HEADER */}
-      <HomeHeader />
       {/* POST SCROLLER */}
       <SubmissionListingProvider
         subreddit={currentSub}
         category={currentCategory}
         timeframe={currentTimeframe}>
-        <PostScroller header={HomeHeader} scrollRef={scrollRef} />
+        <PostScroller
+          scrollRef={scrollRef}
+          currentSubreddit={currentSub}
+          header={
+            <HomeHeader
+              currentSubreddit={currentSub}
+              setSubreddit={setCurrentSub}
+            />
+          }
+        />
       </SubmissionListingProvider>
     </View>
   );

@@ -1,12 +1,15 @@
 import React, { useContext } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
+import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
+import HomeHeader from "./HomeHeader";
 import PostListItem from "./PostListItem";
 import Text from "./style/Text";
 
 type Props = {
   header: any;
   scrollRef: any;
+  currentSubreddit: string | Subreddit;
 };
 
 const PostScroller: React.FC<Props> = (props) => {
@@ -31,6 +34,8 @@ const PostScroller: React.FC<Props> = (props) => {
               offset: 120 * index,
               index,
             })}
+            stickyHeaderIndices={[0]}
+            ListHeaderComponent={props.header}
           />
         ) : (
           <Text>No results!</Text>

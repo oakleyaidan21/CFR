@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import TabBar from "../components/TabBar";

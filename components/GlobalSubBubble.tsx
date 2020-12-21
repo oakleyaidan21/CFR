@@ -1,10 +1,12 @@
 import React, { memo } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 import Text from "./style/Text";
 
 type Props = {
   sub: any;
+  size: number;
+  onPress: any;
 };
 
 const GlobalSubBubble: React.FC<Props> = (props) => {
@@ -24,8 +26,16 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
   };
 
   return (
-    <View style={s.container}>
-      <View style={s.icon}>
+    <TouchableOpacity style={s.container} onPress={props.onPress}>
+      <View
+        style={[
+          s.icon,
+          {
+            width: props.size,
+            height: props.size,
+            borderRadius: props.size / 2,
+          },
+        ]}>
         <Icon name={getIcon(props.sub)} color="white" />
       </View>
       <View
@@ -34,7 +44,7 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
           {props.sub}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -45,10 +55,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   icon: {
-    width: 40,
-    height: 40,
     backgroundColor: "grey",
-    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
   },

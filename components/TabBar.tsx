@@ -71,6 +71,9 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    position: "absolute",
+    bottom: 0,
   },
   iconGroupContainer: {
     width: 350,
