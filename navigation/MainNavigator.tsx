@@ -6,6 +6,7 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import TabNavigator from "./TabNavigator";
+import Login from "../screens/Login";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ const MainNavigator: React.FC = () => {
             cardStyle: { backgroundColor: "black" },
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

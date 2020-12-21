@@ -6,7 +6,7 @@ import Text from "../components/style/Text";
 import SubmissionListingProvider from "../providers/ListingProvider";
 
 const Home: React.FC = (props) => {
-  const [currentSub, setCurrentSub] = useState("All");
+  const [currentSub, setCurrentSub] = useState("Front Page");
   const [currentCategory, setCurrentCategory] = useState("Hot");
   const [currentTimeframe, setCurrentTimeframe] = useState("day");
 

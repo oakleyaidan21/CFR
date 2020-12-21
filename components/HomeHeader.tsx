@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ScrollView, SectionList, StyleSheet, View } from "react-native";
 import Text from "./style/Text";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
 import { store } from "../redux/store";
+import SnooContext from "../context/SnooContext";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
-const temp = ["anime", "youtubehaiku", "RPI"];
 
 const HomeHeader: React.FC = (props) => {
+  const { userSubs } = useContext(SnooContext);
+
   const renderGlobalSub = (sub: any) => {
     return <GlobalSubBubble sub={sub} />;
   };
@@ -17,22 +19,22 @@ const HomeHeader: React.FC = (props) => {
     return <SubBubble sub={sub} />;
   };
 
+  const sections = [
+    {
+      data: [...globalSubs],
+      renderItem: ({ item }: any) => renderGlobalSub(item),
+    },
+    {
+      data: userSubs,
+      renderItem: ({ item }: any) => renderSub(item),
+    },
+  ];
+
   return (
     <View style={s.container}>
       <SectionList
         horizontal={true}
-        sections={[
-          {
-            data: globalSubs,
-            keyExtractor: (item) => item,
-            renderItem: ({ item }) => renderGlobalSub(item),
-          },
-          {
-            data: temp,
-            keyExtractor: (item) => item,
-            renderItem: ({ item }) => renderSub(item),
-          },
-        ]}
+        sections={sections as any}
         // SectionSeparatorComponent={({ trailingItem }) =>
         //   trailingItem ? <View style={s.separator} /> : null
         // }

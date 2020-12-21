@@ -4,6 +4,7 @@ import Home from "../screens/Home";
 import TabBar from "../components/TabBar";
 import Search from "../screens/Search";
 import CreatePost from "../screens/CreatePost";
+import Profile from "../screens/Profile";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +16,7 @@ const TabNavigator: React.FC = () => {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="CreatePost" component={CreatePost} />
       <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 };

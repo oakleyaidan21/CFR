@@ -4,43 +4,63 @@ import { useSelector, useDispatch } from "react-redux";
 import MainNavigator from "./navigation/MainNavigator";
 import SnooContext from "./context/SnooContext";
 import {
+  getUserSubs,
   initializeDefaultSnoowrap,
   initializeSnoowrap,
   initializeUserSnoowrap,
 } from "./util/snoowrap/snoowrapFunctions";
-import Snoowrap from "snoowrap";
+import Snoowrap, { Subreddit } from "snoowrap";
 
 const CFR: React.FC = () => {
-  const { refreshTokens, authCode } = useSelector((state: any) => state);
-  useEffect(() => {
-    // if (refreshTokens.length > 0) {
-    //   initializeUserSnoowrap(refreshTokens[0]).then((r) => {
-    //     setSnoowrap(r);
-    //     //then get initial data
-    //   });
-    // } else {
-    //   if(authCode) {
-    //       console.log("creating default snoowrap");
-    //       initializeDefaultSnoowrap().then((r) => {
-    //           setSnoowrap(r);
-    //           //get initial data
-    //       })
-    //   } else {
-    //       console.log("creating new user snoowrap");
-    //       initializeSnoowrap(authCode).then((r) => {
-
-    //       })
-    //   }
-    // }
-
-    //For now, let's just create a default snoowrap
-    initializeDefaultSnoowrap().then((r) => {
-      setSnoowrap(r);
-    });
-  }, []);
+  const { refreshToken, authCode, users } = useSelector((state: any) => state);
+  const dispatch = useDispatch();
 
   const [snoowrap, setSnoowrap] = useState<Snoowrap | null>(null);
   const [user, setUser] = useState(null);
+  const [userSubs, setUserSubs] = useState<Array<Subreddit>>([]);
+
+  const getSubs = (r: Snoowrap) => {
+    getUserSubs(r).then((subs: any) => {
+      console.log(subs);
+      if (subs) {
+        setUserSubs(subs);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (refreshToken) {
+      initializeUserSnoowrap(refreshToken).then((r) => {
+        console.log("creating snoowrap with refresh token");
+        setSnoowrap(r);
+        getSubs(r);
+      });
+    } else {
+      if (!authCode) {
+        console.log("creating default snoowrap");
+        initializeDefaultSnoowrap().then((r) => {
+          setSnoowrap(r);
+        });
+      } else {
+        console.log("creating snoowrap with authCode", authCode);
+        initializeSnoowrap(authCode).then((r: any) => {
+          let newUsers = users;
+          r.getMe().then((me: any) => {
+            console.log("new refresh token:", r.refreshToken);
+            newUsers.push({ name: me.name, token: r.refreshToken });
+            setUser(me);
+            dispatch({ type: "SET_USERS", users: newUsers });
+            dispatch({
+              type: "SET_REFRESH_TOKEN",
+              refreshToken: r.refreshToken,
+            });
+            setSnoowrap(r);
+            //get user data
+          });
+        });
+      }
+    }
+  }, [authCode]);
 
   return (
     <SnooContext.Provider
@@ -48,7 +68,9 @@ const CFR: React.FC = () => {
         snoowrap: snoowrap,
         setSnoowrap: setSnoowrap,
         user: user,
-        setUser: user,
+        setUser: setUser,
+        userSubs: userSubs,
+        setUserSubs: setUserSubs,
       }}>
       <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
         <StatusBar backgroundColor="black" barStyle="light-content" />

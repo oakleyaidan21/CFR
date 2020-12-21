@@ -19,6 +19,9 @@ const TabBar: React.FC<any> = (props) => {
       case "CreatePost": {
         return "add";
       }
+      case "Profile": {
+        return "account-box";
+      }
       default: {
         return "close";
       }
