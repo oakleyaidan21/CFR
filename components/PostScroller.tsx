@@ -6,6 +6,7 @@ import Text from "./style/Text";
 
 type Props = {
   header: any;
+  scrollRef: any;
 };
 
 const PostScroller: React.FC<Props> = (props) => {
@@ -20,6 +21,7 @@ const PostScroller: React.FC<Props> = (props) => {
       {listing ? (
         listing.length > 0 ? (
           <FlatList
+            ref={props.scrollRef}
             style={{ flex: 1, width: "100%" }}
             renderItem={renderItem}
             data={listing}
@@ -29,7 +31,6 @@ const PostScroller: React.FC<Props> = (props) => {
               offset: 120 * index,
               index,
             })}
-            ListHeaderComponent={props.header}
           />
         ) : (
           <Text>No results!</Text>

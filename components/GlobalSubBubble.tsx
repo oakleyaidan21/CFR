@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
 import Text from "./style/Text";
 
@@ -24,21 +24,8 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
   };
 
   return (
-    <View
-      style={{
-        marginHorizontal: 5,
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
-      <View
-        style={{
-          width: 50,
-          height: 50,
-          backgroundColor: "grey",
-          borderRadius: 25,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
+    <View style={s.container}>
+      <View style={s.icon}>
         <Icon name={getIcon(props.sub)} color="white" />
       </View>
       <View
@@ -50,5 +37,21 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: {
+    marginHorizontal: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    backgroundColor: "grey",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default memo(GlobalSubBubble);

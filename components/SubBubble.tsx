@@ -34,10 +34,10 @@ const SubBubble: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   subIcon: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     backgroundColor: "grey",
-    borderRadius: 25,
+    borderRadius: 20,
   },
 });
 

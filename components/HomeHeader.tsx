@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { ScrollView, SectionList, StyleSheet, View } from "react-native";
-import Text from "./style/Text";
+import { SectionList, StyleSheet, View } from "react-native";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
-import { store } from "../redux/store";
 import SnooContext from "../context/SnooContext";
+import { Subreddit } from "snoowrap";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
@@ -23,10 +22,12 @@ const HomeHeader: React.FC = (props) => {
     {
       data: [...globalSubs],
       renderItem: ({ item }: any) => renderGlobalSub(item),
+      keyExtractor: (item: string) => item,
     },
     {
       data: userSubs,
       renderItem: ({ item }: any) => renderSub(item),
+      keyExtractor: (item: Subreddit) => item.display_name,
     },
   ];
 
@@ -40,6 +41,14 @@ const HomeHeader: React.FC = (props) => {
         // }
         style={{ width: "100%", height: "100%" }}
       />
+      <View
+        style={{
+          width: "100%",
+          height: 3,
+          borderRadius: 2,
+          backgroundColor: "#00af64",
+        }}
+      />
     </View>
   );
 };
@@ -48,8 +57,8 @@ const s = StyleSheet.create({
   container: {
     width: "100%",
     height: 80,
-    marginTop: 10,
-    paddingVertical: 5,
+    padding: 5,
+    backgroundColor: "black",
   },
   separator: {
     width: 3,

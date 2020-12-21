@@ -44,7 +44,7 @@ const s = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginTop: 10,
-    backgroundColor: "rgb(50,50,50)",
+    // backgroundColor: "rgb(50,50,50)",
     borderRadius: 3,
     flexDirection: "row",
   },

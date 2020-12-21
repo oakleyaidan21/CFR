@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
-      sceneContainerStyle={{ backgroundColor: "black" }}
+      sceneContainerStyle={{ backgroundColor: "rgb(20,20,20)" }}
       tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="CreatePost" component={CreatePost} />
