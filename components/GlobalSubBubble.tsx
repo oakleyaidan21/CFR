@@ -38,8 +38,7 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
         ]}>
         <Icon name={getIcon(props.sub)} color="white" />
       </View>
-      <View
-        style={{ width: 50, justifyContent: "center", alignItems: "center" }}>
+      <View style={s.textContainer}>
         <Text style={{ fontSize: 10 }} numberOfLines={1}>
           {props.sub}
         </Text>
@@ -58,6 +57,12 @@ const s = StyleSheet.create({
     backgroundColor: "grey",
     justifyContent: "center",
     alignItems: "center",
+  },
+  textContainer: {
+    width: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 5,
   },
 });
 

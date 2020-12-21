@@ -4,6 +4,7 @@ import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
 import { Subreddit } from "snoowrap";
+import SubmissionListingContext from "../context/SubmissionListingContext";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
@@ -14,7 +15,12 @@ type Props = {
 
 const HomeHeader: React.FC<Props> = (props) => {
   const { userSubs } = useContext(SnooContext);
+  const { setListing } = useContext(SubmissionListingContext);
   const scrollRef = useRef<SectionList>(null);
+
+  const currentSub = props.currentSubreddit;
+
+  const subIsString = typeof currentSub === "string";
 
   const renderGlobalSub = (sub: any, size: number) => {
     return (
@@ -23,6 +29,9 @@ const HomeHeader: React.FC<Props> = (props) => {
         size={size}
         onPress={() => {
           props.setSubreddit(sub);
+          if (currentSub != sub) {
+            setListing(null);
+          }
           scrollRef.current?.scrollToLocation({
             viewOffset: 0,
             itemIndex: 0,
@@ -40,6 +49,9 @@ const HomeHeader: React.FC<Props> = (props) => {
         size={size}
         onPress={() => {
           props.setSubreddit(sub);
+          if (currentSub != sub) {
+            setListing(null);
+          }
           scrollRef.current?.scrollToLocation({
             viewOffset: 0,
             itemIndex: 0,
@@ -49,10 +61,6 @@ const HomeHeader: React.FC<Props> = (props) => {
       />
     );
   };
-
-  const currentSub = props.currentSubreddit;
-
-  const subIsString = typeof currentSub === "string";
 
   const sections = [
     {

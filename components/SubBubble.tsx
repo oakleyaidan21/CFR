@@ -14,6 +14,8 @@ const SubBubble: React.FC<Props> = (props) => {
   const { sub } = props;
   const imgUrl = sub.icon_img
     ? sub.icon_img
+    : sub.community_icon
+    ? sub.community_icon
     : "https://img.favpng.com/4/2/8/computer-icons-reddit-logo-website-png-favpng-hMmUQ5KAUjd27EWLvNwpuvW5Q.jpg";
 
   return (
@@ -36,7 +38,12 @@ const SubBubble: React.FC<Props> = (props) => {
         ]}
       />
       <View
-        style={{ width: 50, justifyContent: "center", alignItems: "center" }}>
+        style={{
+          width: 50,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 5,
+        }}>
         <Text style={{ fontSize: 10 }} numberOfLines={1}>
           {sub.display_name}
         </Text>
@@ -49,7 +56,7 @@ const s = StyleSheet.create({
   subIcon: {
     width: 40,
     height: 40,
-    backgroundColor: "grey",
+    // backgroundColor: "grey",
     borderRadius: 20,
   },
 });

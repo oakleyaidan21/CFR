@@ -27,7 +27,10 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
 
   return (
     <SubmissionListingContext.Provider
-      value={{ listing: listing, setListing: setListing }}>
+      value={{
+        listing: listing,
+        setListing: setListing,
+      }}>
       {props.children}
     </SubmissionListingContext.Provider>
   );
