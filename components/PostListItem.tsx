@@ -11,20 +11,29 @@ type Props = {
   onPress: any;
 };
 
+function getUriImage(uri: string) {
+  return uri !== null &&
+    uri !== undefined &&
+    uri.includes("/") &&
+    uri.includes(".")
+    ? uri
+    : "";
+}
+
 const PostListItem: React.FC<Props> = (props) => {
   const { data } = props;
   const imgUrl =
-    !data.thumbnail ||
+    !getUriImage(data.thumbnail) ||
     data.thumbnail == "" ||
     data.thumbnail === "self" ||
     data.thumbnail === "spoiler" ||
     data.thumbnail === "default"
-      ? "https://external-preview.redd.it/iDdntscPf-nfWKqzHRGFmhVxZm4hZgaKe5oyFws-yzA.png?auto=webp&s=38648ef0dc2c3fce76d5e1d8639234d8da0152b2"
+      ? "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
       : data.thumbnail;
 
   const { subreddit } = data;
 
-  const isSelf = data.domain.includes("self.");
+  const isSelf = data.is_self;
 
   return (
     <TouchableOpacity style={s.container} onPress={() => props.onPress(data)}>
@@ -97,7 +106,6 @@ const s = StyleSheet.create({
     height: 100,
     marginRight: 10,
     borderRadius: 3,
-    backgroundColor: "black",
   },
   titleContainer: {
     height: 100,

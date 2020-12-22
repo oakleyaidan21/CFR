@@ -7,7 +7,6 @@ import {
 } from "@react-navigation/stack";
 import TabNavigator from "./TabNavigator";
 import Login from "../screens/Login";
-import Profile from "../screens/Profile";
 import Post from "../screens/Post";
 
 const Stack = createStackNavigator();
@@ -24,6 +23,8 @@ const MainNavigator: React.FC = () => {
           screenOptions={({ route }) => ({
             headerShown: false,
             cardStyle: { backgroundColor: "black" },
+            cardStyleInterpolator:
+              CardStyleInterpolators.forScaleFromCenterAndroid,
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="Post" component={Post} />

@@ -11,6 +11,9 @@ const HomePlaceholder: React.FC = (props) => {
       <View style={s.block} />
       <View style={s.block} />
       <View style={s.block} />
+      <View style={s.block} />
+      <View style={s.block} />
+      <View style={s.block} />
     </PlaceholderContainer>
   );
 };

@@ -22,6 +22,9 @@ const TabBar: React.FC<any> = (props) => {
       case "Profile": {
         return "account-box";
       }
+      case "Inbox": {
+        return "mail";
+      }
       default: {
         return "close";
       }

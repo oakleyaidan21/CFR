@@ -16,8 +16,7 @@ const SubBubble: React.FC<Props> = (props) => {
     ? sub.icon_img
     : sub.community_icon
     ? sub.community_icon
-    : "https://img.favpng.com/4/2/8/computer-icons-reddit-logo-website-png-favpng-hMmUQ5KAUjd27EWLvNwpuvW5Q.jpg";
-
+    : "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png";
   return (
     <TouchableOpacity
       style={{
@@ -61,4 +60,8 @@ const s = StyleSheet.create({
   },
 });
 
-export default memo(SubBubble);
+function subPropsAreEqual(prevSub: any, nextSub: any) {
+  return prevSub.id === nextSub.id;
+}
+
+export default memo(SubBubble, subPropsAreEqual);

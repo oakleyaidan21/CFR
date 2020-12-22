@@ -19,7 +19,8 @@ const Flair: React.FC<Props> = (props) => {
             props.textColor !== "dark" || props.backgroundColor === ""
               ? "white"
               : "black",
-        }}>
+        }}
+        numberOfLines={1}>
         {props.text}
       </Text>
     </View>

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, memo, useCallback } from "react";
 import { SectionList, StyleSheet, View } from "react-native";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
@@ -62,14 +62,18 @@ const HomeHeader: React.FC<Props> = (props) => {
     );
   };
 
+  const renderHeader = useCallback(() => {
+    return subIsString
+      ? renderGlobalSub(props.currentSubreddit, 60)
+      : renderSub(props.currentSubreddit, 60);
+  }, [props.currentSubreddit]);
+
+  const renderSectionHeader = useCallback(
+    () => <View style={s.separator} />,
+    [],
+  );
+
   const sections = [
-    {
-      data: [currentSub],
-      renderItem: ({ item }: any) =>
-        subIsString ? renderGlobalSub(item, 60) : renderSub(item, 60),
-      keyExtractor: (item: any) =>
-        subIsString ? item : item.display_name + item.id,
-    },
     {
       data: globalSubs,
       renderItem: ({ item }: any) => renderGlobalSub(item, 40),
@@ -89,9 +93,8 @@ const HomeHeader: React.FC<Props> = (props) => {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         sections={sections as any}
-        // SectionSeparatorComponent={({ trailingItem }) =>
-        //   trailingItem ? <View style={s.separator} /> : null
-        // }
+        renderSectionHeader={renderSectionHeader}
+        ListHeaderComponent={renderHeader}
         style={{ width: "100%" }}
       />
     </View>
@@ -107,10 +110,11 @@ const s = StyleSheet.create({
   },
   separator: {
     width: 3,
-    height: 50,
+    height: 40,
+    marginTop: 10,
     backgroundColor: "#00af64",
     borderRadius: 2,
   },
 });
 
-export default HomeHeader;
+export default memo(HomeHeader);

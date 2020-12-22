@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import React, { useCallback, useContext, useState } from "react";
+import { FlatList, View } from "react-native";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
-import HomeHeader from "./HomeHeader";
 import HomePlaceholder from "./placeholders/HomePlaceholder";
 import PostListItem from "./PostListItem";
 import Text from "./style/Text";
+import PostScrollerFooter from "./PostScrollerFooter";
 
 type Props = {
   header: any;
@@ -15,30 +15,74 @@ type Props = {
 };
 
 const PostScroller: React.FC<Props> = (props) => {
-  const { listing } = useContext(SubmissionListingContext);
+  const { listing, setListing } = useContext(SubmissionListingContext);
 
-  const renderItem = (data: any) => {
-    if (!listing) {
-      return <HomePlaceholder />;
-    }
-    return <PostListItem data={data.item} onPress={props.onPress} />;
+  const [fetchingMore, setFetchingMore] = useState(false);
+
+  const renderItem = useCallback(
+    ({ item }) => {
+      if (!listing) {
+        return <HomePlaceholder />;
+      }
+      return <PostListItem data={item} onPress={props.onPress} />;
+    },
+    [listing],
+  );
+
+  const onScroll = (e: any) => {
+    console.log(e.nativeEvent.contentOffset.y);
   };
+
+  const renderHeader = useCallback(() => props.header, [
+    props.currentSubreddit,
+  ]);
+
+  const renderFooter = () => {
+    return <PostScrollerFooter fetchingMore={fetchingMore} />;
+  };
+
+  const renderListEmtpy = useCallback(() => {
+    return !listing ? (
+      <HomePlaceholder />
+    ) : (
+      <View
+        style={{ height: 500, justifyContent: "center", alignItems: "center" }}>
+        <Text>No results...</Text>
+      </View>
+    );
+  }, [listing]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <FlatList
         ref={props.scrollRef}
         style={{ flex: 1, width: "100%" }}
+        // onScroll={onScroll}
         renderItem={renderItem}
-        data={listing ? listing : [1]}
+        data={listing}
         keyExtractor={(item) => (listing ? item.id : item.toString())}
-        getItemLayout={(data, index) => ({
-          length: 160,
-          offset: 160 * index,
-          index,
-        })}
+        getItemLayout={(data, index) => {
+          return {
+            length: 160,
+            offset: 160 * index,
+            index,
+          };
+        }}
+        ListEmptyComponent={renderListEmtpy}
+        onEndReached={() => {
+          if (listing) {
+            setFetchingMore(true);
+            (listing as any)
+              .fetchMore({ amount: 25, append: true })
+              .then((result: any) => {
+                setListing(result);
+                setFetchingMore(false);
+              });
+          }
+        }}
         stickyHeaderIndices={[0]}
-        ListHeaderComponent={props.header}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={renderFooter}
       />
     </View>
   );

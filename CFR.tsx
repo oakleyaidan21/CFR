@@ -55,7 +55,7 @@ const CFR: React.FC = () => {
               refreshToken: r.refreshToken,
             });
             setSnoowrap(r);
-            //get user data
+            getSubs(r);
           });
         });
       }
