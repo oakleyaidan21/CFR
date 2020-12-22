@@ -11,6 +11,7 @@ type Props = {
   header: any;
   scrollRef: any;
   currentSubreddit: string | Subreddit;
+  onPress: any;
 };
 
 const PostScroller: React.FC<Props> = (props) => {
@@ -20,7 +21,7 @@ const PostScroller: React.FC<Props> = (props) => {
     if (!listing) {
       return <HomePlaceholder />;
     }
-    return <PostListItem data={data.item} />;
+    return <PostListItem data={data.item} onPress={props.onPress} />;
   };
 
   return (
@@ -32,8 +33,8 @@ const PostScroller: React.FC<Props> = (props) => {
         data={listing ? listing : [1]}
         keyExtractor={(item) => (listing ? item.id : item.toString())}
         getItemLayout={(data, index) => ({
-          length: 120,
-          offset: 120 * index,
+          length: 160,
+          offset: 160 * index,
           index,
         })}
         stickyHeaderIndices={[0]}

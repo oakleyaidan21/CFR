@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
@@ -7,6 +8,7 @@ import Flair from "./style/Flair";
 
 type Props = {
   data: Submission;
+  onPress: any;
 };
 
 const PostListItem: React.FC<Props> = (props) => {
@@ -22,18 +24,14 @@ const PostListItem: React.FC<Props> = (props) => {
 
   const { subreddit } = data;
 
-  if (data.title.includes("Hola")) {
-    console.log("color:", data.link_flair_background_color);
-  }
-
   const isSelf = data.domain.includes("self.");
 
   return (
-    <TouchableOpacity style={s.container}>
+    <TouchableOpacity style={s.container} onPress={() => props.onPress(data)}>
       {/* POST INFO */}
-      <View style={{ flexDirection: "row", paddingVertical: 10 }}>
+      <View style={s.row}>
         <Text style={{ color: "grey" }}>
-          <Text>{data.subreddit.display_name}</Text>
+          <Text>{subreddit.display_name}</Text>
           <Text> | </Text>
           <Text>{data.author.name}</Text>
           <Text> | </Text>
@@ -60,6 +58,30 @@ const PostListItem: React.FC<Props> = (props) => {
           />
         </View>
       </View>
+      {/* BOTTOM BAR */}
+      <View style={[s.row, { justifyContent: "space-between" }]}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Icon name="swap-vertical-circle" color="grey" size={15} />
+          {/* SCORE */}
+          <Text style={{ color: "grey", marginLeft: 5 }}>
+            {data.score > 9999
+              ? (data.score / 1000).toPrecision(3) + "k"
+              : data.score}
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Icon name="comment" color="grey" size={15} />
+          {/* COMMENTS */}
+          <Text style={{ color: "grey", marginLeft: 5 }}>
+            {data.num_comments}
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Icon name="comment" color="grey" size={15} />
+          {/* COMMENTS */}
+          <Text style={{ color: "grey", marginLeft: 5 }}></Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -67,9 +89,7 @@ const PostListItem: React.FC<Props> = (props) => {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingTop: 0,
-    marginBottom: 10,
+    paddingHorizontal: 10,
     borderRadius: 3,
   },
   image: {
@@ -85,6 +105,11 @@ const s = StyleSheet.create({
     flexGrow: 1,
     flexWrap: "nowrap",
     alignItems: "flex-start",
+  },
+  row: {
+    flexDirection: "row",
+    height: 30,
+    alignItems: "center",
   },
 });
 

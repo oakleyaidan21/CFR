@@ -1,11 +1,16 @@
 import React, { useRef, useState } from "react";
 import { View } from "react-native";
+import { Submission } from "snoowrap";
 import HomeHeader from "../components/HomeHeader";
 import PostScroller from "../components/PostScroller";
 import Text from "../components/style/Text";
 import SubmissionListingProvider from "../providers/ListingProvider";
 
-const Home: React.FC = (props) => {
+type Props = {
+  navigation: any;
+};
+
+const Home: React.FC<Props> = (props) => {
   const scrollRef = useRef(null);
 
   const [currentSub, setCurrentSub] = useState("Front Page");
@@ -27,6 +32,9 @@ const Home: React.FC = (props) => {
               currentSubreddit={currentSub}
               setSubreddit={setCurrentSub}
             />
+          }
+          onPress={(data: Submission) =>
+            props.navigation.navigate("Post", { data: data })
           }
         />
       </SubmissionListingProvider>
