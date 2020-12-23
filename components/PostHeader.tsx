@@ -36,7 +36,7 @@ const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-
 const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
-  const [showContent, setShowContent] = useState(false);
+  const [showContent, setShowContent] = useState(true);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(props.data.saved);
@@ -47,7 +47,7 @@ const PostHeader: React.FC<Props> = (props) => {
     data.thumbnail === "self" ||
     data.thumbnail === "spoiler" ||
     data.thumbnail === "default"
-      ? "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
+      ? "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png"
       : data.thumbnail;
 
   const { subreddit } = data;
@@ -67,7 +67,7 @@ const PostHeader: React.FC<Props> = (props) => {
           setSaving(false);
           setIsSaved(false);
         });
-  }, [saving]);
+  }, [saving, isSaved]);
 
   const renderContent = useCallback(() => {
     // SELF POST

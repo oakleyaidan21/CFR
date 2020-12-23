@@ -36,12 +36,12 @@ const CommentThread: React.FC<Props> = (props) => {
       }}>
       <View
         style={{
-          marginLeft: level > 0 ? 10 : 0,
+          paddingLeft: level > 0 ? 10 : 0,
           borderLeftWidth: level > 0 ? 2 : 0,
           borderColor: "rgb(30,30,30)",
         }}>
         {/* BODY */}
-        <View style={{ padding: 10, paddingLeft: level == 0 ? 0 : 10 }}>
+        <View style={{ padding: 10, paddingLeft: 0 }}>
           <Text style={{ color: "grey" }}>
             <Text
               style={{
@@ -78,14 +78,6 @@ const CommentThread: React.FC<Props> = (props) => {
             {data.replies.map(renderReply)}
           </View>
         )}
-        {/* {level == 0 && (
-          <View
-            style={{
-              height: 2,
-              backgroundColor: "grey",
-            }}
-          />
-        )} */}
       </View>
     </TouchableWithoutFeedback>
   );

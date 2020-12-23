@@ -29,7 +29,7 @@ const PostListItem: React.FC<Props> = (props) => {
     data.thumbnail === "self" ||
     data.thumbnail === "spoiler" ||
     data.thumbnail === "default"
-      ? "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png"
+      ? "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png"
       : data.thumbnail;
 
   const { subreddit } = data;

@@ -13,7 +13,6 @@ type Props = {
 };
 
 const PostSwiper: React.FC<Props> = (props) => {
-  const [currIndex, setCurrIndex] = useState<number>(props.route.params.index);
   const [currPosts, setCurrPosts] = useState<Listing<Submission>>(
     props.route.params.posts,
   );
@@ -21,14 +20,12 @@ const PostSwiper: React.FC<Props> = (props) => {
   const onIndexChanged = useCallback(
     (index) => {
       if (currPosts) {
-        setCurrIndex(index);
         if (index == currPosts.length - 1) {
           (currPosts as any)
             .fetchMore({ amount: 25, append: true })
             .then((list: Listing<Submission>) => {
               setCurrPosts(list);
             });
-          console.log("now!");
         }
       }
     },
@@ -54,7 +51,7 @@ const PostSwiper: React.FC<Props> = (props) => {
         showsPagination={false}
         loop={false}
         onIndexChanged={onIndexChanged}
-        index={currIndex}>
+        index={props.route.params.index}>
         {renderPosts()}
       </Swiper>
       {/* HEADER */}

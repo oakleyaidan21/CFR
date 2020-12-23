@@ -16,7 +16,7 @@ const SubBubble: React.FC<Props> = (props) => {
     ? sub.icon_img
     : sub.community_icon
     ? sub.community_icon
-    : "https://logodownload.org/wp-content/uploads/2018/02/reddit-logo-16.png";
+    : "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png";
   return (
     <TouchableOpacity
       style={{
