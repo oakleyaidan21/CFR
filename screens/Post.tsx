@@ -1,11 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  FlatList,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
 import { Comment, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
@@ -56,7 +50,16 @@ const Post: React.FC<Props> = (props) => {
   }, [comments]);
 
   const renderItem = useCallback(({ item }) => {
-    return <CommentThread data={item} level={0} op={data.author} />;
+    return (
+      <CommentThread
+        data={item}
+        level={0}
+        op={data.author}
+        onLinkPress={(url: string) =>
+          props.navigation.navigate("Web", { url: url })
+        }
+      />
+    );
   }, []);
 
   return (

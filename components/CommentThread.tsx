@@ -10,6 +10,7 @@ type Props = {
   data: Comment;
   level: number;
   op: RedditUser;
+  onLinkPress: any;
 };
 
 const CommentThread: React.FC<Props> = (props) => {
@@ -17,8 +18,16 @@ const CommentThread: React.FC<Props> = (props) => {
 
   const [showReplies, setShowReplies] = useState(false);
 
-  const renderReply = useCallback((comment) => {
-    return <CommentThread data={comment} level={level + 1} op={op} />;
+  const renderReply = useCallback((comment: Comment) => {
+    return (
+      <CommentThread
+        data={comment}
+        level={level + 1}
+        op={op}
+        key={comment.id}
+        onLinkPress={props.onLinkPress}
+      />
+    );
   }, []);
 
   const renderSpecificNodes = useCallback(
@@ -79,6 +88,7 @@ const CommentThread: React.FC<Props> = (props) => {
             stylesheet={htmlstyles}
             renderNode={renderSpecificNodes}
             addLineBreaks={false}
+            onLinkPress={props.onLinkPress}
           />
           {/* EXTRA INFO */}
 

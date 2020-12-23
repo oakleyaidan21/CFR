@@ -15,7 +15,9 @@ type Props = {
 };
 
 const PostScroller: React.FC<Props> = (props) => {
-  const { listing, setListing } = useContext(SubmissionListingContext);
+  const { listing, setListing, getPosts } = useContext(
+    SubmissionListingContext,
+  );
 
   const [fetchingMore, setFetchingMore] = useState(false);
 
@@ -60,7 +62,7 @@ const PostScroller: React.FC<Props> = (props) => {
         // onScroll={onScroll}
         renderItem={renderItem}
         data={listing}
-        keyExtractor={(item) => (listing ? item.id : item.toString())}
+        keyExtractor={(item, index) => item.id + index.toString()}
         getItemLayout={(data, index) => {
           return {
             length: 160,

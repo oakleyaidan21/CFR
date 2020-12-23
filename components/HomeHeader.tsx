@@ -5,6 +5,8 @@ import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
+import Spin from "./animations/Spin";
+import Flash from "./animations/Flash";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
@@ -15,58 +17,74 @@ type Props = {
 
 const HomeHeader: React.FC<Props> = (props) => {
   const { userSubs } = useContext(SnooContext);
-  const { setListing } = useContext(SubmissionListingContext);
+  const { setListing, getPosts, listing } = useContext(
+    SubmissionListingContext,
+  );
   const scrollRef = useRef<SectionList>(null);
 
   const currentSub = props.currentSubreddit;
 
   const subIsString = typeof currentSub === "string";
 
-  const renderGlobalSub = (sub: any, size: number) => {
+  const renderGlobalSub = (sub: any, size: number, header: boolean) => {
     return (
       <GlobalSubBubble
         sub={sub}
         size={size}
         onPress={() => {
-          props.setSubreddit(sub);
-          if (currentSub != sub) {
+          if (header) {
             setListing(null);
+            getPosts();
+          } else {
+            props.setSubreddit(sub);
+            if (currentSub != sub) {
+              setListing(null);
+            }
+            scrollRef.current?.scrollToLocation({
+              viewOffset: 0,
+              itemIndex: 0,
+              sectionIndex: 0,
+            });
           }
-          scrollRef.current?.scrollToLocation({
-            viewOffset: 0,
-            itemIndex: 0,
-            sectionIndex: 0,
-          });
         }}
       />
     );
   };
 
-  const renderSub = (sub: any, size: number) => {
+  const renderSub = (sub: any, size: number, header: boolean) => {
     return (
       <SubBubble
         sub={sub}
         size={size}
         onPress={() => {
-          props.setSubreddit(sub);
-          if (currentSub != sub) {
+          if (header) {
             setListing(null);
+            getPosts();
+          } else {
+            if (currentSub != sub) {
+              setListing(null);
+            }
+            props.setSubreddit(sub);
+            scrollRef.current?.scrollToLocation({
+              viewOffset: 0,
+              itemIndex: 0,
+              sectionIndex: 0,
+            });
           }
-          scrollRef.current?.scrollToLocation({
-            viewOffset: 0,
-            itemIndex: 0,
-            sectionIndex: 0,
-          });
         }}
       />
     );
   };
 
   const renderHeader = useCallback(() => {
-    return subIsString
-      ? renderGlobalSub(props.currentSubreddit, 60)
-      : renderSub(props.currentSubreddit, 60);
-  }, [props.currentSubreddit]);
+    return (
+      <Flash flashing={!listing}>
+        {subIsString
+          ? renderGlobalSub(props.currentSubreddit, 60, true)
+          : renderSub(props.currentSubreddit, 60, true)}
+      </Flash>
+    );
+  }, [props.currentSubreddit, listing]);
 
   const renderSectionHeader = useCallback(
     () => <View style={s.separator} />,
@@ -76,12 +94,12 @@ const HomeHeader: React.FC<Props> = (props) => {
   const sections = [
     {
       data: globalSubs,
-      renderItem: ({ item }: any) => renderGlobalSub(item, 40),
+      renderItem: ({ item }: any) => renderGlobalSub(item, 40, false),
       keyExtractor: (item: string) => item,
     },
     {
       data: userSubs,
-      renderItem: ({ item }: any) => renderSub(item, 40),
+      renderItem: ({ item }: any) => renderSub(item, 40, false),
       keyExtractor: (item: Subreddit) => item.id,
     },
   ];

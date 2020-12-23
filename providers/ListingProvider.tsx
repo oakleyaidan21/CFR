@@ -17,19 +17,24 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
   const { subreddit, category, timeframe } = props;
 
   useEffect(() => {
+    getPosts();
+  }, [subreddit, category, timeframe]);
+
+  const getPosts = () => {
     getGeneralPosts(snoowrap, subreddit, category, timeframe).then(
       (posts: any) => {
         console.log("got posts!", posts.length);
         setListing(posts);
       },
     );
-  }, [subreddit, category, timeframe]);
+  };
 
   return (
     <SubmissionListingContext.Provider
       value={{
         listing: listing,
         setListing: setListing,
+        getPosts: getPosts,
       }}>
       {props.children}
     </SubmissionListingContext.Provider>

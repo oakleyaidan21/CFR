@@ -37,7 +37,7 @@ const PostHeader: React.FC<Props> = (props) => {
   const isSelf = data.is_self;
 
   const renderContent = useCallback(() => {
-    //   IMAGE
+    // IMAGE
     if (data.url.includes(".jpg") || data.url.includes(".png")) {
       return (
         <FastImage
@@ -46,6 +46,9 @@ const PostHeader: React.FC<Props> = (props) => {
           resizeMode={FastImage.resizeMode.contain}
         />
       );
+    }
+    // SELF POST
+    if (isSelf) {
     }
     return <Text style={{ color: "white" }}>Impl!</Text>;
   }, []);

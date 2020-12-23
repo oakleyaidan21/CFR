@@ -21,7 +21,6 @@ const CFR: React.FC = () => {
 
   const getSubs = (r: Snoowrap) => {
     getUserSubs(r).then((subs: any) => {
-      console.log(subs);
       if (subs) {
         setUserSubs(subs);
       }
