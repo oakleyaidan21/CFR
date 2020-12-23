@@ -8,6 +8,7 @@ import {
 import TabNavigator from "./TabNavigator";
 import Login from "../screens/Login";
 import Post from "../screens/Post";
+import Web from "../screens/Web";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const MainNavigator: React.FC = () => {
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="Post" component={Post} />
+          <Stack.Screen name="Web" component={Web} />
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       </NavigationContainer>

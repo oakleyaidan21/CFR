@@ -9,8 +9,8 @@ import {
 import { Icon } from "react-native-elements";
 import { Comment, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
-import PostListItem from "../components/PostListItem";
 import Text from "../components/style/Text";
+import PostHeader from "../components/PostHeader";
 
 type Props = {
   navigation: any;
@@ -37,7 +37,7 @@ const Post: React.FC<Props> = (props) => {
   const renderPostHeader = useCallback(() => {
     return (
       <View style={{ marginTop: 50 }}>
-        <PostListItem data={data} onPress={() => {}} />
+        <PostHeader data={data} navigation={props.navigation} />
       </View>
     );
   }, []);
