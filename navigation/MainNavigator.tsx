@@ -9,6 +9,7 @@ import TabNavigator from "./TabNavigator";
 import Login from "../screens/Login";
 import Post from "../screens/Post";
 import Web from "../screens/Web";
+import PostSwiper from "../screens/PostSwiper";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const MainNavigator: React.FC = () => {
               CardStyleInterpolators.forScaleFromCenterAndroid,
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
+          <Stack.Screen name="PostSwiper" component={PostSwiper} />
           <Stack.Screen name="Post" component={Post} />
           <Stack.Screen name="Web" component={Web} />
           <Stack.Screen name="Login" component={Login} />

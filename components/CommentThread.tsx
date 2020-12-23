@@ -1,5 +1,6 @@
 import React, { useCallback, useState, memo } from "react";
 import { TouchableWithoutFeedback, View, Text } from "react-native";
+import FastImage from "react-native-fast-image";
 import { Comment, RedditUser } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
 import MDRenderer from "./MDRenderer";
@@ -40,13 +41,13 @@ const CommentThread: React.FC<Props> = (props) => {
           borderColor: "rgb(30,30,30)",
         }}>
         {/* BODY */}
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 10, paddingLeft: level == 0 ? 0 : 10 }}>
           <Text style={{ color: "grey" }}>
             <Text
               style={{
                 fontWeight: "bold",
                 marginVertical: 10,
-                color: op.name === data.author.name ? "#00af64" : "grey",
+                color: op.name === data.author.name ? "lightblue" : "grey",
               }}>
               {data.author.name}
             </Text>
@@ -59,11 +60,10 @@ const CommentThread: React.FC<Props> = (props) => {
             </Text>
             <Text>{getTimeSincePosted(data.created_utc)}</Text>
           </Text>
-          {/* HERE TO SPACE HTMLVIEW EVENLY */}
+          {/* HERE TO SPACE MDRENDER EVENLY; SEEMS JANK, TRUST ME IT'S NEEDED */}
           <Text></Text>
           <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* EXTRA INFO */}
-
           {data.replies.length > 0 && (
             <Text style={{ color: "grey" }}>
               {data.replies.length == 1
@@ -73,20 +73,19 @@ const CommentThread: React.FC<Props> = (props) => {
           )}
         </View>
         {/* REPLIES */}
-        {showReplies && (
+        {showReplies && data.replies.length > 0 && (
           <View style={{ marginBottom: 5 }}>
             {data.replies.map(renderReply)}
           </View>
         )}
-        {level == 0 && (
+        {/* {level == 0 && (
           <View
             style={{
               height: 2,
-              marginHorizontal: 10,
               backgroundColor: "grey",
             }}
           />
-        )}
+        )} */}
       </View>
     </TouchableWithoutFeedback>
   );

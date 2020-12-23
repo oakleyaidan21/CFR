@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { View, FlatList, ActivityIndicator, StyleSheet } from "react-native";
 import { Icon } from "react-native-elements";
-import { Comment, Submission } from "snoowrap";
+import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
@@ -22,9 +22,11 @@ const Post: React.FC<Props> = (props) => {
 
   const getComments = () => {
     if (data.comments) {
-      data.comments.fetchMore({ amount: 10, append: true }).then((c) => {
-        setComments(c);
-      });
+      (data as any).comments
+        .fetchMore({ amount: 10, append: true })
+        .then((c: Listing<Comment>) => {
+          setComments(c);
+        });
     }
   };
 
@@ -63,7 +65,7 @@ const Post: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
       {/* POST & COMMENTS */}
       <FlatList
         style={{ flex: 1 }}
@@ -73,29 +75,8 @@ const Post: React.FC<Props> = (props) => {
         ListHeaderComponent={renderPostHeader}
         keyExtractor={(item) => item.id}
       />
-      {/* HEADER */}
-      <View style={s.headerContainer}>
-        <Icon
-          name="arrow-back"
-          color="white"
-          onPress={props.navigation.goBack}
-        />
-      </View>
     </View>
   );
 };
-
-const s = StyleSheet.create({
-  headerContainer: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: 10,
-    position: "absolute",
-    top: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-});
 
 export default Post;

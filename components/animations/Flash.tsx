@@ -15,9 +15,7 @@ const Flash: React.FC<Props> = (props) => {
       useNativeDriver: true,
     }).start((e) => {
       if (e.finished) {
-        if (props.flashing) {
-          flash(end === 1 ? 0 : 1);
-        }
+        flash(end === 1 ? 0 : 1);
       }
     });
   };
@@ -27,6 +25,7 @@ const Flash: React.FC<Props> = (props) => {
       flash(1);
     } else {
       flashAnimation.setValue(1);
+      flashAnimation.stopAnimation(() => flashAnimation.setValue(0));
     }
   }, [props.flashing]);
 

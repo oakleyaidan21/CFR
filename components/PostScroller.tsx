@@ -22,11 +22,17 @@ const PostScroller: React.FC<Props> = (props) => {
   const [fetchingMore, setFetchingMore] = useState(false);
 
   const renderItem = useCallback(
-    ({ item }) => {
+    ({ item, index }) => {
       if (!listing) {
         return <HomePlaceholder />;
       }
-      return <PostListItem data={item} onPress={props.onPress} />;
+      return (
+        <PostListItem
+          data={item}
+          onPress={(index: number) => props.onPress(listing, index)}
+          index={index}
+        />
+      );
     },
     [listing],
   );

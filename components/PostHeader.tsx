@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   Dimensions,
   TouchableWithoutFeedback,
+  TouchableNativeFeedback,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-
 import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
+import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
 import MDRenderer from "./MDRenderer";
 import Flair from "./style/Flair";
@@ -37,6 +38,8 @@ const windowHeight = Dimensions.get("window").height;
 const PostHeader: React.FC<Props> = (props) => {
   const [showContent, setShowContent] = useState(false);
   const [showImageViewer, setShowImageViewer] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(props.data.saved);
   const { data } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
@@ -52,6 +55,19 @@ const PostHeader: React.FC<Props> = (props) => {
   const isSelf = data.is_self;
 
   const matches = data.url.match(postRegex);
+
+  const savePost = useCallback(() => {
+    setSaving(true);
+    !isSaved
+      ? data.save().then(() => {
+          setSaving(false);
+          setIsSaved(true);
+        })
+      : data.unsave().then(() => {
+          setSaving(false);
+          setIsSaved(false);
+        });
+  }, [saving]);
 
   const renderContent = useCallback(() => {
     // SELF POST
@@ -153,33 +169,62 @@ const PostHeader: React.FC<Props> = (props) => {
           </View>
         </TouchableOpacity>
       </View>
-      {/* BOTTOM BAR */}
-      <View style={[s.row, { justifyContent: "space-between" }]}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon name="swap-vertical-circle" color="grey" size={15} />
-          {/* SCORE */}
-          <Text style={{ color: "grey", marginLeft: 5 }}>
-            {data.score > 9999
-              ? (data.score / 1000).toPrecision(3) + "k"
-              : data.score}
-          </Text>
+      {/* CONTENT */}
+      {showContent && <View style={{ marginTop: 10 }}>{renderContent()}</View>}
+      {/* FOOTER */}
+      <View style={s.headerFooter}>
+        <View style={s.postControl}>
+          {/* SCORE CONTROL */}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}>
+            <Icon
+              name="forward"
+              color="grey"
+              size={20}
+              style={{ transform: [{ rotate: "270deg" }] }}
+            />
+            <Text
+              style={{
+                color: "grey",
+                fontWeight: "bold",
+                marginHorizontal: 10,
+              }}>
+              {data.score}
+            </Text>
+            <Icon
+              name="forward"
+              color="grey"
+              size={20}
+              style={{ transform: [{ rotate: "90deg" }] }}
+            />
+          </View>
+          <Spin spinning={saving}>
+            <TouchableNativeFeedback onPress={savePost} disabled={saving}>
+              <View>
+                <Icon name="star" color={isSaved ? "green" : "grey"} />
+              </View>
+            </TouchableNativeFeedback>
+          </Spin>
+          <Icon name="flag" color="grey" />
+          <Icon name="more-horiz" color="grey" />
         </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon name="comment" color="grey" size={15} />
-          {/* COMMENTS */}
-          <Text style={{ color: "grey", marginLeft: 5 }}>
-            {data.num_comments}
+          <Icon
+            name="comment"
+            color="grey"
+            style={{ marginRight: 10 }}
+            size={20}
+          />
+          <Text style={{ color: "grey", fontWeight: "bold" }}>
+            {data.num_comments} Comments
           </Text>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon name="comment" color="grey" size={15} />
-          {/* MISC */}
-          <Text style={{ color: "grey", marginLeft: 5 }}></Text>
+          <Icon name="arrow-drop-down" color="grey" />
         </View>
       </View>
-      {/* CONTENT */}
-      {renderContent()}
-      {<View style={s.selfFooter} />}
     </View>
   );
 };
@@ -187,7 +232,6 @@ const PostHeader: React.FC<Props> = (props) => {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 0,
     borderRadius: 3,
   },
   image: {
@@ -207,11 +251,14 @@ const s = StyleSheet.create({
     height: 30,
     alignItems: "center",
   },
-  selfFooter: {
-    width: "100%",
-    height: 3,
-    borderRadius: 3,
-    backgroundColor: "rgb(100,100,100)",
+  headerFooter: {
+    paddingTop: 10,
+  },
+  postControl: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
   },
 });
 

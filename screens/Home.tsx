@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { View } from "react-native";
-import { Submission } from "snoowrap";
+import { Listing, Submission } from "snoowrap";
 import HomeHeader from "../components/HomeHeader";
 import PostScroller from "../components/PostScroller";
 import Text from "../components/style/Text";
@@ -33,8 +33,11 @@ const Home: React.FC<Props> = (props) => {
               setSubreddit={setCurrentSub}
             />
           }
-          onPress={(data: Submission) =>
-            props.navigation.navigate("Post", { data: data })
+          onPress={(data: Listing<Submission>, index: number) =>
+            props.navigation.navigate("PostSwiper", {
+              posts: data,
+              index: index,
+            })
           }
         />
       </SubmissionListingProvider>

@@ -15,11 +15,9 @@ const Spin: React.FC<Props> = (props) => {
       easing: Easing.elastic(1),
       useNativeDriver: true,
     }).start((e) => {
-      if (props.spinning) {
-        if (e.finished) {
-          spinAnimation.setValue(0);
-          spin();
-        }
+      if (e.finished) {
+        spinAnimation.setValue(0);
+        spin();
       }
     });
   };
@@ -32,6 +30,8 @@ const Spin: React.FC<Props> = (props) => {
   useEffect(() => {
     if (props.spinning) {
       spin();
+    } else {
+      spinAnimation.stopAnimation(() => spinAnimation.setValue(0));
     }
   }, [props.spinning]);
 

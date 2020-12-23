@@ -9,6 +9,7 @@ import Flair from "./style/Flair";
 type Props = {
   data: Submission;
   onPress: any;
+  index: number;
 };
 
 function getUriImage(uri: string) {
@@ -21,7 +22,7 @@ function getUriImage(uri: string) {
 }
 
 const PostListItem: React.FC<Props> = (props) => {
-  const { data } = props;
+  const { data, index } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
     data.thumbnail == "" ||
@@ -36,7 +37,7 @@ const PostListItem: React.FC<Props> = (props) => {
   const isSelf = data.is_self;
 
   return (
-    <TouchableOpacity style={s.container} onPress={() => props.onPress(data)}>
+    <TouchableOpacity style={s.container} onPress={() => props.onPress(index)}>
       {/* POST INFO */}
       <View style={s.row}>
         <Text style={{ color: "grey" }}>
