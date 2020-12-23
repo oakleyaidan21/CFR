@@ -60,8 +60,8 @@ const s = StyleSheet.create({
   },
 });
 
-function subPropsAreEqual(prevSub: any, nextSub: any) {
-  return prevSub.id === nextSub.id;
+function subPropsAreEqual(prevSub: Props, nextSub: Props) {
+  return prevSub.sub.id === nextSub.sub.id;
 }
 
 export default memo(SubBubble, subPropsAreEqual);

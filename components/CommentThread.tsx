@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, memo } from "react";
 import { StyleSheet, TouchableWithoutFeedback, View, Text } from "react-native";
 import { Comment, RedditUser } from "snoowrap";
 
 import HTMLView from "react-native-htmlview";
 import SpoilerText from "./SpoilerText";
 import { getTimeSincePosted } from "../util/util";
+import MDRenderer from "./MDRenderer";
 
 type Props = {
   data: Comment;
@@ -30,30 +31,10 @@ const CommentThread: React.FC<Props> = (props) => {
     );
   }, []);
 
-  const renderSpecificNodes = useCallback(
-    (node, index, siblings, parent, defaultRenderer) => {
-      if (node.attribs) {
-        if (node.attribs.class) {
-          if (node.attribs.class === "md-spoiler-text") {
-            return (
-              <View style={{ alignSelf: "center" }}>
-                <SpoilerText node={node} />
-              </View>
-            );
-          }
-        }
-      }
-
-      return undefined;
-    },
-    [],
-  );
-
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         setShowReplies(!showReplies);
-        console.log(props.data.body_html);
       }}>
       <View
         style={{
@@ -83,13 +64,7 @@ const CommentThread: React.FC<Props> = (props) => {
           </Text>
           {/* HERE TO SPACE HTMLVIEW EVENLY */}
           <Text></Text>
-          <HTMLView
-            value={"<cfr>" + data.body_html + "<cfr>"}
-            stylesheet={htmlstyles}
-            renderNode={renderSpecificNodes}
-            addLineBreaks={false}
-            onLinkPress={props.onLinkPress}
-          />
+          <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* EXTRA INFO */}
 
           <Text style={{ color: "grey" }}>
@@ -103,11 +78,9 @@ const CommentThread: React.FC<Props> = (props) => {
   );
 };
 
-const htmlstyles = StyleSheet.create({
-  div: {
-    color: "white",
-  },
-  cfr: {},
-});
+function commentsAreEqual(prevComment: Props, nextComment: Props) {
+  console.log(prevComment);
+  return prevComment.data.id === nextComment.data.id;
+}
 
-export default CommentThread;
+export default memo(CommentThread, commentsAreEqual);

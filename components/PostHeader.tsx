@@ -1,9 +1,16 @@
 import React, { memo, useCallback, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
+import MDRenderer from "./MDRenderer";
 import Flair from "./style/Flair";
 
 type Props = {
@@ -19,6 +26,8 @@ function getUriImage(uri: string) {
     ? uri
     : "";
 }
+
+const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
   const [showContent, setShowContent] = useState(false);
@@ -37,21 +46,41 @@ const PostHeader: React.FC<Props> = (props) => {
   const isSelf = data.is_self;
 
   const renderContent = useCallback(() => {
+    // SELF POST
+    if (isSelf && data.selftext_html) {
+      return (
+        <>
+          <MDRenderer
+            data={data.selftext_html as string}
+            onLinkPress={(url: string) =>
+              props.navigation.navigate("Web", { url: url })
+            }
+          />
+          <View
+            style={{
+              width: "100%",
+              height: 3,
+              borderRadius: 3,
+              backgroundColor: "rgb(100,100,100)",
+            }}
+          />
+        </>
+      );
+    }
+    if (!showContent) return null;
     // IMAGE
     if (data.url.includes(".jpg") || data.url.includes(".png")) {
       return (
         <FastImage
           source={{ uri: data.url }}
-          style={{ width: "100%", height: 400 }}
+          style={{ width: "100%", height: windowHeight - 240 }}
           resizeMode={FastImage.resizeMode.contain}
         />
       );
     }
-    // SELF POST
-    if (isSelf) {
-    }
+
     return <Text style={{ color: "white" }}>Impl!</Text>;
-  }, []);
+  }, [showContent]);
 
   return (
     <View style={s.container}>
@@ -118,7 +147,7 @@ const PostHeader: React.FC<Props> = (props) => {
         </View>
       </View>
       {/* CONTENT */}
-      {showContent && renderContent()}
+      {renderContent()}
     </View>
   );
 };
@@ -148,8 +177,11 @@ const s = StyleSheet.create({
   },
 });
 
-function postPropsAreEqual(prevPost: any, nextPost: any) {
-  return prevPost.id === nextPost.id && prevPost.score === nextPost.score;
+function postPropsAreEqual(prevPost: Props, nextPost: Props) {
+  return (
+    prevPost.data.id === nextPost.data.id &&
+    prevPost.data.score === nextPost.data.score
+  );
 }
 
 export default memo(PostHeader, postPropsAreEqual);

@@ -121,8 +121,11 @@ const s = StyleSheet.create({
   },
 });
 
-function postPropsAreEqual(prevPost: any, nextPost: any) {
-  return prevPost.id === nextPost.id && prevPost.score === nextPost.score;
+function postPropsAreEqual(prevPost: Props, nextPost: Props) {
+  return (
+    prevPost.data.id === nextPost.data.id &&
+    prevPost.data.score === nextPost.data.score
+  );
 }
 
 export default memo(PostListItem, postPropsAreEqual);
