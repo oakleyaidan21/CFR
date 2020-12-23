@@ -16,6 +16,7 @@ import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
 import MDRenderer from "./MDRenderer";
 import Flair from "./style/Flair";
+import VideoPlayer from "./VideoPlayer";
 
 type Props = {
   data: Submission;
@@ -31,7 +32,7 @@ function getUriImage(uri: string) {
     : "";
 }
 
-const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?(.jpg|.gif|.png|.gifv)$/;
+const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/;
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -71,22 +72,30 @@ const PostHeader: React.FC<Props> = (props) => {
 
   const renderContent = useCallback(() => {
     // SELF POST
-    if (isSelf && data.selftext_html) {
-      return (
+    if (isSelf) {
+      return data.selftext_html ? (
         <MDRenderer
           data={data.selftext_html as string}
           onLinkPress={(url: string) =>
             props.navigation.navigate("Web", { url: url })
           }
         />
-      );
+      ) : null;
     }
 
     if (!showContent) return null;
     if (!matches)
-      return <Text style={{ color: "white" }}>unknonwn regex {data.url}</Text>;
+      return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
+
+    const threeExt = matches[4]
+      ? matches[4].substring(matches[4].length - 4, matches[4].length)
+      : false;
+    const fourExt = matches[4]
+      ? matches[4].substring(matches[4].length - 5, matches[4].length)
+      : false;
+
     // IMAGE
-    if (matches[5] == ".jpg" || matches[5] == ".png") {
+    if (threeExt == ".jpg" || threeExt == ".png") {
       return (
         <>
           <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
@@ -106,18 +115,28 @@ const PostHeader: React.FC<Props> = (props) => {
     }
 
     // GIF
-    if (matches[5] == ".gif") {
+    if (threeExt == ".gif") {
       return (
         <FastImage
           source={{ uri: data.url }}
-          style={{ width: "100%", height: windowHeight - 240 }}
+          style={{ width: "100%", height: windowHeight - 280 }}
           resizeMode={FastImage.resizeMode.contain}
         />
       );
     }
     // VIDEO
-    if (matches[5] == ".gifv") {
-      return <Text style={{ color: "white" }}>Impl gifv</Text>;
+    if (fourExt == ".gifv" || matches[2] === ".redd") {
+      return (
+        <View style={{ width: "100%", height: windowHeight - 280 }}>
+          <VideoPlayer
+            source={
+              fourExt == ".gifv"
+                ? data.url.substring(0, data.url.length - 4) + "mp4"
+                : (data.media?.reddit_video?.hls_url as string)
+            }
+          />
+        </View>
+      );
     }
 
     return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
