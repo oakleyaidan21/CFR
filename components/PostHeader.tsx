@@ -5,11 +5,14 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+
 import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
+import ImageViewer from "./ImageViewer";
 import MDRenderer from "./MDRenderer";
 import Flair from "./style/Flair";
 
@@ -27,10 +30,13 @@ function getUriImage(uri: string) {
     : "";
 }
 
+const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?(.jpg|.gif|.png|.gifv)$/;
+
 const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
   const [showContent, setShowContent] = useState(false);
+  const [showImageViewer, setShowImageViewer] = useState(false);
   const { data } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
@@ -45,31 +51,46 @@ const PostHeader: React.FC<Props> = (props) => {
 
   const isSelf = data.is_self;
 
+  const matches = data.url.match(postRegex);
+
   const renderContent = useCallback(() => {
     // SELF POST
     if (isSelf && data.selftext_html) {
       return (
+        <MDRenderer
+          data={data.selftext_html as string}
+          onLinkPress={(url: string) =>
+            props.navigation.navigate("Web", { url: url })
+          }
+        />
+      );
+    }
+
+    if (!showContent) return null;
+    if (!matches)
+      return <Text style={{ color: "white" }}>unknonwn regex {data.url}</Text>;
+    // IMAGE
+    if (matches[5] == ".jpg" || matches[5] == ".png") {
+      return (
         <>
-          <MDRenderer
-            data={data.selftext_html as string}
-            onLinkPress={(url: string) =>
-              props.navigation.navigate("Web", { url: url })
-            }
-          />
-          <View
-            style={{
-              width: "100%",
-              height: 3,
-              borderRadius: 3,
-              backgroundColor: "rgb(100,100,100)",
-            }}
+          <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
+            <FastImage
+              source={{ uri: data.url }}
+              style={{ width: "100%", height: windowHeight - 240 }}
+              resizeMode={FastImage.resizeMode.contain}
+            />
+          </TouchableWithoutFeedback>
+          <ImageViewer
+            visible={showImageViewer}
+            images={[{ uri: data.url }]}
+            close={() => setShowImageViewer(false)}
           />
         </>
       );
     }
-    if (!showContent) return null;
-    // IMAGE
-    if (data.url.includes(".jpg") || data.url.includes(".png")) {
+
+    // GIF
+    if (matches[5] == ".gif") {
       return (
         <FastImage
           source={{ uri: data.url }}
@@ -78,9 +99,13 @@ const PostHeader: React.FC<Props> = (props) => {
         />
       );
     }
+    // VIDEO
+    if (matches[5] == ".gifv") {
+      return <Text style={{ color: "white" }}>Impl gifv</Text>;
+    }
 
-    return <Text style={{ color: "white" }}>Impl!</Text>;
-  }, [showContent]);
+    return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
+  }, [showContent, showImageViewer]);
 
   return (
     <View style={s.container}>
@@ -107,7 +132,13 @@ const PostHeader: React.FC<Props> = (props) => {
         <TouchableOpacity
           style={{ flex: 1 }}
           disabled={isSelf}
-          onPress={() => setShowContent(!showContent)}>
+          onPress={() => {
+            if (!matches) {
+              props.navigation.navigate("Web", { url: data.url });
+            } else {
+              setShowContent(!showContent);
+            }
+          }}>
           <View style={s.titleContainer}>
             <Text
               style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
@@ -148,6 +179,7 @@ const PostHeader: React.FC<Props> = (props) => {
       </View>
       {/* CONTENT */}
       {renderContent()}
+      {<View style={s.selfFooter} />}
     </View>
   );
 };
@@ -155,7 +187,7 @@ const PostHeader: React.FC<Props> = (props) => {
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 0,
     borderRadius: 3,
   },
   image: {
@@ -174,6 +206,12 @@ const s = StyleSheet.create({
     flexDirection: "row",
     height: 30,
     alignItems: "center",
+  },
+  selfFooter: {
+    width: "100%",
+    height: 3,
+    borderRadius: 3,
+    backgroundColor: "rgb(100,100,100)",
   },
 });
 

@@ -1,9 +1,6 @@
 import React, { useCallback, useState, memo } from "react";
-import { StyleSheet, TouchableWithoutFeedback, View, Text } from "react-native";
+import { TouchableWithoutFeedback, View, Text } from "react-native";
 import { Comment, RedditUser } from "snoowrap";
-
-import HTMLView from "react-native-htmlview";
-import SpoilerText from "./SpoilerText";
 import { getTimeSincePosted } from "../util/util";
 import MDRenderer from "./MDRenderer";
 
@@ -38,7 +35,7 @@ const CommentThread: React.FC<Props> = (props) => {
       }}>
       <View
         style={{
-          marginLeft: level * 10,
+          marginLeft: level > 0 ? 10 : 0,
           borderLeftWidth: level > 0 ? 2 : 0,
           borderColor: "rgb(30,30,30)",
         }}>
@@ -67,19 +64,35 @@ const CommentThread: React.FC<Props> = (props) => {
           <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* EXTRA INFO */}
 
-          <Text style={{ color: "grey" }}>
-            {data.replies.length > 0 ? data.replies.length : "No"} replies
-          </Text>
+          {data.replies.length > 0 && (
+            <Text style={{ color: "grey" }}>
+              {data.replies.length == 1
+                ? "1 reply"
+                : data.replies.length + " replies"}
+            </Text>
+          )}
         </View>
         {/* REPLIES */}
-        {showReplies && data.replies.map(renderReply)}
+        {showReplies && (
+          <View style={{ marginBottom: 5 }}>
+            {data.replies.map(renderReply)}
+          </View>
+        )}
+        {level == 0 && (
+          <View
+            style={{
+              height: 2,
+              marginHorizontal: 10,
+              backgroundColor: "grey",
+            }}
+          />
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
 function commentsAreEqual(prevComment: Props, nextComment: Props) {
-  console.log(prevComment);
   return prevComment.data.id === nextComment.data.id;
 }
 

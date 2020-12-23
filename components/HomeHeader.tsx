@@ -5,8 +5,6 @@ import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
-import Spin from "./animations/Spin";
-import Flash from "./animations/Flash";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
@@ -77,13 +75,9 @@ const HomeHeader: React.FC<Props> = (props) => {
   };
 
   const renderHeader = useCallback(() => {
-    return (
-      <Flash flashing={!listing}>
-        {subIsString
-          ? renderGlobalSub(props.currentSubreddit, 60, true)
-          : renderSub(props.currentSubreddit, 60, true)}
-      </Flash>
-    );
+    return subIsString
+      ? renderGlobalSub(props.currentSubreddit, 60, true)
+      : renderSub(props.currentSubreddit, 60, true);
   }, [props.currentSubreddit, listing]);
 
   const renderSectionHeader = useCallback(
