@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Comment, Submission } from "snoowrap";
+import CommentThread from "../components/CommentThread";
 import PostListItem from "../components/PostListItem";
 import Text from "../components/style/Text";
 
@@ -55,7 +56,7 @@ const Post: React.FC<Props> = (props) => {
   }, [comments]);
 
   const renderItem = useCallback(({ item }) => {
-    return <Text>{item.body}</Text>;
+    return <CommentThread data={item} level={0} op={data.author} />;
   }, []);
 
   return (
@@ -67,6 +68,7 @@ const Post: React.FC<Props> = (props) => {
         ListEmptyComponent={renderListEmtpy}
         renderItem={renderItem}
         ListHeaderComponent={renderPostHeader}
+        keyExtractor={(item) => item.id}
       />
       {/* HEADER */}
       <View style={s.headerContainer}>

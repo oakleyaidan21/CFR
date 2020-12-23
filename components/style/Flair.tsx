@@ -10,6 +10,7 @@ type Props = {
 
 const Flair: React.FC<Props> = (props) => {
   const bc = props.backgroundColor === "" ? "#00af64" : props.backgroundColor;
+
   return props.text ? (
     <View style={{ backgroundColor: bc, padding: 2, borderRadius: 3 }}>
       <Text
