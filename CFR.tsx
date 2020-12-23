@@ -9,6 +9,7 @@ import {
   initializeSnoowrap,
   initializeUserSnoowrap,
 } from "./util/snoowrap/snoowrapFunctions";
+import SplashScreen from "react-native-splash-screen";
 import Snoowrap, { Subreddit } from "snoowrap";
 
 const CFR: React.FC = () => {
@@ -32,6 +33,7 @@ const CFR: React.FC = () => {
       initializeUserSnoowrap(refreshToken).then((r) => {
         console.log("creating snoowrap with refresh token");
         setSnoowrap(r);
+        SplashScreen.hide();
         getSubs(r);
       });
     } else {
@@ -39,6 +41,7 @@ const CFR: React.FC = () => {
         console.log("creating default snoowrap");
         initializeDefaultSnoowrap().then((r) => {
           setSnoowrap(r);
+          SplashScreen.hide();
         });
       } else {
         console.log("creating snoowrap with authCode", authCode);
@@ -54,6 +57,7 @@ const CFR: React.FC = () => {
               refreshToken: r.refreshToken,
             });
             setSnoowrap(r);
+            SplashScreen.hide();
             getSubs(r);
           });
         });
