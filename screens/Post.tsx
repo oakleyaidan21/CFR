@@ -15,6 +15,7 @@ const Post: React.FC<Props> = (props) => {
   const { data } = props.route.params;
 
   const [comments, setComments] = useState<Array<Comment> | null>(null);
+  const [postHeight, setPostHeight] = useState(0);
 
   useEffect(() => {
     getComments();
@@ -33,10 +34,14 @@ const Post: React.FC<Props> = (props) => {
   const renderPostHeader = useCallback(() => {
     return (
       <View style={{ marginTop: 50 }}>
-        <PostHeader data={data} navigation={props.navigation} />
+        <PostHeader
+          data={data}
+          navigation={props.navigation}
+          postHeight={postHeight}
+        />
       </View>
     );
-  }, []);
+  }, [postHeight]);
 
   const renderListEmtpy = useCallback(() => {
     return (
@@ -64,8 +69,12 @@ const Post: React.FC<Props> = (props) => {
     );
   }, []);
 
+  const onLayout = useCallback(({ nativeEvent }) => {
+    setPostHeight(nativeEvent.layout.height);
+  }, []);
+
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+    <View style={{ flex: 1, paddingHorizontal: 10 }} onLayout={onLayout}>
       {/* POST & COMMENTS */}
       <FlatList
         style={{ flex: 1 }}

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -21,6 +21,7 @@ import VideoPlayer from "./VideoPlayer";
 type Props = {
   data: Submission;
   navigation: any;
+  postHeight: number;
 };
 
 function getUriImage(uri: string) {
@@ -41,6 +42,7 @@ const PostHeader: React.FC<Props> = (props) => {
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(props.data.saved);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const { data } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
@@ -70,6 +72,15 @@ const PostHeader: React.FC<Props> = (props) => {
         });
   }, [saving, isSaved]);
 
+  const onHeaderLayout = useCallback(
+    ({ nativeEvent }) => {
+      setHeaderHeight(nativeEvent.layout.height);
+    },
+    [headerHeight],
+  );
+
+  const contentHeight = props.postHeight - headerHeight - 110;
+
   const renderContent = useCallback(() => {
     // SELF POST
     if (isSelf) {
@@ -95,13 +106,13 @@ const PostHeader: React.FC<Props> = (props) => {
       : false;
 
     // IMAGE
-    if (threeExt == ".jpg" || threeExt == ".png") {
+    if (threeExt == ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
       return (
         <>
           <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
             <FastImage
               source={{ uri: data.url }}
-              style={{ width: "100%", height: windowHeight - 240 }}
+              style={{ width: "100%", height: contentHeight }}
               resizeMode={FastImage.resizeMode.contain}
             />
           </TouchableWithoutFeedback>
@@ -119,7 +130,7 @@ const PostHeader: React.FC<Props> = (props) => {
       return (
         <FastImage
           source={{ uri: data.url }}
-          style={{ width: "100%", height: windowHeight - 280 }}
+          style={{ width: "100%", height: contentHeight }}
           resizeMode={FastImage.resizeMode.contain}
         />
       );
@@ -127,7 +138,7 @@ const PostHeader: React.FC<Props> = (props) => {
     // VIDEO
     if (fourExt == ".gifv" || matches[2] === ".redd") {
       return (
-        <View style={{ width: "100%", height: windowHeight - 280 }}>
+        <View style={{ width: "100%", height: contentHeight }}>
           <VideoPlayer
             source={
               fourExt == ".gifv"
@@ -140,58 +151,60 @@ const PostHeader: React.FC<Props> = (props) => {
     }
 
     return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
-  }, [showContent, showImageViewer]);
+  }, [showContent, showImageViewer, headerHeight]);
 
   return (
     <View style={s.container}>
       {/* POST INFO */}
-      <View style={s.row}>
-        <Text style={{ color: "grey" }}>
-          <Text>{subreddit.display_name}</Text>
-          <Text> | </Text>
-          <Text>{data.author.name}</Text>
-          <Text> | </Text>
-          {!isSelf && <Text>{data.domain}</Text>}
-          {!isSelf && <Text> | </Text>}
-          <Text>{getTimeSincePosted(data.created_utc)}</Text>
-        </Text>
-      </View>
-      {/* MAIN CONTENT */}
-      <View style={{ flexDirection: "row", flex: 1, width: "100%" }}>
-        {/* THUMBNAIL */}
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate("Web", { url: data.url })}>
-          <FastImage style={s.image} source={{ uri: imgUrl }} />
-        </TouchableOpacity>
-        {/* TITLE/FLAIR/POINTS*/}
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          disabled={isSelf}
-          onPress={() => {
-            if (!matches) {
-              props.navigation.navigate("Web", { url: data.url });
-            } else {
-              setShowContent(!showContent);
-            }
-          }}>
-          <View style={s.titleContainer}>
-            <Text
-              style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
-              numberOfLines={4}>
-              {data.title}
-            </Text>
-            <Flair
-              text={data.link_flair_text}
-              backgroundColor={data.link_flair_background_color}
-              textColor={data.link_flair_text_color}
-            />
-          </View>
-        </TouchableOpacity>
+      <View onLayout={onHeaderLayout}>
+        <View style={s.row}>
+          <Text style={{ color: "grey" }}>
+            <Text>{subreddit.display_name}</Text>
+            <Text> | </Text>
+            <Text>{data.author.name}</Text>
+            <Text> | </Text>
+            {!isSelf && <Text>{data.domain}</Text>}
+            {!isSelf && <Text> | </Text>}
+            <Text>{getTimeSincePosted(data.created_utc)}</Text>
+          </Text>
+        </View>
+        {/* MAIN CONTENT */}
+        <View style={{ flexDirection: "row", flex: 1, width: "100%" }}>
+          {/* THUMBNAIL */}
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate("Web", { url: data.url })}>
+            <FastImage style={s.image} source={{ uri: imgUrl }} />
+          </TouchableOpacity>
+          {/* TITLE/FLAIR/POINTS*/}
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            disabled={isSelf}
+            onPress={() => {
+              if (!matches) {
+                props.navigation.navigate("Web", { url: data.url });
+              } else {
+                setShowContent(!showContent);
+              }
+            }}>
+            <View style={s.titleContainer}>
+              <Text
+                style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
+                numberOfLines={4}>
+                {data.title}
+              </Text>
+              <Flair
+                text={data.link_flair_text}
+                backgroundColor={data.link_flair_background_color}
+                textColor={data.link_flair_text_color}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
       {/* CONTENT */}
       {showContent && <View style={{ marginTop: 10 }}>{renderContent()}</View>}
       {/* FOOTER */}
-      <View style={s.headerFooter}>
+      <View>
         <View style={s.postControl}>
           {/* SCORE CONTROL */}
           <View
@@ -270,14 +283,12 @@ const s = StyleSheet.create({
     height: 30,
     alignItems: "center",
   },
-  headerFooter: {
-    paddingTop: 10,
-  },
+
   postControl: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    height: 50,
   },
 });
 

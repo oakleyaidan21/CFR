@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Vibration, Alert } from "react-native";
 import ImageView from "react-native-image-viewing";
 
 type Props = {
@@ -9,10 +9,23 @@ type Props = {
 };
 
 const ImageViewer: React.FC<Props> = (props) => {
+  const download = () => {
+    console.log("impl!");
+  };
+
+  const onLongPress = () => {
+    Vibration.vibrate();
+    Alert.alert("Download Image", "Would you like to download this image?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Download", onPress: download },
+    ]);
+  };
+
   return (
     <ImageView
       {...props}
       imageIndex={0}
+      onLongPress={onLongPress}
       onRequestClose={props.close}
       swipeToCloseEnabled={true}
     />
