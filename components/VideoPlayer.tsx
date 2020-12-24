@@ -1,5 +1,10 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import Video from "react-native-video";
 import Slider from "@react-native-community/slider";
@@ -15,6 +20,7 @@ const VideoPlayer: React.FC<Props> = (props) => {
   const [duration, setDuration] = useState(0);
   const [finished, setFinished] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const videoRef = useRef<Video>(null);
 
@@ -48,6 +54,10 @@ const VideoPlayer: React.FC<Props> = (props) => {
     videoRef.current?.seek(value);
   };
 
+  const onBuffer = (e: any) => {
+    setIsBuffering(e.isBuffering);
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={() => setShowControls(!showControls)}>
@@ -63,16 +73,24 @@ const VideoPlayer: React.FC<Props> = (props) => {
           onLoadStart={onLoadStart}
           onSeek={onSeek}
           onEnd={onEnd}
+          onBuffer={onBuffer}
         />
       </TouchableWithoutFeedback>
       {/* CONTROLS */}
       {showControls && (
         <View style={s.controlBar}>
-          <Icon
-            name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
-            color="white"
-            onPress={() => (finished ? replay() : setPaused(!paused))}
-          />
+          {isBuffering ? (
+            <View style={{ width: 50 }}>
+              <ActivityIndicator color="white" />
+            </View>
+          ) : (
+            <Icon
+              name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
+              color="white"
+              onPress={() => (finished ? replay() : setPaused(!paused))}
+              size={50}
+            />
+          )}
           <Slider
             style={{ flex: 1 }}
             value={currentVideoTime}

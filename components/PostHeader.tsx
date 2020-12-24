@@ -14,6 +14,7 @@ import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
 import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
+import ImageWithIndicator from "./ImageWithIndicator";
 import MDRenderer from "./MDRenderer";
 import Flair from "./style/Flair";
 import VideoPlayer from "./VideoPlayer";
@@ -110,7 +111,7 @@ const PostHeader: React.FC<Props> = (props) => {
       return (
         <>
           <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
-            <FastImage
+            <ImageWithIndicator
               source={{ uri: data.url }}
               style={{ width: "100%", height: contentHeight }}
               resizeMode={FastImage.resizeMode.contain}
@@ -128,7 +129,7 @@ const PostHeader: React.FC<Props> = (props) => {
     // GIF
     if (threeExt == ".gif") {
       return (
-        <FastImage
+        <ImageWithIndicator
           source={{ uri: data.url }}
           style={{ width: "100%", height: contentHeight }}
           resizeMode={FastImage.resizeMode.contain}
