@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, View, Platform } from "react-native";
+import { StyleSheet, View, TouchableWithoutFeedback } from "react-native";
 import { Icon } from "react-native-elements";
-import MediaControls, { PLAYER_STATES } from "react-native-media-controls";
 import Video from "react-native-video";
+import Slider from "@react-native-community/slider";
 
 type Props = {
   source: string;
@@ -10,122 +10,92 @@ type Props = {
 
 const VideoPlayer: React.FC<Props> = (props) => {
   const [paused, setPaused] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentVideoTime, setCurrentVideoTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+
+  const videoRef = useRef<Video>(null);
+
+  const onProgress = (data: any) => {
+    if (!isLoading) {
+      setCurrentVideoTime(data.currentTime);
+    }
+  };
+
+  const onLoad = (data: any) => {
+    setDuration(Math.round(data.duration));
+    setIsLoading(false);
+  };
+
+  const onLoadStart = () => setIsLoading(true);
+
+  const onEnd = () => {
+    setFinished(true);
+    setPaused(true);
+  };
+
+  const onSeek = (data: any) => {};
+
+  const replay = () => {
+    setFinished(false);
+    setPaused(false);
+    videoRef.current?.seek(0);
+  };
+
+  const seekVideo = (value: number) => {
+    videoRef.current?.seek(value);
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <Video
-        source={{ uri: props.source }}
-        style={{ flex: 1 }}
-        resizeMode={"contain"}
-        paused={paused}
-      />
-      {/* CONTROLS */}
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          height: 50,
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>
-        <Icon
-          name={paused ? "play-arrow" : "pause"}
-          color="white"
-          onPress={() => setPaused(!paused)}
+      <TouchableWithoutFeedback onPress={() => setShowControls(!showControls)}>
+        <Video
+          source={{ uri: props.source }}
+          style={{ flex: 1 }}
+          resizeMode={"contain"}
+          paused={paused}
+          ref={videoRef}
+          repeat={false}
+          onProgress={onProgress}
+          onLoad={onLoad}
+          onLoadStart={onLoadStart}
+          onSeek={onSeek}
+          onEnd={onEnd}
         />
-      </View>
+      </TouchableWithoutFeedback>
+      {/* CONTROLS */}
+      {showControls && (
+        <View style={s.controlBar}>
+          <Icon
+            name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
+            color="white"
+            onPress={() => (finished ? replay() : setPaused(!paused))}
+          />
+          <Slider
+            style={{ flex: 1 }}
+            value={currentVideoTime}
+            minimumValue={0}
+            onValueChange={seekVideo}
+            maximumValue={duration}
+            minimumTrackTintColor={"#00af64"}
+          />
+        </View>
+      )}
     </View>
   );
-  //   const videoPlayer = useRef(null);
-  //   const [duration, setDuration] = useState(0);
-  //   const [paused, setPaused] = useState(true);
-
-  //   const [currentTime, setCurrentTime] = useState(0);
-  //   const [playerState, setPlayerState] = useState(PLAYER_STATES.PAUSED);
-  //   const [isLoading, setIsLoading] = useState(true);
-
-  //   const onSeek = (seek) => {
-  //     videoPlayer?.current.seek(seek);
-  //   };
-
-  //   const onSeeking = (currentVideoTime) => setCurrentTime(currentVideoTime);
-
-  //   const onPaused = (newState) => {
-  //     setPaused(!paused);
-  //     setPlayerState(newState);
-  //   };
-
-  //   const onReplay = () => {
-  //     videoPlayer?.current.seek(0);
-  //     setCurrentTime(0);
-  //     if (Platform.OS === "android") {
-  //       setPlayerState(PLAYER_STATES.PAUSED);
-  //       setPaused(true);
-  //     } else {
-  //       setPlayerState(PLAYER_STATES.PLAYING);
-  //       setPaused(false);
-  //     }
-  //   };
-
-  //   const onProgress = (data) => {
-  //     if (!isLoading) {
-  //       setCurrentTime(data.currentTime);
-  //     }
-  //   };
-
-  //   const onLoad = (data) => {
-  //     setDuration(Math.round(data.duration));
-  //     setIsLoading(false);
-  //   };
-
-  //   const onLoadStart = () => setIsLoading(true);
-
-  //   const onEnd = () => {
-  //     setPlayerState(PLAYER_STATES.ENDED);
-  //     setCurrentTime(duration);
-  //   };
-
-  //   return (
-  //     <View>
-  //       <Video
-  //         onEnd={onEnd}
-  //         onLoad={onLoad}
-  //         onLoadStart={onLoadStart}
-  //         posterResizeMode={"cover"}
-  //         onProgress={onProgress}
-  //         paused={paused}
-  //         ref={(ref) => (videoPlayer.current = ref)}
-  //         resizeMode={"contain"}
-  //         source={{ uri: props.source }}
-  //         style={styles.backgroundVideo}
-  //       />
-  //       <MediaControls
-  //         isFullScreen={false}
-  //         duration={duration}
-  //         isLoading={isLoading}
-  //         progress={currentTime}
-  //         onPaused={onPaused}
-  //         onReplay={onReplay}
-  //         onSeek={onSeek}
-  //         onSeeking={onSeeking}
-  //         mainColor={"red"}
-  //         playerState={playerState}
-  //         sliderStyle={{ containerStyle: {}, thumbStyle: {}, trackStyle: {} }}
-  //       />
-  //     </View>
-  //   );
 };
 
-const styles = StyleSheet.create({
-  backgroundVideo: {
-    height: 250,
+const s = StyleSheet.create({
+  controlBar: {
+    position: "absolute",
+    bottom: 0,
+    height: 50,
     width: "100%",
-  },
-  mediaControls: {
-    height: "100%",
-    flex: 1,
-    alignSelf: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
 
