@@ -46,6 +46,12 @@ const htmlstyles = StyleSheet.create({
     color: "white",
   },
   cfr: {},
+  blockquote: {
+    paddingLeft: 10,
+    fontStyle: "italic",
+    marginLeft: 50,
+    color: "grey",
+  },
 });
 
 export default MDRenderer;

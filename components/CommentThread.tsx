@@ -33,6 +33,7 @@ const CommentThread: React.FC<Props> = (props) => {
     <TouchableWithoutFeedback
       onPress={() => {
         setShowReplies(!showReplies);
+        console.log(data.body_html);
       }}>
       <View
         style={{
