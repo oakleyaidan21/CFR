@@ -11,8 +11,6 @@ type Props = {
 };
 
 const Home: React.FC<Props> = (props) => {
-  const scrollRef = useRef(null);
-
   const [currentSub, setCurrentSub] = useState("Front Page");
   const [currentCategory, setCurrentCategory] = useState("Hot");
   const [currentTimeframe, setCurrentTimeframe] = useState("day");
@@ -25,7 +23,6 @@ const Home: React.FC<Props> = (props) => {
         category={currentCategory}
         timeframe={currentTimeframe}>
         <PostScroller
-          scrollRef={scrollRef}
           currentSubreddit={currentSub}
           header={
             <HomeHeader

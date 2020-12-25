@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { FlatList, View } from "react-native";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
@@ -9,12 +15,13 @@ import PostScrollerFooter from "./PostScrollerFooter";
 
 type Props = {
   header: any;
-  scrollRef: any;
   currentSubreddit: string | Subreddit;
   onPress: any;
 };
 
 const PostScroller: React.FC<Props> = (props) => {
+  const scrollRef = useRef<FlatList>(null);
+
   const { listing, setListing, getPosts } = useContext(
     SubmissionListingContext,
   );
@@ -60,10 +67,17 @@ const PostScroller: React.FC<Props> = (props) => {
     );
   }, [listing]);
 
+  useEffect(() => {
+    // when listing changes, scroll to the top
+    if (listing == null) {
+      scrollRef.current?.scrollToOffset({ offset: 0, animated: false });
+    }
+  }, [listing]);
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <FlatList
-        ref={props.scrollRef}
+        ref={scrollRef}
         style={{ flex: 1, width: "100%" }}
         // onScroll={onScroll}
         renderItem={renderItem}
