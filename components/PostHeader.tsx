@@ -73,14 +73,11 @@ const PostHeader: React.FC<Props> = (props) => {
         });
   }, [saving, isSaved]);
 
-  const onHeaderLayout = useCallback(
-    ({ nativeEvent }) => {
-      setHeaderHeight(nativeEvent.layout.height);
-    },
-    [headerHeight],
-  );
+  const onHeaderLayout = useCallback(({ nativeEvent }) => {
+    setHeaderHeight(nativeEvent.layout.height);
+  }, []);
 
-  const contentHeight = props.postHeight - headerHeight - 110;
+  const contentHeight = windowHeight - 25 - 130 - 110;
 
   const renderContent = useCallback(() => {
     // SELF POST
