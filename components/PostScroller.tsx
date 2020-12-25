@@ -30,9 +30,6 @@ const PostScroller: React.FC<Props> = (props) => {
 
   const renderItem = useCallback(
     ({ item, index }) => {
-      if (!listing) {
-        return <HomePlaceholder />;
-      }
       return (
         <PostListItem
           data={item}

@@ -16,8 +16,10 @@ import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
 import ImageWithIndicator from "./ImageWithIndicator";
 import MDRenderer from "./MDRenderer";
+import GalleryViewer from "./GalleryViewer";
 import Flair from "./style/Flair";
 import VideoPlayer from "./VideoPlayer";
+import PostListItem from "./PostListItem";
 
 type Props = {
   data: Submission;
@@ -79,6 +81,15 @@ const PostHeader: React.FC<Props> = (props) => {
 
   const contentHeight = windowHeight - 25 - 130 - 110;
 
+  const mapRedditGalleryImages = useCallback(() => {
+    let urls = [];
+
+    for (const i of Object.entries(data.media_metadata)) {
+      urls.push({ uri: i[1].s.u });
+    }
+    return urls;
+  }, []);
+
   const renderContent = useCallback(() => {
     // SELF POST
     if (isSelf) {
@@ -96,12 +107,35 @@ const PostHeader: React.FC<Props> = (props) => {
     if (!matches)
       return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
 
+    const isGallery = data.is_gallery;
+
+    const crosspost = data.crosspost_parent_list;
+
     const threeExt = matches[4]
       ? matches[4].substring(matches[4].length - 4, matches[4].length)
       : false;
     const fourExt = matches[4]
       ? matches[4].substring(matches[4].length - 5, matches[4].length)
       : false;
+
+    // CROSSPOST
+    if (crosspost) {
+      return (
+        <View
+          style={{
+            backgroundColor: "rgb(30,30,30)",
+            borderRadius: 3,
+          }}>
+          <PostListItem
+            index={0}
+            onPress={() =>
+              props.navigation.navigate("Post", { data: crosspost[0] })
+            }
+            data={crosspost[0]}
+          />
+        </View>
+      );
+    }
 
     // IMAGE
     if (threeExt == ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
@@ -148,8 +182,18 @@ const PostHeader: React.FC<Props> = (props) => {
       );
     }
 
-    return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
-  }, [showContent, showImageViewer, headerHeight]);
+    // REDDIT GALLERY
+    if (isGallery) {
+      return (
+        <View style={{ width: "100%", height: contentHeight }}>
+          <GalleryViewer images={mapRedditGalleryImages()} />
+        </View>
+      );
+    }
+
+    // return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
+    return null;
+  }, [showContent, showImageViewer]);
 
   return (
     <View style={s.container}>

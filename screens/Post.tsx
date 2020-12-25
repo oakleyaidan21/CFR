@@ -41,7 +41,7 @@ const Post: React.FC<Props> = (props) => {
         />
       </View>
     );
-  }, [postHeight]);
+  }, []);
 
   const renderListEmtpy = useCallback(() => {
     return (
