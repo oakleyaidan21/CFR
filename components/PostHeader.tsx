@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -60,8 +60,6 @@ const PostHeader: React.FC<Props> = (props) => {
 
   const isSelf = data.is_self;
 
-  const matches = data.url.match(postRegex);
-
   const savePost = useCallback(() => {
     setSaving(true);
     !isSaved
@@ -91,6 +89,7 @@ const PostHeader: React.FC<Props> = (props) => {
   }, []);
 
   const renderContent = useCallback(() => {
+    const matches = data.url.match(postRegex);
     // SELF POST
     if (isSelf) {
       return data.selftext_html ? (
@@ -103,21 +102,7 @@ const PostHeader: React.FC<Props> = (props) => {
       ) : null;
     }
 
-    if (!showContent) return null;
-    if (!matches)
-      return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
-
-    const isGallery = data.is_gallery;
-
     const crosspost = data.crosspost_parent_list;
-
-    const threeExt = matches[4]
-      ? matches[4].substring(matches[4].length - 4, matches[4].length)
-      : false;
-    const fourExt = matches[4]
-      ? matches[4].substring(matches[4].length - 5, matches[4].length)
-      : false;
-
     // CROSSPOST
     if (crosspost) {
       return (
@@ -136,6 +121,19 @@ const PostHeader: React.FC<Props> = (props) => {
         </View>
       );
     }
+
+    if (!showContent) return null;
+    if (!matches)
+      return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
+
+    const isGallery = data.is_gallery;
+
+    const threeExt = matches[4]
+      ? matches[4].substring(matches[4].length - 4, matches[4].length)
+      : false;
+    const fourExt = matches[4]
+      ? matches[4].substring(matches[4].length - 5, matches[4].length)
+      : false;
 
     // IMAGE
     if (threeExt == ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
@@ -192,8 +190,10 @@ const PostHeader: React.FC<Props> = (props) => {
     }
 
     // return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
-    return null;
+    return false;
   }, [showContent, showImageViewer]);
+
+  const content = renderContent();
 
   return (
     <View style={s.container}>
@@ -222,7 +222,7 @@ const PostHeader: React.FC<Props> = (props) => {
             style={{ flex: 1 }}
             disabled={isSelf}
             onPress={() => {
-              if (!matches) {
+              if (!content) {
                 props.navigation.navigate("Web", { url: data.url });
               } else {
                 setShowContent(!showContent);
@@ -244,7 +244,9 @@ const PostHeader: React.FC<Props> = (props) => {
         </View>
       </View>
       {/* CONTENT */}
-      {showContent && <View style={{ marginTop: 10 }}>{renderContent()}</View>}
+      {showContent && content && (
+        <View style={{ marginTop: 10 }}>{content}</View>
+      )}
       {/* FOOTER */}
       <View>
         <View style={s.postControl}>
