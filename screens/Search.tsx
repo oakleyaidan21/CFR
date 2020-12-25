@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import {
   View,
   TextInput,
@@ -12,7 +12,7 @@ import { Subreddit } from "snoowrap";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import SnooContext from "../context/SnooContext";
-import { searchForSubs } from "../util/snoowrap/snoowrapFunctions";
+import { searchForSubs, searchPosts } from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
   navigation: any;
@@ -24,6 +24,8 @@ const Search: React.FC<Props> = (props) => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchingSubs, setSearchingSubs] = useState(false);
   const [searchingSubmissions, setSearchingSubmissions] = useState(false);
+
+  const searchRef = useRef<TextInput>(null);
 
   const { snoowrap } = useContext(SnooContext);
 
@@ -43,11 +45,23 @@ const Search: React.FC<Props> = (props) => {
   }, []);
 
   const searchSubs = useCallback(() => {
+    searchRef.current?.blur();
     if (snoowrap) {
       setSearchingSubs(true);
       searchForSubs(snoowrap, query).then((r: any) => {
         setResults(r);
         setSearchingSubs(false);
+      });
+    }
+  }, [query]);
+
+  const searchAllSubmissions = useCallback(() => {
+    searchRef.current?.blur();
+    if (snoowrap) {
+      setSearchingSubmissions(true);
+      searchPosts(snoowrap, "all", query).then((r: any) => {
+        props.navigation.navigate("SearchResults", { data: r, query: query });
+        setSearchingSubmissions(false);
       });
     }
   }, [query]);
@@ -63,6 +77,7 @@ const Search: React.FC<Props> = (props) => {
         <View style={s.searchInput}>
           <Icon name="search" color="white" />
           <TextInput
+            ref={searchRef}
             onChangeText={onValueChange}
             placeholder={"Search..."}
             placeholderTextColor={"rgb(200,200,200)"}
@@ -139,6 +154,7 @@ const Search: React.FC<Props> = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={s.searchType}
+          onPress={searchAllSubmissions}
           disabled={query.length === 0 || searchingSubmissions}>
           {searchingSubmissions ? (
             <ActivityIndicator color="white" />
@@ -172,7 +188,7 @@ const Search: React.FC<Props> = (props) => {
         </TouchableOpacity>
       </View>
     );
-  }, [query, searchingSubs]);
+  }, [query, searchingSubs, searchingSubmissions]);
 
   return (
     <View style={{ flex: 1 }}>

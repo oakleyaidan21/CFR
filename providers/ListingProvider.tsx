@@ -8,16 +8,21 @@ type Props = {
   subreddit: string;
   category: string;
   timeframe: string;
+  listing?: Listing<Submission>;
 };
 
 const SubmissionListingProvider: React.FC<Props> = (props) => {
   const { snoowrap } = useContext(SnooContext);
-  const [listing, setListing] = useState<Listing<Submission> | null>(null);
+  const [listing, setListing] = useState<Listing<Submission> | null>(
+    props.listing ? props.listing : null,
+  );
 
   const { subreddit, category, timeframe } = props;
 
   useEffect(() => {
-    getPosts();
+    if (!props.listing) {
+      getPosts();
+    }
   }, [subreddit, category, timeframe]);
 
   const getPosts = () => {
