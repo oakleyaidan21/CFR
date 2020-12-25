@@ -214,7 +214,7 @@ export const searchPosts = async (
     });
 };
 
-export const searchForSubs = (snoowrap: snoowrap, query: string) => {
+export const searchForSubsNames = (snoowrap: snoowrap, query: string) => {
   return snoowrap
     .searchSubredditNames({ query })
     .then((results) => {
@@ -222,6 +222,18 @@ export const searchForSubs = (snoowrap: snoowrap, query: string) => {
     })
     .catch((error) => {
       console.log("error getting sub names", error);
+      return [];
+    });
+};
+
+export const searchForSubs = (snoowrap: snoowrap, query: string) => {
+  return snoowrap
+    .searchSubreddits({ query: query })
+    .then((results) => {
+      return results;
+    })
+    .catch((error) => {
+      console.log("error getting searched subs", error);
       return [];
     });
 };
