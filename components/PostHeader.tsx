@@ -300,4 +300,6 @@ function postPropsAreEqual(prevPost: Props, nextPost: Props) {
   );
 }
 
-export default memo(PostHeader, postPropsAreEqual);
+// export default memo(PostHeader, postPropsAreEqual);
+
+export default PostHeader;

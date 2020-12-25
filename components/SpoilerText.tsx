@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View, TouchableWithoutFeedback, Alert, Text } from "react-native";
-import HTMLView from "react-native-htmlview";
+import { Alert, Text } from "react-native";
 
 type Props = {
   node: any;
@@ -9,18 +8,17 @@ type Props = {
 const SpoilerText: React.FC<Props> = (props) => {
   const [showSpoiler, setShowSpoiler] = useState(false);
   return (
-    <TouchableWithoutFeedback
+    <Text
+      style={{
+        color: showSpoiler ? "black" : "lightgrey",
+        backgroundColor: "lightgrey",
+      }}
       onPress={() => {
         Alert.alert("Spoiler", props.node.children[0].data);
-        setShowSpoiler(true);
+        setShowSpoiler(!showSpoiler);
       }}>
-      <View
-        style={{ alignItems: "center", backgroundColor: "rgb(200,200,200)" }}>
-        <Text style={{ color: showSpoiler ? "black" : "rgb(200,200,200)" }}>
-          {props.node.children[0].data}
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
+      {props.node.children[0].data}
+    </Text>
   );
 };
 
