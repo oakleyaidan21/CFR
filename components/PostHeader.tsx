@@ -122,7 +122,6 @@ const PostHeader: React.FC<Props> = (props) => {
       );
     }
 
-    if (!showContent) return null;
     if (!matches)
       return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
 
