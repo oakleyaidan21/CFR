@@ -287,7 +287,12 @@ const PostHeader: React.FC<Props> = (props) => {
           <Icon name="flag" color="grey" />
           <Icon name="more-horiz" color="grey" />
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: 10,
+          }}>
           <Icon
             name="comment"
             color="grey"
@@ -308,6 +313,7 @@ const s = StyleSheet.create({
   container: {
     flex: 1,
     borderRadius: 3,
+    paddingHorizontal: 10,
   },
   image: {
     width: 100,

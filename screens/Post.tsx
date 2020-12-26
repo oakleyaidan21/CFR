@@ -42,7 +42,7 @@ const Post: React.FC<Props> = (props) => {
 
   const renderPostHeader = useCallback(() => {
     return (
-      <View style={{ marginTop: 50 }}>
+      <View style={{ marginTop: 50, backgroundColor: "black" }}>
         <PostHeader
           data={data}
           navigation={props.navigation}
@@ -94,7 +94,12 @@ const Post: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10 }} onLayout={onLayout}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "rgb(20,20,20)",
+      }}
+      onLayout={onLayout}>
       {/* POST & COMMENTS */}
       <FlatList
         style={{ flex: 1 }}
@@ -107,6 +112,7 @@ const Post: React.FC<Props> = (props) => {
           <RefreshControl
             refreshing={gettingPostInfo}
             onRefresh={onRefresh}
+            tintColor={"grey"}
             progressBackgroundColor={"black"}
             colors={["white", "#00af64"]}
           />

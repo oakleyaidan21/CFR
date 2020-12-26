@@ -55,11 +55,7 @@ const TabBar: React.FC<any> = (props) => {
               key={name}
               style={s.tabBarIconContainer}
               onPress={() => {
-                if ((name === "Profile" || name === "Inbox") && !user) {
-                  navigation.navigate("Login");
-                } else {
-                  navigation.navigate(name);
-                }
+                navigation.navigate(name);
               }}>
               <Icon
                 name={iconName(name)}

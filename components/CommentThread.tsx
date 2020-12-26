@@ -37,8 +37,9 @@ const CommentThread: React.FC<Props> = (props) => {
       }}>
       <View
         style={{
-          paddingLeft: level > 0 ? 10 : 0,
+          paddingLeft: 10,
           borderLeftWidth: level > 0 ? 2 : 0,
+
           borderColor: "rgb(30,30,30)",
         }}>
         {/* BODY */}
