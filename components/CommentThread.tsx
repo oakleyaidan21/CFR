@@ -85,7 +85,10 @@ const CommentThread: React.FC<Props> = (props) => {
 };
 
 function commentsAreEqual(prevComment: Props, nextComment: Props) {
-  return prevComment.data.id === nextComment.data.id;
+  return (
+    prevComment.data.id === nextComment.data.id &&
+    prevComment.data.score === nextComment.data.score
+  );
 }
 
 export default memo(CommentThread, commentsAreEqual);

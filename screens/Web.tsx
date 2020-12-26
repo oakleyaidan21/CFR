@@ -99,7 +99,9 @@ const Web: React.FC<Props> = (props) => {
             onPress={props.navigation.goBack}>
             <Icon name="close" color="white" size={30} />
           </TouchableOpacity>
-          <Text style={{ color: "grey" }}>{currUrl}</Text>
+          <Text style={{ color: "grey" }} numberOfLines={1}>
+            {currUrl}
+          </Text>
         </View>
       </View>
       {/* WEB FUNCTIONS */}

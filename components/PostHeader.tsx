@@ -280,7 +280,7 @@ const PostHeader: React.FC<Props> = (props) => {
           <Spin spinning={saving}>
             <TouchableNativeFeedback onPress={savePost} disabled={saving}>
               <View>
-                <Icon name="star" color={isSaved ? "green" : "grey"} />
+                <Icon name="star" color={isSaved ? "#00af64" : "grey"} />
               </View>
             </TouchableNativeFeedback>
           </Spin>

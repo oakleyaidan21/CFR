@@ -43,7 +43,7 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
             height: 2,
             left: WINDOW_WIDTH / 2 - 110,
             width: 200,
-            backgroundColor: "green",
+            backgroundColor: "#00af64",
             transform: [{ scaleX: progress }],
           }}
         />
@@ -56,7 +56,7 @@ const s = StyleSheet.create({
   progressBar: {
     position: "absolute",
     top: 0,
-    backgroundColor: "green",
+    backgroundColor: "#00af64",
     height: 2,
     width: WINDOW_WIDTH,
   },
