@@ -1,12 +1,15 @@
 import React, { useContext, useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
+import SnooContext from "../context/SnooContext";
 import TabBarIndicator from "./animations/TabBarIndicator";
 
 const TabBar: React.FC<any> = (props) => {
   const { state, navigation } = props;
   const { index } = state;
   const [positions, setPositions] = useState<Array<number>>([0, 0, 0, 0, 0]);
+
+  const { user } = useContext(SnooContext);
 
   const iconName = (name: string) => {
     switch (name) {
@@ -52,7 +55,11 @@ const TabBar: React.FC<any> = (props) => {
               key={name}
               style={s.tabBarIconContainer}
               onPress={() => {
-                navigation.navigate(name);
+                if ((name === "Profile" || name === "Inbox") && !user) {
+                  navigation.navigate("Login");
+                } else {
+                  navigation.navigate(name);
+                }
               }}>
               <Icon
                 name={iconName(name)}
