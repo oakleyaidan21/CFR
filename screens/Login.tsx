@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 import { WebView } from "react-native-webview";
 import Snoowrap from "snoowrap";
 import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
+import { Icon } from "react-native-elements";
 
 interface Props {
   navigation: any;
@@ -44,6 +45,13 @@ const Login: React.FC<Props> = (props) => {
         flex: 1,
         borderRadius: 10,
       }}>
+      <View style={s.header}>
+        <Icon
+          name="arrow-back"
+          color="white"
+          onPress={props.navigation.goBack}
+        />
+      </View>
       <WebView
         source={{ uri: url }}
         style={{ backgroundColor: "black" }}
@@ -63,5 +71,16 @@ const Login: React.FC<Props> = (props) => {
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  header: {
+    height: 70,
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    padding: 10,
+  },
+});
 
 export default Login;

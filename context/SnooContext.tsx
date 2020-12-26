@@ -1,10 +1,10 @@
 import { createContext } from "react";
-import Snoowrap, { Subreddit } from "snoowrap";
+import Snoowrap, { RedditUser, Subreddit } from "snoowrap";
 
 interface SnooContextInterface {
   snoowrap: null | Snoowrap;
   setSnoowrap: any;
-  user: any;
+  user: RedditUser | null;
   setUser: any;
   userSubs: Array<Subreddit>;
   setUserSubs: any;

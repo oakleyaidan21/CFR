@@ -10,14 +10,14 @@ import {
   initializeUserSnoowrap,
 } from "./util/snoowrap/snoowrapFunctions";
 import SplashScreen from "react-native-splash-screen";
-import Snoowrap, { Subreddit } from "snoowrap";
+import Snoowrap, { RedditUser, Subreddit } from "snoowrap";
 
 const CFR: React.FC = () => {
   const { refreshToken, authCode, users } = useSelector((state: any) => state);
   const dispatch = useDispatch();
 
   const [snoowrap, setSnoowrap] = useState<Snoowrap | null>(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<RedditUser>();
   const [userSubs, setUserSubs] = useState<Array<Subreddit>>([]);
 
   const getSubs = (r: Snoowrap) => {
@@ -33,8 +33,11 @@ const CFR: React.FC = () => {
       initializeUserSnoowrap(refreshToken).then((r) => {
         console.log("creating snoowrap with refresh token");
         setSnoowrap(r);
-        SplashScreen.hide();
-        getSubs(r);
+        r.getMe().then((me: any) => {
+          setUser(me);
+          SplashScreen.hide();
+          getSubs(r);
+        });
       });
     } else {
       if (!authCode) {

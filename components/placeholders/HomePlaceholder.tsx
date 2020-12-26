@@ -4,7 +4,7 @@ import PlaceholderContainer from "./PlaceholderContainer";
 
 const HomePlaceholder: React.FC = (props) => {
   return (
-    <PlaceholderContainer style={{ flex: 1 }} flash={true}>
+    <PlaceholderContainer style={{ flex: 1, padding: 10 }} flash={true}>
       <View style={s.block} />
       <View style={s.block} />
       <View style={s.block} />

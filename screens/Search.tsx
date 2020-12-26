@@ -217,6 +217,7 @@ const s = StyleSheet.create({
     backgroundColor: "grey",
     borderRadius: 3,
     paddingHorizontal: 10,
+    marginHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
   },
