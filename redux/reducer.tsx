@@ -1,7 +1,7 @@
 const initialPersistingState = {
   refreshToken: null,
   authCode: null,
-  users: [],
+  users: {},
 };
 
 const persistingReducer = (state = initialPersistingState, action: any) => {
@@ -13,7 +13,8 @@ const persistingReducer = (state = initialPersistingState, action: any) => {
       return { ...state, refreshToken: action.refreshToken };
     }
     case "SET_USERS": {
-      return { ...state, users: action.users };
+      console.log("new users:", action.users);
+      return { ...state, users: { ...action.users } };
     }
     case "LOGOUT": {
       return { ...state, authCode: "none", refreshToken: "none" };

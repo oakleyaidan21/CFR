@@ -18,6 +18,7 @@ const HomeHeader: React.FC<Props> = (props) => {
   const { setListing, getPosts, listing } = useContext(
     SubmissionListingContext,
   );
+
   const scrollRef = useRef<SectionList>(null);
 
   const currentSub = props.currentSubreddit;
@@ -78,7 +79,7 @@ const HomeHeader: React.FC<Props> = (props) => {
     return subIsString
       ? renderGlobalSub(props.currentSubreddit, 60, true)
       : renderSub(props.currentSubreddit, 60, true);
-  }, [props.currentSubreddit, listing]);
+  }, [props.currentSubreddit, listing, userSubs]);
 
   const renderSectionHeader = useCallback(
     () => <View style={s.separator} />,

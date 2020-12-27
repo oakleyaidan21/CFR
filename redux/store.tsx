@@ -1,5 +1,4 @@
 import { persistStore, persistReducer } from "redux-persist";
-
 import reducer from "./reducer";
 import { createStore } from "redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";

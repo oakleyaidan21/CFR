@@ -17,7 +17,7 @@ const CFR: React.FC = () => {
   const dispatch = useDispatch();
 
   const [snoowrap, setSnoowrap] = useState<Snoowrap | null>(null);
-  const [user, setUser] = useState<RedditUser>();
+  const [user, setUser] = useState<RedditUser | null>(null);
   const [userSubs, setUserSubs] = useState<Array<Subreddit>>([]);
 
   const getSubs = (r: Snoowrap) => {
@@ -52,7 +52,7 @@ const CFR: React.FC = () => {
           let newUsers = users;
           r.getMe().then((me: any) => {
             console.log("new refresh token:", r.refreshToken);
-            newUsers.push({ name: me.name, token: r.refreshToken });
+            newUsers[me.name] = r.refreshToken;
             setUser(me);
             dispatch({ type: "SET_USERS", users: newUsers });
             dispatch({
@@ -66,7 +66,7 @@ const CFR: React.FC = () => {
         });
       }
     }
-  }, [authCode]);
+  }, [authCode, refreshToken]);
 
   return (
     <SnooContext.Provider
