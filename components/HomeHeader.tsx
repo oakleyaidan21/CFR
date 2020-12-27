@@ -1,16 +1,21 @@
-import React, { useContext, useRef, memo, useCallback } from "react";
-import { SectionList, StyleSheet, View } from "react-native";
+import React, { useContext, useRef, memo, useCallback, useState } from "react";
+import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
+import Text from "./style/Text";
+import SubHeader from "./SubHeader";
+import { Icon } from "react-native-elements";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
 type Props = {
   currentSubreddit: string | Subreddit;
   setSubreddit: any;
+  currentCategory: string;
+  currentTimeframe: string;
 };
 
 const HomeHeader: React.FC<Props> = (props) => {
@@ -19,11 +24,11 @@ const HomeHeader: React.FC<Props> = (props) => {
     SubmissionListingContext,
   );
 
+  const [showSubs, setShowSubs] = useState(false);
+
   const scrollRef = useRef<SectionList>(null);
 
   const currentSub = props.currentSubreddit;
-
-  const subIsString = typeof currentSub === "string";
 
   const renderGlobalSub = (sub: any, size: number, header: boolean) => {
     return (
@@ -35,6 +40,7 @@ const HomeHeader: React.FC<Props> = (props) => {
             setListing(null);
             getPosts();
           } else {
+            setShowSubs(false);
             props.setSubreddit(sub);
             if (currentSub != sub) {
               setListing(null);
@@ -60,6 +66,7 @@ const HomeHeader: React.FC<Props> = (props) => {
             setListing(null);
             getPosts();
           } else {
+            setShowSubs(false);
             if (currentSub != sub) {
               setListing(null);
             }
@@ -75,16 +82,15 @@ const HomeHeader: React.FC<Props> = (props) => {
     );
   };
 
-  const renderHeader = useCallback(() => {
-    return subIsString
-      ? renderGlobalSub(props.currentSubreddit, 60, true)
-      : renderSub(props.currentSubreddit, 60, true);
-  }, [props.currentSubreddit, listing, userSubs]);
-
-  const renderSectionHeader = useCallback(
-    () => <View style={s.separator} />,
-    [],
-  );
+  const renderFooter = useCallback(() => {
+    return (
+      <TouchableOpacity
+        style={{ marginHorizontal: 10, backgroundColor: "rgba(0,0,0,0.8)" }}
+        onPress={() => setShowSubs(!showSubs)}>
+        <Icon name={showSubs ? "close" : "more-vert"} color="grey" />
+      </TouchableOpacity>
+    );
+  }, [showSubs]);
 
   const sections = [
     {
@@ -101,15 +107,26 @@ const HomeHeader: React.FC<Props> = (props) => {
 
   return (
     <View style={s.container}>
-      <SectionList
-        ref={scrollRef}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        sections={sections as any}
-        renderSectionHeader={renderSectionHeader}
-        ListHeaderComponent={renderHeader}
-        style={{ width: "100%" }}
-      />
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {showSubs ? (
+          <SectionList
+            ref={scrollRef}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            sections={sections as any}
+            style={{ width: "100%" }}
+          />
+        ) : (
+          <View style={{ flex: 1 }}>
+            <SubHeader
+              data={currentSub}
+              currentCategory={props.currentCategory}
+              currentTimeframe={props.currentTimeframe}
+            />
+          </View>
+        )}
+        {renderFooter()}
+      </View>
     </View>
   );
 };
@@ -117,9 +134,9 @@ const HomeHeader: React.FC<Props> = (props) => {
 const s = StyleSheet.create({
   container: {
     width: "100%",
-    padding: 5,
     position: "relative",
     backgroundColor: "rgba(0,0,0,0.8)",
+    height: 100,
   },
   separator: {
     width: 3,

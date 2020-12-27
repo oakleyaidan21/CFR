@@ -7,6 +7,7 @@ type Props = {
   sub: any;
   size: number;
   onPress: any;
+  hideText?: boolean;
 };
 
 const GlobalSubBubble: React.FC<Props> = (props) => {
@@ -38,11 +39,13 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
         ]}>
         <Icon name={getIcon(props.sub)} color="white" />
       </View>
-      <View style={s.textContainer}>
-        <Text style={{ fontSize: 10 }} numberOfLines={1}>
-          {props.sub}
-        </Text>
-      </View>
+      {!props.hideText && (
+        <View style={s.textContainer}>
+          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
+            {props.sub}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

@@ -43,7 +43,7 @@ const SubBubble: React.FC<Props> = (props) => {
           alignItems: "center",
           marginTop: 5,
         }}>
-        <Text style={{ fontSize: 10 }} numberOfLines={1}>
+        <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
           {sub.display_name}
         </Text>
       </View>

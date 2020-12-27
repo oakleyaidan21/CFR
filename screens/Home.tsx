@@ -28,6 +28,8 @@ const Home: React.FC<Props> = (props) => {
             <HomeHeader
               currentSubreddit={currentSub}
               setSubreddit={setCurrentSub}
+              currentCategory={currentCategory}
+              currentTimeframe={currentTimeframe}
             />
           }
           onPress={(data: Listing<Submission>, index: number) =>
