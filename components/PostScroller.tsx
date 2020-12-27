@@ -5,7 +5,7 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, RefreshControl, View } from "react-native";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import HomePlaceholder from "./placeholders/HomePlaceholder";
@@ -27,6 +27,7 @@ const PostScroller: React.FC<Props> = (props) => {
   );
 
   const [fetchingMore, setFetchingMore] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const renderItem = useCallback(
     ({ item, index }) => {
@@ -71,6 +72,11 @@ const PostScroller: React.FC<Props> = (props) => {
     }
   }, [listing]);
 
+  const refreshPosts = useCallback(() => {
+    setRefreshing(true);
+    getPosts().then(() => setRefreshing(false));
+  }, []);
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <FlatList
@@ -99,6 +105,15 @@ const PostScroller: React.FC<Props> = (props) => {
               });
           }
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refreshPosts}
+            tintColor={"white"}
+            progressBackgroundColor={"black"}
+            colors={["white", "#00af64"]}
+          />
+        }
         stickyHeaderIndices={[0]}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}

@@ -26,12 +26,15 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
   }, [subreddit, category, timeframe]);
 
   const getPosts = () => {
-    getGeneralPosts(snoowrap, subreddit, category, timeframe).then(
-      (posts: any) => {
+    return getGeneralPosts(snoowrap, subreddit, category, timeframe)
+      .then((posts: any) => {
         console.log("got posts!", posts.length);
         setListing(posts);
-      },
-    );
+        return true;
+      })
+      .catch((error) => {
+        return false;
+      });
   };
 
   return (

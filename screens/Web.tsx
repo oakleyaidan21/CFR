@@ -29,6 +29,7 @@ const Web: React.FC<Props> = (props) => {
   const onNavigationStateChange = useCallback((navState) => {
     if (currUrl !== navState.url) {
       setCurrUrl(navState.url);
+      setProgress(0);
     }
   }, []);
 
@@ -44,7 +45,7 @@ const Web: React.FC<Props> = (props) => {
     if (webRef.current) webRef.current.reload();
   };
 
-  const onLoadProgress = (e) => {
+  const onLoadProgress = (e: any) => {
     setProgress(e.nativeEvent.progress);
   };
 
