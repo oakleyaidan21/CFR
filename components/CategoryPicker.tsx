@@ -5,11 +5,13 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
+  Modal,
 } from "react-native";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 
 type Props = {
   close: any;
+  isVisible: boolean;
 };
 
 const categories = ["Hot", "New", "Top", "Cont."];
@@ -70,7 +72,7 @@ const CategoryPicker: React.FC<Props> = (props) => {
   );
 
   return (
-    <View style={s.container}>
+    <Modal visible={props.isVisible} animationType="fade" transparent={true}>
       <TouchableWithoutFeedback
         onPress={() => {
           setShowTimes(null);
@@ -82,15 +84,15 @@ const CategoryPicker: React.FC<Props> = (props) => {
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </View>
+    </Modal>
   );
 };
 
 const s = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 40,
-    right: -15,
+    top: 80,
+    right: 10,
     width: 200,
     backgroundColor: "rgba(0,0,0,0.8)",
     borderRadius: 3,

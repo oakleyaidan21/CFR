@@ -85,9 +85,11 @@ const SubHeader: React.FC<Props> = (props) => {
         <Text style={{ color: "grey", fontWeight: "bold" }}>{category}</Text>
         <Icon name="arrow-drop-down" color="grey" />
       </TouchableOpacity>
-      {showCatPicker && (
-        <CategoryPicker close={() => setShowCatPicker(false)} />
-      )}
+
+      <CategoryPicker
+        isVisible={showCatPicker}
+        close={() => setShowCatPicker(false)}
+      />
     </View>
   );
 };
