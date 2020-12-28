@@ -37,9 +37,9 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <SubmissionListingProvider
-        subreddit={"none"}
-        category={"none"}
-        timeframe={"none"}
+        initialSubreddit={"none"}
+        initialCategory={"none"}
+        initialTimeframe={"none"}
         listing={props.route.params.data}>
         <PostScroller
           currentSubreddit={"Search Results"}

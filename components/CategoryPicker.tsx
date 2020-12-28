@@ -1,24 +1,23 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import {
   View,
-  Modal,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
 } from "react-native";
+import SubmissionListingContext from "../context/SubmissionListingContext";
 
 type Props = {
-  isVisible: boolean;
   close: any;
-  setCategory: any;
-  setTimeframe: any;
 };
 
 const categories = ["Hot", "New", "Top", "Cont."];
 const times = ["hour", "day", "week", "month", "year", "all"];
 
 const CategoryPicker: React.FC<Props> = (props) => {
+  const { setTimeframe, setCategory } = useContext(SubmissionListingContext);
+
   const [showTimes, setShowTimes] = useState<null | string>(null);
 
   const renderCategory = useCallback(
@@ -33,7 +32,7 @@ const CategoryPicker: React.FC<Props> = (props) => {
               setShowTimes(cat);
             } else {
               setShowTimes(null);
-              props.setCategory(cat);
+              setCategory(cat);
               props.close();
             }
           }}>
@@ -50,8 +49,8 @@ const CategoryPicker: React.FC<Props> = (props) => {
                     key={time}
                     onPress={() => {
                       setShowTimes(null);
-                      props.setCategory(cat);
-                      props.setTimeframe(time);
+                      setCategory(cat);
+                      setTimeframe(time);
                       props.close();
                     }}>
                     <Text style={{ color: "grey", fontWeight: "bold" }}>
@@ -71,7 +70,7 @@ const CategoryPicker: React.FC<Props> = (props) => {
   );
 
   return (
-    <Modal visible={props.isVisible} animationType="fade" transparent={true}>
+    <View style={s.container}>
       <TouchableWithoutFeedback
         onPress={() => {
           setShowTimes(null);
@@ -83,15 +82,15 @@ const CategoryPicker: React.FC<Props> = (props) => {
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
-    </Modal>
+    </View>
   );
 };
 
 const s = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 80,
-    right: 10,
+    top: 40,
+    right: -15,
     width: 200,
     backgroundColor: "rgba(0,0,0,0.8)",
     borderRadius: 3,

@@ -16,25 +16,16 @@ const Home: React.FC<Props> = (props) => {
   const [currentTimeframe, setCurrentTimeframe] = useState("day");
 
   const renderHeader = useCallback(() => {
-    return (
-      <HomeHeader
-        currentSubreddit={currentSub}
-        setSubreddit={setCurrentSub}
-        currentCategory={currentCategory}
-        currentTimeframe={currentTimeframe}
-        setCategory={setCurrentCategory}
-        setTimeframe={setCurrentTimeframe}
-      />
-    );
+    return <HomeHeader />;
   }, [currentSub, currentCategory, currentTimeframe]);
 
   return (
     <View style={{ flex: 1 }}>
       {/* POST SCROLLER */}
       <SubmissionListingProvider
-        subreddit={currentSub}
-        category={currentCategory}
-        timeframe={currentTimeframe}>
+        initialSubreddit={currentSub}
+        initialCategory={currentCategory}
+        initialTimeframe={currentTimeframe}>
         <PostScroller
           currentSubreddit={currentSub}
           header={renderHeader()}

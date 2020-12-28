@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Listing, Submission } from "snoowrap";
+import { Listing, Submission, Subreddit } from "snoowrap";
 import SnooContext from "../context/SnooContext";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import { getGeneralPosts } from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
-  subreddit: string;
-  category: string;
-  timeframe: string;
+  initialSubreddit: string;
+  initialCategory: string;
+  initialTimeframe: string;
   listing?: Listing<Submission>;
 };
 
@@ -16,11 +16,15 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
   const [listing, setListing] = useState<Listing<Submission> | null>(
     props.listing ? props.listing : null,
   );
-
-  const { subreddit, category, timeframe } = props;
+  const [category, setCategory] = useState<string>(props.initialCategory);
+  const [timeframe, setTimeframe] = useState<string>(props.initialTimeframe);
+  const [subreddit, setSubreddit] = useState<string | Subreddit>(
+    props.initialSubreddit,
+  );
 
   useEffect(() => {
     if (!props.listing) {
+      setListing(null);
       getPosts();
     }
   }, [subreddit, category, timeframe]);
@@ -43,6 +47,12 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
         listing: listing,
         setListing: setListing,
         getPosts: getPosts,
+        timeframe: timeframe,
+        setTimeframe: setTimeframe,
+        category: category,
+        setCategory: setCategory,
+        subreddit: subreddit,
+        setSubreddit: setSubreddit,
       }}>
       {props.children}
     </SubmissionListingContext.Provider>

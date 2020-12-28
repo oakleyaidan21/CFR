@@ -22,7 +22,7 @@ type Props = {
 const PostScroller: React.FC<Props> = (props) => {
   const scrollRef = useRef<FlatList>(null);
 
-  const { listing, setListing, getPosts } = useContext(
+  const { listing, setListing, getPosts, subreddit } = useContext(
     SubmissionListingContext,
   );
 
@@ -46,9 +46,7 @@ const PostScroller: React.FC<Props> = (props) => {
     console.log(e.nativeEvent.contentOffset.y);
   };
 
-  const renderHeader = useCallback(() => props.header, [
-    props.currentSubreddit,
-  ]);
+  const renderHeader = useCallback(() => props.header, [subreddit]);
 
   const renderFooter = () => {
     return <PostScrollerFooter fetchingMore={fetchingMore} />;
@@ -75,7 +73,7 @@ const PostScroller: React.FC<Props> = (props) => {
   const refreshPosts = useCallback(() => {
     setRefreshing(true);
     getPosts().then(() => setRefreshing(false));
-  }, [props.currentSubreddit]);
+  }, [subreddit]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

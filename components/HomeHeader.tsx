@@ -11,24 +11,25 @@ import { Icon } from "react-native-elements";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
-type Props = {
-  currentSubreddit: string | Subreddit;
-  setSubreddit: any;
-  currentCategory: string;
-  currentTimeframe: string;
-  setCategory: any;
-  setTimeframe: any;
-};
+type Props = {};
 
 const HomeHeader: React.FC<Props> = (props) => {
   const { userSubs } = useContext(SnooContext);
-  const { setListing } = useContext(SubmissionListingContext);
+  const {
+    setListing,
+    subreddit,
+    setSubreddit,
+    category,
+    timeframe,
+    setCategory,
+    setTimeframe,
+  } = useContext(SubmissionListingContext);
 
   const [showSubs, setShowSubs] = useState(false);
 
   const scrollRef = useRef<SectionList>(null);
 
-  const currentSub = props.currentSubreddit;
+  const currentSub = subreddit;
 
   const renderGlobalSub = useCallback(
     (sub: any, size: number) => {
@@ -38,10 +39,7 @@ const HomeHeader: React.FC<Props> = (props) => {
           size={size}
           onPress={() => {
             setShowSubs(false);
-            props.setSubreddit(sub);
-            if (currentSub != sub) {
-              setListing(null);
-            }
+            setSubreddit(sub);
             scrollRef.current?.scrollToLocation({
               viewOffset: 0,
               itemIndex: 0,
@@ -62,10 +60,7 @@ const HomeHeader: React.FC<Props> = (props) => {
           size={size}
           onPress={() => {
             setShowSubs(false);
-            if (currentSub != sub) {
-              setListing(null);
-            }
-            props.setSubreddit(sub);
+            setSubreddit(sub);
             scrollRef.current?.scrollToLocation({
               viewOffset: 0,
               itemIndex: 0,
@@ -89,22 +84,8 @@ const HomeHeader: React.FC<Props> = (props) => {
   }, [showSubs]);
 
   const renderSubHeader = useCallback(() => {
-    return (
-      <SubHeader
-        data={currentSub}
-        currentCategory={props.currentCategory}
-        currentTimeframe={props.currentTimeframe}
-        setCategory={(cat: string) => {
-          setListing(null);
-          props.setCategory(cat);
-        }}
-        setTimeframe={(tf: string) => {
-          setListing(null);
-          props.setTimeframe(tf);
-        }}
-      />
-    );
-  }, [currentSub, props.currentCategory]);
+    return <SubHeader data={currentSub} />;
+  }, [currentSub, category]);
 
   const sections = [
     {

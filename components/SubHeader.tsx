@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Subreddit } from "snoowrap";
+import SubmissionListingContext from "../context/SubmissionListingContext";
 import CategoryPicker from "./CategoryPicker";
 import GlobalSubBubble from "./GlobalSubBubble";
 import Text from "./style/Text";
@@ -10,15 +11,13 @@ import Text from "./style/Text";
 type Props = {
   data: string | Subreddit;
   navigation?: any;
-  currentCategory: string;
-  currentTimeframe: string;
-  setCategory: any;
-  setTimeframe: any;
 };
 
 const SubHeader: React.FC<Props> = (props) => {
-  const { data, currentCategory, currentTimeframe } = props;
-
+  const { data } = props;
+  const { subreddit, category, timeframe } = useContext(
+    SubmissionListingContext,
+  );
   const [showCatPicker, setShowCatPicker] = useState(false);
 
   const isString = typeof data === "string";
@@ -82,27 +81,20 @@ const SubHeader: React.FC<Props> = (props) => {
       </View>
       <TouchableOpacity
         style={{ flexDirection: "row", alignItems: "center" }}
-        onPress={() => setShowCatPicker(true)}>
-        <Text style={{ color: "grey", fontWeight: "bold" }}>
-          {props.currentCategory}
-        </Text>
+        onPress={() => setShowCatPicker(!showCatPicker)}>
+        <Text style={{ color: "grey", fontWeight: "bold" }}>{category}</Text>
         <Icon name="arrow-drop-down" color="grey" />
       </TouchableOpacity>
-
-      <CategoryPicker
-        isVisible={showCatPicker}
-        close={() => setShowCatPicker(false)}
-        setCategory={props.setCategory}
-        setTimeframe={props.setTimeframe}
-      />
+      {showCatPicker && (
+        <CategoryPicker close={() => setShowCatPicker(false)} />
+      )}
     </View>
   );
 };
 
 const s = StyleSheet.create({
   container: {
-    paddingVertical: 10,
-    paddingRight: 10,
+    padding: 10,
     width: "100%",
     alignItems: "center",
     flexDirection: "row",

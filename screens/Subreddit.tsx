@@ -25,22 +25,15 @@ const Sub: React.FC<Props> = (props) => {
     : "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png";
 
   const renderHeader = useCallback(() => {
-    return (
-      <SubHeader
-        data={data}
-        navigation={props.navigation}
-        currentTimeframe={currentTimeframe}
-        currentCategory={currentCategory}
-      />
-    );
+    return <SubHeader data={data} navigation={props.navigation} />;
   }, []);
 
   return (
     <View style={{ flex: 1 }}>
       <SubmissionListingProvider
-        subreddit={data.display_name}
-        category={"Hot"}
-        timeframe={"Day"}>
+        initialSubreddit={data.display_name}
+        initialCategory={"Hot"}
+        initialTimeframe={"Day"}>
         <PostScroller
           currentSubreddit={data}
           header={renderHeader()}
