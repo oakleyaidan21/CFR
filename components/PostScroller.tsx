@@ -75,7 +75,7 @@ const PostScroller: React.FC<Props> = (props) => {
   const refreshPosts = useCallback(() => {
     setRefreshing(true);
     getPosts().then(() => setRefreshing(false));
-  }, []);
+  }, [props.currentSubreddit]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

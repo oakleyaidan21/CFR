@@ -16,13 +16,13 @@ type Props = {
   setSubreddit: any;
   currentCategory: string;
   currentTimeframe: string;
+  setCategory: any;
+  setTimeframe: any;
 };
 
 const HomeHeader: React.FC<Props> = (props) => {
   const { userSubs } = useContext(SnooContext);
-  const { setListing, getPosts, listing } = useContext(
-    SubmissionListingContext,
-  );
+  const { setListing } = useContext(SubmissionListingContext);
 
   const [showSubs, setShowSubs] = useState(false);
 
@@ -30,16 +30,13 @@ const HomeHeader: React.FC<Props> = (props) => {
 
   const currentSub = props.currentSubreddit;
 
-  const renderGlobalSub = (sub: any, size: number, header: boolean) => {
-    return (
-      <GlobalSubBubble
-        sub={sub}
-        size={size}
-        onPress={() => {
-          if (header) {
-            setListing(null);
-            getPosts();
-          } else {
+  const renderGlobalSub = useCallback(
+    (sub: any, size: number) => {
+      return (
+        <GlobalSubBubble
+          sub={sub}
+          size={size}
+          onPress={() => {
             setShowSubs(false);
             props.setSubreddit(sub);
             if (currentSub != sub) {
@@ -50,22 +47,20 @@ const HomeHeader: React.FC<Props> = (props) => {
               itemIndex: 0,
               sectionIndex: 0,
             });
-          }
-        }}
-      />
-    );
-  };
+          }}
+        />
+      );
+    },
+    [userSubs],
+  );
 
-  const renderSub = (sub: any, size: number, header: boolean) => {
-    return (
-      <SubBubble
-        sub={sub}
-        size={size}
-        onPress={() => {
-          if (header) {
-            setListing(null);
-            getPosts();
-          } else {
+  const renderSub = useCallback(
+    (sub: any, size: number) => {
+      return (
+        <SubBubble
+          sub={sub}
+          size={size}
+          onPress={() => {
             setShowSubs(false);
             if (currentSub != sub) {
               setListing(null);
@@ -76,11 +71,12 @@ const HomeHeader: React.FC<Props> = (props) => {
               itemIndex: 0,
               sectionIndex: 0,
             });
-          }
-        }}
-      />
-    );
-  };
+          }}
+        />
+      );
+    },
+    [userSubs],
+  );
 
   const renderFooter = useCallback(() => {
     return (
@@ -92,15 +88,33 @@ const HomeHeader: React.FC<Props> = (props) => {
     );
   }, [showSubs]);
 
+  const renderSubHeader = useCallback(() => {
+    return (
+      <SubHeader
+        data={currentSub}
+        currentCategory={props.currentCategory}
+        currentTimeframe={props.currentTimeframe}
+        setCategory={(cat: string) => {
+          setListing(null);
+          props.setCategory(cat);
+        }}
+        setTimeframe={(tf: string) => {
+          setListing(null);
+          props.setTimeframe(tf);
+        }}
+      />
+    );
+  }, [currentSub, props.currentCategory]);
+
   const sections = [
     {
       data: globalSubs,
-      renderItem: ({ item }: any) => renderGlobalSub(item, 40, false),
+      renderItem: ({ item }: any) => renderGlobalSub(item, 40),
       keyExtractor: (item: string) => item,
     },
     {
       data: userSubs,
-      renderItem: ({ item }: any) => renderSub(item, 40, false),
+      renderItem: ({ item }: any) => renderSub(item, 40),
       keyExtractor: (item: Subreddit) => item.id,
     },
   ];
@@ -117,13 +131,7 @@ const HomeHeader: React.FC<Props> = (props) => {
             style={{ width: "100%" }}
           />
         ) : (
-          <View style={{ flex: 1 }}>
-            <SubHeader
-              data={currentSub}
-              currentCategory={props.currentCategory}
-              currentTimeframe={props.currentTimeframe}
-            />
-          </View>
+          <View style={{ flex: 1 }}>{renderSubHeader()}</View>
         )}
         {renderFooter()}
       </View>
@@ -136,7 +144,8 @@ const s = StyleSheet.create({
     width: "100%",
     position: "relative",
     backgroundColor: "rgba(0,0,0,0.8)",
-    height: 100,
+    height: 70,
+    justifyContent: "center",
   },
   separator: {
     width: 3,

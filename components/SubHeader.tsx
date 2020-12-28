@@ -1,8 +1,9 @@
-import React, { useCallback } from "react";
-import { TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Subreddit } from "snoowrap";
+import CategoryPicker from "./CategoryPicker";
 import GlobalSubBubble from "./GlobalSubBubble";
 import Text from "./style/Text";
 
@@ -11,10 +12,14 @@ type Props = {
   navigation?: any;
   currentCategory: string;
   currentTimeframe: string;
+  setCategory: any;
+  setTimeframe: any;
 };
 
 const SubHeader: React.FC<Props> = (props) => {
   const { data, currentCategory, currentTimeframe } = props;
+
+  const [showCatPicker, setShowCatPicker] = useState(false);
 
   const isString = typeof data === "string";
 
@@ -44,15 +49,7 @@ const SubHeader: React.FC<Props> = (props) => {
   const imgUrl = getImageString();
 
   return (
-    <View
-      style={{
-        paddingVertical: 10,
-        paddingRight: 10,
-        width: "100%",
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "space-between",
-      }}>
+    <View style={s.container}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {props.navigation && (
           <Icon
@@ -83,14 +80,34 @@ const SubHeader: React.FC<Props> = (props) => {
           {typeof data === "string" ? data : data.display_name}
         </Text>
       </View>
-      <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }}>
+      <TouchableOpacity
+        style={{ flexDirection: "row", alignItems: "center" }}
+        onPress={() => setShowCatPicker(true)}>
         <Text style={{ color: "grey", fontWeight: "bold" }}>
-          {currentCategory}
+          {props.currentCategory}
         </Text>
         <Icon name="arrow-drop-down" color="grey" />
       </TouchableOpacity>
+
+      <CategoryPicker
+        isVisible={showCatPicker}
+        close={() => setShowCatPicker(false)}
+        setCategory={props.setCategory}
+        setTimeframe={props.setTimeframe}
+      />
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: {
+    paddingVertical: 10,
+    paddingRight: 10,
+    width: "100%",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+});
 
 export default SubHeader;
