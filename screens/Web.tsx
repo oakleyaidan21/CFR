@@ -7,6 +7,7 @@ import {
   Animated,
   Easing,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import Text from "../components/style/Text";
 import { WebView } from "react-native-webview";
@@ -20,16 +21,13 @@ type Props = {
 const width = Dimensions.get("window").width;
 
 const Web: React.FC<Props> = (props) => {
-  const loadAnimation = useRef(new Animated.Value(0)).current;
-  const opacityAnimation = useRef(new Animated.Value(0.5)).current;
   const webRef = useRef<WebView>(null);
+  const [loading, setLoading] = useState(true);
   const [currUrl, setCurrUrl] = useState(props.route.params.url);
-  const [progress, setProgress] = useState(0);
 
   const onNavigationStateChange = useCallback((navState) => {
     if (currUrl !== navState.url) {
       setCurrUrl(navState.url);
-      setProgress(0);
     }
   }, []);
 
@@ -45,54 +43,13 @@ const Web: React.FC<Props> = (props) => {
     if (webRef.current) webRef.current.reload();
   };
 
-  const onLoadProgress = (e: any) => {
-    setProgress(e.nativeEvent.progress);
-  };
-
-  useEffect(() => {
-    Animated.timing(loadAnimation, {
-      toValue: progress,
-      duration: 200,
-      useNativeDriver: true,
-    }).start((e) => {
-      if (e.finished) {
-        if (progress === 1) {
-          Animated.timing(opacityAnimation, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-          }).start((e2) => {
-            if (e2.finished) {
-              Animated.timing(opacityAnimation, {
-                toValue: 0,
-                duration: 300,
-                useNativeDriver: true,
-              }).start();
-            }
-          });
-        }
-      }
-    });
-  }, [progress]);
-
-  const interp = loadAnimation.interpolate({
-    inputRange: [0.0, 1.0],
-    outputRange: [0.0, width],
-  });
+  const onLoadEnd = () => setLoading(false);
+  const onLoadStart = () => setLoading(true);
 
   return (
     <View style={{ flex: 1 }}>
       {/* URL AND PROGRESS */}
       <View style={{ width: "100%", justifyContent: "center" }}>
-        <Animated.View
-          style={[
-            s.loadingIndicator,
-            {
-              opacity: opacityAnimation,
-              transform: [{ translateX: interp }],
-            },
-          ]}
-        />
         <View
           style={{ flexDirection: "row", alignItems: "center", height: 50 }}>
           <TouchableOpacity
@@ -100,9 +57,12 @@ const Web: React.FC<Props> = (props) => {
             onPress={props.navigation.goBack}>
             <Icon name="close" color="white" size={30} />
           </TouchableOpacity>
-          <Text style={{ color: "grey" }} numberOfLines={1}>
+          <Text style={{ color: "grey", flex: 1 }} numberOfLines={1}>
             {currUrl}
           </Text>
+          <View style={{ width: 50 }}>
+            {loading && <ActivityIndicator color="grey" />}
+          </View>
         </View>
       </View>
       {/* WEB FUNCTIONS */}
@@ -125,26 +85,18 @@ const Web: React.FC<Props> = (props) => {
 
       <WebView
         javaScriptCanOpenWindowsAutomatically={false}
-        style={{ flex: 1 }}
+        style={{ flex: 1, opacity: 0.99 }} // Opacity set to 0.99 to fix completely random bug: https://github.com/react-native-webview/react-native-webview/issues/811
         onNavigationStateChange={onNavigationStateChange}
         source={{ uri: props.route.params.url }}
         ref={webRef}
-        onLoadProgress={onLoadProgress}
+        onLoadStart={onLoadStart}
+        onLoadEnd={onLoadEnd}
       />
     </View>
   );
 };
 
 const s = StyleSheet.create({
-  loadingIndicator: {
-    backgroundColor: "rgb(200,200,200)",
-    height: 50,
-    width: width,
-    position: "absolute",
-    bottom: 0,
-    left: -width,
-  },
-
   webFunctions: {
     width: "100%",
     height: 50,

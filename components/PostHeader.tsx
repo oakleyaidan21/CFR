@@ -235,8 +235,8 @@ const PostHeader: React.FC<Props> = (props) => {
             }}>
             <View style={s.titleContainer}>
               <Text
-                style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
-                numberOfLines={4}>
+                style={{ color: "white", fontWeight: "bold" }}
+                numberOfLines={isSelf ? 10 : 4}>
                 {data.title}
               </Text>
               <Flair
@@ -328,9 +328,6 @@ const s = StyleSheet.create({
     borderRadius: 3,
   },
   titleContainer: {
-    height: 100,
-    flexGrow: 1,
-    flexWrap: "nowrap",
     alignItems: "flex-start",
   },
   row: {

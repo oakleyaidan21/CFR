@@ -76,7 +76,13 @@ const HomeHeader: React.FC<Props> = (props) => {
   const renderFooter = useCallback(() => {
     return (
       <TouchableOpacity
-        style={{ marginHorizontal: 10, backgroundColor: "rgba(0,0,0,0.8)" }}
+        style={{
+          backgroundColor: "rgba(0,0,0,0.8)",
+          width: 50,
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         onPress={() => setShowSubs(!showSubs)}>
         <Icon name={showSubs ? "close" : "more-horiz"} color="grey" />
       </TouchableOpacity>
@@ -107,9 +113,13 @@ const HomeHeader: React.FC<Props> = (props) => {
           <SectionList
             ref={scrollRef}
             horizontal={true}
+            style={{
+              backgroundColor: "rgba(0,0,0,0.8)",
+              width: "100%",
+              height: 60,
+            }}
             showsHorizontalScrollIndicator={false}
             sections={sections as any}
-            style={{ width: "100%" }}
           />
         ) : (
           <View style={{ flex: 1 }}>{renderSubHeader()}</View>
@@ -124,8 +134,7 @@ const s = StyleSheet.create({
   container: {
     width: "100%",
     position: "relative",
-    backgroundColor: "rgba(0,0,0,0.8)",
-    height: 70,
+    height: 60,
     justifyContent: "center",
   },
   separator: {
