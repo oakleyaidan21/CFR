@@ -4,10 +4,12 @@ import {
   View,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import Video from "react-native-video";
 import Slider from "@react-native-community/slider";
+import Fade from "./animations/Fade";
 
 type Props = {
   source: string;
@@ -77,19 +79,21 @@ const VideoPlayer: React.FC<Props> = (props) => {
         />
       </TouchableWithoutFeedback>
       {/* CONTROLS */}
-      {showControls && (
+      <Fade show={showControls} style={s.controlBar}>
         <View style={s.controlBar}>
           {isBuffering ? (
             <View style={{ width: 50 }}>
               <ActivityIndicator color="white" />
             </View>
           ) : (
-            <Icon
-              name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
-              color="white"
-              onPress={() => (finished ? replay() : setPaused(!paused))}
-              size={50}
-            />
+            <TouchableOpacity
+              onPress={() => (finished ? replay() : setPaused(!paused))}>
+              <Icon
+                name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
+                color="white"
+                size={50}
+              />
+            </TouchableOpacity>
           )}
           <Slider
             style={{ flex: 1 }}
@@ -100,7 +104,7 @@ const VideoPlayer: React.FC<Props> = (props) => {
             minimumTrackTintColor={"#00af64"}
           />
         </View>
-      )}
+      </Fade>
     </View>
   );
 };
@@ -109,6 +113,7 @@ const s = StyleSheet.create({
   controlBar: {
     position: "absolute",
     bottom: 0,
+    zIndex: 10,
     height: 50,
     width: "100%",
     flexDirection: "row",

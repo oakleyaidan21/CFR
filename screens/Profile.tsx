@@ -18,6 +18,11 @@ const Profile: React.FC<Props> = (props) => {
 
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
+  const navToLogin = useCallback(() => {
+    setShowUserDropdown(false);
+    props.navigation.navigate("Login");
+  }, []);
+
   const renderHeader = useCallback(() => {
     return (
       <View style={s.header}>
@@ -73,7 +78,7 @@ const Profile: React.FC<Props> = (props) => {
             flexDirection: "row",
             alignItems: "center",
           }}
-          onPress={() => props.navigation.navigate("Login")}>
+          onPress={navToLogin}>
           <Icon name="add-box" color="grey" style={{ marginRight: 10 }} />
           <Text style={{ color: "grey" }}>Add new user</Text>
         </TouchableOpacity>

@@ -57,7 +57,8 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   icon: {
-    backgroundColor: "grey",
+    borderColor: "white",
+    borderWidth: 2,
     justifyContent: "center",
     alignItems: "center",
   },

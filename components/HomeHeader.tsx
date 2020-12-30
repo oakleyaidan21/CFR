@@ -78,7 +78,7 @@ const HomeHeader: React.FC<Props> = (props) => {
       <TouchableOpacity
         style={{ marginHorizontal: 10, backgroundColor: "rgba(0,0,0,0.8)" }}
         onPress={() => setShowSubs(!showSubs)}>
-        <Icon name={showSubs ? "close" : "more-vert"} color="grey" />
+        <Icon name={showSubs ? "close" : "more-horiz"} color="grey" />
       </TouchableOpacity>
     );
   }, [showSubs]);

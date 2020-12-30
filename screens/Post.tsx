@@ -40,6 +40,10 @@ const Post: React.FC<Props> = (props) => {
     return false;
   };
 
+  const openInWeb = useCallback((url) => {
+    props.navigation.navigate("Web", { url: url });
+  }, []);
+
   const renderPostHeader = useCallback(() => {
     return (
       <View style={{ marginTop: 50, backgroundColor: "black" }}>
@@ -72,9 +76,7 @@ const Post: React.FC<Props> = (props) => {
           data={item}
           level={0}
           op={data.author}
-          onLinkPress={(url: string) =>
-            props.navigation.navigate("Web", { url: url })
-          }
+          onLinkPress={openInWeb}
         />
       );
     },

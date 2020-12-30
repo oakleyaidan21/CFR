@@ -77,6 +77,15 @@ const PostHeader: React.FC<Props> = (props) => {
     setHeaderHeight(nativeEvent.layout.height);
   }, []);
 
+  const openInWeb = useCallback(
+    (url) =>
+      props.navigation.navigate("Web", {
+        url: typeof url === "string" ? url : data.url,
+      }),
+
+    [],
+  );
+
   const contentHeight = windowHeight - 25 - 130 - 110;
 
   const mapRedditGalleryImages = useCallback(() => {
@@ -95,9 +104,7 @@ const PostHeader: React.FC<Props> = (props) => {
       return data.selftext_html ? (
         <MDRenderer
           data={data.selftext_html as string}
-          onLinkPress={(url: string) =>
-            props.navigation.navigate("Web", { url: url })
-          }
+          onLinkPress={openInWeb}
         />
       ) : null;
     }
@@ -212,8 +219,7 @@ const PostHeader: React.FC<Props> = (props) => {
         {/* MAIN CONTENT */}
         <View style={{ flexDirection: "row", flex: 1, width: "100%" }}>
           {/* THUMBNAIL */}
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate("Web", { url: data.url })}>
+          <TouchableOpacity onPress={openInWeb}>
             <FastImage style={s.image} source={{ uri: imgUrl }} />
           </TouchableOpacity>
           {/* TITLE/FLAIR/POINTS*/}
@@ -222,7 +228,7 @@ const PostHeader: React.FC<Props> = (props) => {
             disabled={isSelf}
             onPress={() => {
               if (!content) {
-                props.navigation.navigate("Web", { url: data.url });
+                openInWeb(null);
               } else {
                 setShowContent(!showContent);
               }
