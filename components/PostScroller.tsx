@@ -27,8 +27,6 @@ const PostScroller: React.FC<Props> = (props) => {
     SubmissionListingContext,
   );
 
-  const { user } = useContext(SnooContext);
-
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -73,10 +71,10 @@ const PostScroller: React.FC<Props> = (props) => {
     }
   }, [listing]);
 
-  const refreshPosts = useCallback(() => {
+  const refreshPosts = () => {
     setRefreshing(true);
     getPosts().then(() => setRefreshing(false));
-  }, [subreddit, user]);
+  };
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

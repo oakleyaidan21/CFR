@@ -20,6 +20,7 @@ import GalleryViewer from "./GalleryViewer";
 import Flair from "./style/Flair";
 import VideoPlayer from "./VideoPlayer";
 import PostListItem from "./PostListItem";
+import ImgurAlbumViewer from "./ImgurAlbumViewer";
 
 type Props = {
   data: Submission;
@@ -99,6 +100,8 @@ const PostHeader: React.FC<Props> = (props) => {
 
   const renderContent = useCallback(() => {
     const matches = data.url.match(postRegex);
+
+    console.log("m:", matches);
     // SELF POST
     if (isSelf) {
       return data.selftext_html ? (
@@ -133,6 +136,9 @@ const PostHeader: React.FC<Props> = (props) => {
       return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
 
     const isGallery = data.is_gallery;
+    const isImgurGallery = matches[4]
+      ? matches[4].substring(0, 3) == "/a/"
+      : false;
 
     const threeExt = matches[4]
       ? matches[4].substring(matches[4].length - 4, matches[4].length)
@@ -195,6 +201,14 @@ const PostHeader: React.FC<Props> = (props) => {
       );
     }
 
+    // IMGUR GALLERY
+    if (isImgurGallery) {
+      return (
+        <View style={{ width: "100%", height: contentHeight }}>
+          <ImgurAlbumViewer imgurHash={matches[4].substring(3)} />
+        </View>
+      );
+    }
     // return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
     return false;
   }, [showContent, showImageViewer]);

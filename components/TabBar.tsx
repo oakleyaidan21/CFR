@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 import SnooContext from "../context/SnooContext";
 import TabBarIndicator from "./animations/TabBarIndicator";
+import TempTabBarIndicator from "./animations/TempTabBarIndicator";
 
 const TabBar: React.FC<any> = (props) => {
   const { state, navigation } = props;
@@ -37,10 +38,6 @@ const TabBar: React.FC<any> = (props) => {
   return (
     <View style={s.container}>
       <View style={s.iconGroupContainer}>
-        <TabBarIndicator
-          pos={positions[index]}
-          name={iconName(state.routes[index].name)}
-        />
         {state.routes.map((route: { name: string }, i: number) => {
           const focused = index === i;
           const { name } = route;
@@ -62,6 +59,7 @@ const TabBar: React.FC<any> = (props) => {
                 color={focused ? "white" : "grey"}
                 size={30}
               />
+              {focused && <TempTabBarIndicator />}
             </TouchableOpacity>
           );
         })}

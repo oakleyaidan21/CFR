@@ -1,9 +1,10 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { View } from "react-native";
 import { Listing, Submission } from "snoowrap";
 import HomeHeader from "../components/HomeHeader";
 import PostScroller from "../components/PostScroller";
 import Text from "../components/style/Text";
+import SnooContext from "../context/SnooContext";
 import SubmissionListingProvider from "../providers/ListingProvider";
 
 type Props = {
@@ -11,23 +12,20 @@ type Props = {
 };
 
 const Home: React.FC<Props> = (props) => {
-  const [currentSub, setCurrentSub] = useState("Front Page");
-  const [currentCategory, setCurrentCategory] = useState("Hot");
-  const [currentTimeframe, setCurrentTimeframe] = useState("day");
+  const { user } = useContext(SnooContext);
 
   const renderHeader = useCallback(() => {
     return <HomeHeader />;
-  }, [currentSub, currentCategory, currentTimeframe]);
+  }, []);
 
-  return (
-    <View style={{ flex: 1 }}>
-      {/* POST SCROLLER */}
+  const renderHomeScroller = useCallback(() => {
+    return (
       <SubmissionListingProvider
-        initialSubreddit={currentSub}
-        initialCategory={currentCategory}
-        initialTimeframe={currentTimeframe}>
+        initialSubreddit={"Front Page"}
+        initialCategory={"Hot"}
+        initialTimeframe={"hour"}>
         <PostScroller
-          currentSubreddit={currentSub}
+          currentSubreddit={"Front Page"}
           header={renderHeader()}
           onPress={(data: Listing<Submission>, index: number) =>
             props.navigation.navigate("PostSwiper", {
@@ -37,6 +35,13 @@ const Home: React.FC<Props> = (props) => {
           }
         />
       </SubmissionListingProvider>
+    );
+  }, [user]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      {/* POST SCROLLER */}
+      {renderHomeScroller()}
     </View>
   );
 };

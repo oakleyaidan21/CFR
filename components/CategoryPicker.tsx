@@ -91,7 +91,7 @@ const CategoryPicker: React.FC<Props> = (props) => {
 const s = StyleSheet.create({
   container: {
     position: "absolute",
-    top: 80,
+    top: 70,
     right: 10,
     width: 200,
     backgroundColor: "rgba(0,0,0,0.8)",

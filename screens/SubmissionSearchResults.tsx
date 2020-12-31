@@ -16,7 +16,7 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
     return (
       <View
         style={{
-          paddingVertical: 10,
+          height: 50,
           backgroundColor: "rgba(0,0,0,0.8)",
           width: "100%",
           flexDirection: "row",

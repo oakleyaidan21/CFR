@@ -68,33 +68,31 @@ const Search: React.FC<Props> = (props) => {
 
   const renderHeader = useCallback(() => {
     return (
-      <View
-        style={{
-          width: "100%",
-          backgroundColor: "rgba(0,0,0,0.8)",
-          paddingVertical: 10,
-        }}>
+      <View style={s.headerContainer}>
         <View style={s.searchInput}>
-          <Icon name="search" color="white" />
+          <Icon name="search" color="white" style={{ marginHorizontal: 5 }} />
           <TextInput
             ref={searchRef}
             onChangeText={onValueChange}
-            placeholder={"Search..."}
             placeholderTextColor={"rgb(200,200,200)"}
             onFocus={onFocus}
             onBlur={onBlur}
+            placeholder={"Search..."}
             style={{ color: "white", flex: 1 }}
             value={query}
+            selectionColor={"#00af64"}
           />
           {results.length > 0 && (
-            <Icon
-              name="close"
-              color="white"
-              onPress={() => {
-                setResults([]);
-                setQuery("");
-              }}
-            />
+            <View style={{ marginHorizontal: 5 }}>
+              <Icon
+                name="close"
+                color="white"
+                onPress={() => {
+                  setResults([]);
+                  setQuery("");
+                }}
+              />
+            </View>
           )}
         </View>
       </View>
@@ -213,10 +211,10 @@ const Search: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   searchInput: {
-    height: 50,
-    backgroundColor: "grey",
+    height: "100%",
+    borderWidth: 2,
+    borderColor: "white",
     borderRadius: 3,
-    paddingHorizontal: 10,
     marginHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
@@ -233,6 +231,12 @@ const s = StyleSheet.create({
     flex: 1,
     marginTop: 70,
     marginBottom: 50,
+  },
+  headerContainer: {
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    paddingVertical: 5,
+    height: 60,
   },
 });
 
