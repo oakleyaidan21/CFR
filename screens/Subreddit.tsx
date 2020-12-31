@@ -25,7 +25,14 @@ const Sub: React.FC<Props> = (props) => {
     : "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png";
 
   const renderHeader = useCallback(() => {
-    return <SubHeader data={data} navigation={props.navigation} />;
+    return (
+      <SubHeader
+        data={data}
+        navigation={props.navigation}
+        fromHome={false}
+        onSubPress={null}
+      />
+    );
   }, []);
 
   return (

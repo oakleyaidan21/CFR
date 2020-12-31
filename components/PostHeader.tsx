@@ -101,7 +101,6 @@ const PostHeader: React.FC<Props> = (props) => {
   const renderContent = useCallback(() => {
     const matches = data.url.match(postRegex);
 
-    console.log("m:", matches);
     // SELF POST
     if (isSelf) {
       return data.selftext_html ? (

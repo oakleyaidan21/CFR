@@ -7,10 +7,13 @@ import SubmissionListingContext from "../context/SubmissionListingContext";
 import CategoryPicker from "./CategoryPicker";
 import GlobalSubBubble from "./GlobalSubBubble";
 import Text from "./style/Text";
+import SubSearchBar from "./SubSearchBar";
 
 type Props = {
   data: string | Subreddit;
   navigation?: any;
+  onSubPress: any;
+  fromHome: boolean;
 };
 
 const SubHeader: React.FC<Props> = (props) => {
@@ -19,6 +22,7 @@ const SubHeader: React.FC<Props> = (props) => {
     SubmissionListingContext,
   );
   const [showCatPicker, setShowCatPicker] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   const isString = typeof data === "string";
 
@@ -49,47 +53,74 @@ const SubHeader: React.FC<Props> = (props) => {
 
   return (
     <View style={s.container}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {props.navigation && (
-          <Icon
-            name="arrow-back"
-            color="white"
-            onPress={props.navigation.goBack}
+      {showSearchBar ? (
+        <SubSearchBar
+          sub={data}
+          close={() => setShowSearchBar(false)}
+          onSearch={(r: any, query: string) =>
+            props.navigation.navigate("SearchResults", {
+              data: r,
+              query: query,
+            })
+          }
+        />
+      ) : (
+        <>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            {!props.fromHome && (
+              <Icon
+                name="arrow-back"
+                color="white"
+                onPress={props.navigation.goBack}
+              />
+            )}
+            <TouchableOpacity
+              onPress={props.onSubPress}
+              style={{ flexDirection: "row", alignItems: "center" }}>
+              {!isString ? (
+                <FastImage
+                  source={{ uri: imgUrl }}
+                  style={{
+                    height: 40,
+                    width: 40,
+                    borderRadius: 20,
+                    marginHorizontal: 10,
+                  }}
+                />
+              ) : (
+                <GlobalSubBubble
+                  sub={data}
+                  onPress={null}
+                  size={40}
+                  hideText={true}
+                />
+              )}
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                {typeof data === "string" ? data : data.display_name}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => setShowCatPicker(!showCatPicker)}>
+              <Text style={{ color: "grey", fontWeight: "bold" }}>
+                {category}
+              </Text>
+              <Icon name="arrow-drop-down" color="grey" />
+            </TouchableOpacity>
+            {subreddit !== "Front Page" && subreddit !== "Saved" && (
+              <TouchableOpacity onPress={() => setShowSearchBar(true)}>
+                <Icon name="search" color="grey" style={{ marginLeft: 10 }} />
+              </TouchableOpacity>
+            )}
+          </View>
+          <CategoryPicker
+            isVisible={showCatPicker}
+            close={() => setShowCatPicker(false)}
           />
-        )}
-        {!isString ? (
-          <FastImage
-            source={{ uri: imgUrl }}
-            style={{
-              height: 40,
-              width: 40,
-              borderRadius: 20,
-              marginHorizontal: 10,
-            }}
-          />
-        ) : (
-          <GlobalSubBubble
-            sub={data}
-            onPress={null}
-            size={40}
-            hideText={true}
-          />
-        )}
-        <Text style={{ color: "white", fontWeight: "bold" }}>
-          {typeof data === "string" ? data : data.display_name}
-        </Text>
-      </View>
-      <TouchableOpacity
-        style={{ flexDirection: "row", alignItems: "center" }}
-        onPress={() => setShowCatPicker(!showCatPicker)}>
-        <Text style={{ color: "grey", fontWeight: "bold" }}>{category}</Text>
-        <Icon name="arrow-drop-down" color="grey" />
-      </TouchableOpacity>
-
-      <CategoryPicker
-        isVisible={showCatPicker}
-        close={() => setShowCatPicker(false)}
-      />
+        </>
+      )}
     </View>
   );
 };
@@ -102,6 +133,7 @@ const s = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "rgba(0,0,0,0.8)",
     justifyContent: "space-between",
+    height: 60,
   },
 });
 

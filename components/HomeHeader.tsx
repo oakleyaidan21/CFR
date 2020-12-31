@@ -11,7 +11,9 @@ import { Icon } from "react-native-elements";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 
-type Props = {};
+type Props = {
+  navigation: any;
+};
 
 const HomeHeader: React.FC<Props> = (props) => {
   const { userSubs } = useContext(SnooContext);
@@ -90,7 +92,14 @@ const HomeHeader: React.FC<Props> = (props) => {
   }, [showSubs]);
 
   const renderSubHeader = useCallback(() => {
-    return <SubHeader data={currentSub} />;
+    return (
+      <SubHeader
+        data={currentSub}
+        onSubPress={() => setShowSubs(true)}
+        navigation={props.navigation}
+        fromHome={true}
+      />
+    );
   }, [currentSub, category]);
 
   const sections = [
@@ -124,7 +133,7 @@ const HomeHeader: React.FC<Props> = (props) => {
         ) : (
           <View style={{ flex: 1 }}>{renderSubHeader()}</View>
         )}
-        {renderFooter()}
+        {/* {renderFooter()} */}
       </View>
     </View>
   );

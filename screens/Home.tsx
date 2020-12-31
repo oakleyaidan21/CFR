@@ -15,7 +15,7 @@ const Home: React.FC<Props> = (props) => {
   const { user } = useContext(SnooContext);
 
   const renderHeader = useCallback(() => {
-    return <HomeHeader />;
+    return <HomeHeader navigation={props.navigation} />;
   }, []);
 
   const renderHomeScroller = useCallback(() => {
