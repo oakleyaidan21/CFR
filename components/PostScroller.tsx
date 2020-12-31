@@ -12,6 +12,7 @@ import HomePlaceholder from "./placeholders/HomePlaceholder";
 import PostListItem from "./PostListItem";
 import Text from "./style/Text";
 import PostScrollerFooter from "./PostScrollerFooter";
+import SnooContext from "../context/SnooContext";
 
 type Props = {
   header: any;
@@ -25,6 +26,8 @@ const PostScroller: React.FC<Props> = (props) => {
   const { listing, setListing, getPosts, subreddit } = useContext(
     SubmissionListingContext,
   );
+
+  const { user } = useContext(SnooContext);
 
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,7 +76,7 @@ const PostScroller: React.FC<Props> = (props) => {
   const refreshPosts = useCallback(() => {
     setRefreshing(true);
     getPosts().then(() => setRefreshing(false));
-  }, [subreddit]);
+  }, [subreddit, user]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
