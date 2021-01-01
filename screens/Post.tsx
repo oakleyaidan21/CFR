@@ -46,12 +46,16 @@ const Post: React.FC<Props> = (props) => {
 
   const renderPostHeader = useCallback(() => {
     return (
-      <View style={{ marginTop: 50, backgroundColor: "black" }}>
-        <PostHeader
-          data={data}
-          navigation={props.navigation}
-          postHeight={postHeight}
-        />
+      <View>
+        {/* padding view to make translucent header look more natural */}
+        <View style={{ height: 50, width: "100%", backgroundColor: "black" }} />
+        <View style={{ backgroundColor: "black" }}>
+          <PostHeader
+            data={data}
+            navigation={props.navigation}
+            postHeight={postHeight}
+          />
+        </View>
       </View>
     );
   }, [data.score, data.id]);

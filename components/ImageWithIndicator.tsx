@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Dimensions, Animated } from "react-native";
+import { StyleSheet, View, Dimensions, Animated, Easing } from "react-native";
 import FastImage from "react-native-fast-image";
 
 type Props = {

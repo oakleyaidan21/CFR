@@ -4,6 +4,7 @@ import { View, Animated, StyleSheet } from "react-native";
 type Props = {
   show: Boolean;
   style?: any;
+  delay?: number;
 };
 
 const Fade: React.FC<Props> = (props) => {
@@ -13,6 +14,7 @@ const Fade: React.FC<Props> = (props) => {
     Animated.timing(fadeAnimation, {
       toValue: props.show ? 1 : 0,
       duration: 200,
+      delay: props.delay ? props.delay : 0,
       useNativeDriver: true,
     }).start();
   }, [props.show]);

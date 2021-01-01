@@ -135,8 +135,11 @@ const PostHeader: React.FC<Props> = (props) => {
       return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
 
     const isGallery = data.is_gallery;
-    const isImgurGallery = matches[4]
-      ? matches[4].substring(0, 3) == "/a/"
+    const isImgur = data.domain === "imgur.com";
+    const isImgurGallery = isImgur
+      ? matches[4]
+        ? matches[4].substring(0, 3) == "/a/"
+        : false
       : false;
 
     const threeExt = matches[4]
