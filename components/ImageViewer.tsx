@@ -1,6 +1,12 @@
 import React from "react";
 import { View, Vibration, Alert } from "react-native";
 import ImageView from "react-native-image-viewing";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 type Props = {
   visible: boolean;
@@ -14,7 +20,7 @@ const ImageViewer: React.FC<Props> = (props) => {
   };
 
   const onLongPress = () => {
-    Vibration.vibrate();
+    ReactNativeHapticFeedback.trigger("impactLight", options);
     Alert.alert("Download Image", "Would you like to download this image?", [
       { text: "Cancel", style: "cancel" },
       { text: "Download", onPress: download },

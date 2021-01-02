@@ -12,6 +12,8 @@ target 'CFR' do
 
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
+  pod 'RNReactNativeHapticFeedback', :path => '../node_modules/react-native-haptic-feedback'
+
   target 'CFRTests' do
     inherit! :complete
     # Pods for testing
