@@ -63,7 +63,7 @@ const Login: React.FC<Props> = (props) => {
             const code = newNavState.url.slice(start_i + 5);
             dispatch({ type: "SET_REFRESH_TOKEN", refreshToken: null });
             dispatch({ type: "SET_AUTH_CODE", authCode: code });
-            props.navigation.goBack();
+            props.navigation.navigate("Home");
           }
         }}
         renderError={() => <ActivityIndicator />}

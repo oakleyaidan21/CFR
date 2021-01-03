@@ -3,10 +3,8 @@ import {
   View,
   FlatList,
   ActivityIndicator,
-  StyleSheet,
   RefreshControl,
 } from "react-native";
-import { Icon } from "react-native-elements";
 import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
@@ -74,14 +72,16 @@ const Post: React.FC<Props> = (props) => {
   }, [comments]);
 
   const renderItem = useCallback(
-    ({ item }) => {
+    ({ item, index }) => {
       return (
-        <CommentThread
-          data={item}
-          level={0}
-          op={data.author}
-          onLinkPress={openInWeb}
-        />
+        <View style={{ marginTop: index === 0 ? 5 : 0 }}>
+          <CommentThread
+            data={item}
+            level={0}
+            op={data.author}
+            onLinkPress={openInWeb}
+          />
+        </View>
       );
     },
     [gettingPostInfo],

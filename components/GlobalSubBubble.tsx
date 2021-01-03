@@ -27,7 +27,10 @@ const GlobalSubBubble: React.FC<Props> = (props) => {
   };
 
   return (
-    <TouchableOpacity style={s.container} onPress={props.onPress}>
+    <TouchableOpacity
+      style={s.container}
+      onPress={props.onPress}
+      disabled={!props.onPress}>
       <View
         style={[
           s.icon,

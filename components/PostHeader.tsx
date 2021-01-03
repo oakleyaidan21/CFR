@@ -21,6 +21,7 @@ import Flair from "./style/Flair";
 import VideoPlayer from "./VideoPlayer";
 import PostListItem from "./PostListItem";
 import ImgurAlbumViewer from "./ImgurAlbumViewer";
+import Score from "./Score";
 
 type Props = {
   data: Submission;
@@ -272,33 +273,7 @@ const PostHeader: React.FC<Props> = (props) => {
       <View>
         <View style={s.postControl}>
           {/* SCORE CONTROL */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}>
-            <Icon
-              name="forward"
-              color="grey"
-              size={20}
-              style={{ transform: [{ rotate: "270deg" }] }}
-            />
-            <Text
-              style={{
-                color: "grey",
-                fontWeight: "bold",
-                marginHorizontal: 10,
-              }}>
-              {data.score}
-            </Text>
-            <Icon
-              name="forward"
-              color="grey"
-              size={20}
-              style={{ transform: [{ rotate: "90deg" }] }}
-            />
-          </View>
+          <Score data={data} iconSize={20} />
           <Spin spinning={saving}>
             <TouchableNativeFeedback onPress={savePost} disabled={saving}>
               <View>

@@ -11,22 +11,17 @@ import { Icon } from "react-native-elements";
 import Fade from "./animations/Fade";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
+const anonSubs = ["Front Page", "Popular", "All"];
 
 type Props = {
   navigation: any;
 };
 
 const HomeHeader: React.FC<Props> = (props) => {
-  const { userSubs } = useContext(SnooContext);
-  const {
-    setListing,
-    subreddit,
-    setSubreddit,
-    category,
-    timeframe,
-    setCategory,
-    setTimeframe,
-  } = useContext(SubmissionListingContext);
+  const { userSubs, user } = useContext(SnooContext);
+  const { subreddit, setSubreddit, category } = useContext(
+    SubmissionListingContext,
+  );
 
   const [showSubs, setShowSubs] = useState(false);
 
@@ -81,20 +76,26 @@ const HomeHeader: React.FC<Props> = (props) => {
   );
 
   const renderFooter = useCallback(() => {
-    return (
-      <TouchableOpacity
-        style={{
-          backgroundColor: "rgba(0,0,0,0.8)",
-          width: 50,
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onPress={() => setShowSubs(!showSubs)}>
-        <Icon name={showSubs ? "close" : "more-horiz"} color="grey" />
-      </TouchableOpacity>
+    return userSubs.length > 0 ? null : (
+      <View style={s.footerContainer}>
+        {user ? (
+          <Text style={{ color: "grey" }}>
+            Your subscribed subreddits go here. Subscribe to some!
+          </Text>
+        ) : (
+          <View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+              onPress={() => props.navigation.navigate("Login")}>
+              <Text style={{ fontWeight: "bold", color: "#00af64" }}>
+                Log in{" "}
+              </Text>
+            </TouchableOpacity>
+            <Text style={{ color: "grey" }}>to view your subscriptions!</Text>
+          </View>
+        )}
+      </View>
     );
-  }, [showSubs]);
+  }, [user, userSubs]);
 
   const renderSubHeader = useCallback(() => {
     return (
@@ -109,7 +110,7 @@ const HomeHeader: React.FC<Props> = (props) => {
 
   const sections = [
     {
-      data: globalSubs,
+      data: user ? globalSubs : anonSubs,
       renderItem: ({ item, index }: any) => renderGlobalSub(item, index, 40),
       keyExtractor: (item: string) => item,
     },
@@ -134,11 +135,11 @@ const HomeHeader: React.FC<Props> = (props) => {
             }}
             showsHorizontalScrollIndicator={false}
             sections={sections as any}
+            ListFooterComponent={renderFooter}
           />
         ) : (
           <View style={{ flex: 1 }}>{renderSubHeader()}</View>
         )}
-        {/* {renderFooter()} */}
       </View>
     </View>
   );
@@ -157,6 +158,12 @@ const s = StyleSheet.create({
     marginTop: 10,
     backgroundColor: "#00af64",
     borderRadius: 2,
+  },
+  footerContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: "90%",
+    marginRight: 10,
   },
 });
 

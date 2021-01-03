@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
+import Score from "./Score";
 import Flair from "./style/Flair";
 
 type Props = {
@@ -70,26 +71,13 @@ const PostListItem: React.FC<Props> = (props) => {
       </View>
       {/* BOTTOM BAR */}
       <View style={[s.row, { justifyContent: "space-between" }]}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon name="swap-vertical-circle" color="grey" size={15} />
-          {/* SCORE */}
-          <Text style={{ color: "grey", marginLeft: 5 }}>
-            {data.score > 9999
-              ? (data.score / 1000).toPrecision(3) + "k"
-              : data.score}
-          </Text>
-        </View>
+        <Score data={data} iconSize={20} />
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Icon name="comment" color="grey" size={15} />
           {/* COMMENTS */}
           <Text style={{ color: "grey", marginLeft: 5 }}>
             {data.num_comments}
           </Text>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon name="comment" color="grey" size={15} />
-          {/* COMMENTS */}
-          <Text style={{ color: "grey", marginLeft: 5 }}></Text>
         </View>
       </View>
     </TouchableOpacity>
