@@ -1,14 +1,15 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import {
   View,
   FlatList,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { Comment, Listing, Submission } from "snoowrap";
+import { Comment, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
+import SnooContext from "../context/SnooContext";
 
 type Props = {
   navigation: any;
@@ -16,6 +17,8 @@ type Props = {
 };
 
 const Post: React.FC<Props> = (props) => {
+  const { snoowrap } = useContext(SnooContext);
+
   const [data, setData] = useState<Submission>(props.route.params.data);
   const [comments, setComments] = useState<Array<Comment> | null>(null);
   const [postHeight, setPostHeight] = useState(0);
@@ -26,15 +29,19 @@ const Post: React.FC<Props> = (props) => {
   }, []);
 
   const getComments = () => {
-    if (data.comments) {
-      return (data as any).comments
-        .fetchMore({ amount: 10, append: true })
-        .then((c: Listing<Comment>) => {
-          setComments(c);
+    if (snoowrap) {
+      snoowrap
+        .oauthRequest({
+          uri: "/r/" + data.subreddit.display_name + "/comments/" + data.id,
+          qs: { sort: "top" },
+        })
+        .then((d: any) => {
+          setComments(d.comments);
           setGettingPostInfo(false);
           return true;
         });
     }
+
     return false;
   };
 
@@ -114,6 +121,7 @@ const Post: React.FC<Props> = (props) => {
         renderItem={renderItem}
         ListHeaderComponent={renderPostHeader}
         keyExtractor={(item) => item.id}
+        initialNumToRender={10}
         refreshControl={
           <RefreshControl
             refreshing={gettingPostInfo}

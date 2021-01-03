@@ -1,7 +1,11 @@
 import React, { useCallback, useState, memo } from "react";
-import { TouchableWithoutFeedback, View, Text, StyleSheet } from "react-native";
-import { Icon } from "react-native-elements";
-import FastImage from "react-native-fast-image";
+import {
+  TouchableWithoutFeedback,
+  View,
+  Text,
+  StyleSheet,
+  LayoutAnimation,
+} from "react-native";
 import { Comment, RedditUser } from "snoowrap";
 import { getTimeSincePosted } from "../util/util";
 import MDRenderer from "./MDRenderer";
@@ -19,6 +23,11 @@ const CommentThread: React.FC<Props> = (props) => {
 
   const [showReplies, setShowReplies] = useState(false);
 
+  const animateReplies = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowReplies(!showReplies);
+  };
+
   const renderReply = useCallback((comment: Comment) => {
     return (
       <CommentThread
@@ -31,19 +40,15 @@ const CommentThread: React.FC<Props> = (props) => {
     );
   }, []);
 
-  console.log("a:", data.author);
-
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        setShowReplies(!showReplies);
-        console.log(data.body_html);
-      }}>
+    <TouchableWithoutFeedback onPress={animateReplies}>
       <View
         style={{
           margin: level === 0 ? 5 : 0,
           marginTop: 0,
           borderRadius: 3,
+          borderTopLeftRadius: level === 0 ? 3 : 0,
+          borderBottomLeftRadius: level === 0 ? 3 : 0,
           paddingLeft: 10,
           borderLeftWidth: level > 0 ? 2 : 0,
           borderColor: "rgb(50,50,50)",
@@ -63,11 +68,9 @@ const CommentThread: React.FC<Props> = (props) => {
                 flexDirection: "row",
                 alignItems: "center",
               }}>
-              <FastImage
-                source={{ uri: data.author.icon_img }}
-                style={s.userIconImg}
-              />
-              <Text style={{ color: "grey" }}>{data.author.name}</Text>
+              <Text style={{ color: "grey", fontWeight: "bold" }}>
+                {data.author.name}
+              </Text>
             </View>
             <Text style={{ color: "grey" }}>
               {getTimeSincePosted(data.created_utc)}
