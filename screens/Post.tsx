@@ -5,11 +5,12 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { Comment, Submission } from "snoowrap";
+import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
 import SnooContext from "../context/SnooContext";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = {
   navigation: any;
@@ -20,28 +21,25 @@ const Post: React.FC<Props> = (props) => {
   const { snoowrap } = useContext(SnooContext);
 
   const [data, setData] = useState<Submission>(props.route.params.data);
-  const [comments, setComments] = useState<Array<Comment> | null>(null);
-  const [postHeight, setPostHeight] = useState(0);
+  const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
+  const [fetchingComments, setFetchingComments] = useState(false);
 
   useEffect(() => {
     getComments();
   }, []);
 
   const getComments = () => {
-    if (snoowrap) {
-      snoowrap
-        .oauthRequest({
-          uri: "/r/" + data.subreddit.display_name + "/comments/" + data.id,
-          qs: { sort: "top" },
-        })
-        .then((d: any) => {
-          setComments(d.comments);
-          setGettingPostInfo(false);
-          return true;
-        });
-    }
-
+    setFetchingComments(true);
+    const commentList = comments ? comments : data.comments;
+    (commentList as any)
+      .fetchMore({ amount: 10, append: true })
+      .then((c: Listing<Comment>) => {
+        setComments(c);
+        setGettingPostInfo(false);
+        setFetchingComments(false);
+        return true;
+      });
     return false;
   };
 
@@ -55,11 +53,7 @@ const Post: React.FC<Props> = (props) => {
         {/* padding view to make translucent header look more natural */}
         <View style={{ height: 50, width: "100%", backgroundColor: "black" }} />
         <View style={{ backgroundColor: "black" }}>
-          <PostHeader
-            data={data}
-            navigation={props.navigation}
-            postHeight={postHeight}
-          />
+          <PostHeader data={data} navigation={props.navigation} />
         </View>
       </View>
     );
@@ -94,10 +88,6 @@ const Post: React.FC<Props> = (props) => {
     [gettingPostInfo],
   );
 
-  const onLayout = useCallback(({ nativeEvent }) => {
-    setPostHeight(nativeEvent.layout.height);
-  }, []);
-
   const onRefresh = useCallback(() => {
     setGettingPostInfo(true);
     data.fetch().then((r) => {
@@ -106,13 +96,32 @@ const Post: React.FC<Props> = (props) => {
     });
   }, []);
 
+  const renderFooter = useCallback(() => {
+    return comments && !comments.isFinished ? (
+      <View
+        style={{
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          height: 50,
+        }}>
+        <TouchableOpacity onPress={getComments} disabled={fetchingComments}>
+          {fetchingComments ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text>Get more comments?</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    ) : null;
+  }, [comments, fetchingComments]);
+
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: "rgb(20,20,20)",
-      }}
-      onLayout={onLayout}>
+      }}>
       {/* POST & COMMENTS */}
       <FlatList
         style={{ flex: 1 }}
@@ -121,7 +130,6 @@ const Post: React.FC<Props> = (props) => {
         renderItem={renderItem}
         ListHeaderComponent={renderPostHeader}
         keyExtractor={(item) => item.id}
-        initialNumToRender={10}
         refreshControl={
           <RefreshControl
             refreshing={gettingPostInfo}
@@ -131,6 +139,7 @@ const Post: React.FC<Props> = (props) => {
             colors={["white", "#00af64"]}
           />
         }
+        ListFooterComponent={renderFooter}
       />
     </View>
   );

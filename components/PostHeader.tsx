@@ -26,7 +26,6 @@ import Score from "./Score";
 type Props = {
   data: Submission;
   navigation: any;
-  postHeight: number;
 };
 
 function getUriImage(uri: string) {
