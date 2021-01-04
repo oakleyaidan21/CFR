@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { RedditContent } from "snoowrap";
+import { RedditContent, Submission } from "snoowrap";
 
 export function useDidUpdateEffect(fn: any, inputs: any) {
   const didMountRef = useRef(false);
@@ -49,4 +49,54 @@ export const getUriImage = (uri: string) => {
     uri.includes(".")
     ? uri
     : "";
+};
+
+export const determinePostType = (data: Submission) => {
+  if (data.is_self) {
+    return { code: "SLF" };
+  }
+  if (data.crosspost_parent_list) {
+    return { code: "XPT", xpst: data.crosspost_parent_list[0] };
+  }
+  const matches = data.url.match(
+    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/,
+  );
+  if (!matches) {
+    return { code: "IDK" };
+  }
+  const isGallery = data.is_gallery;
+  const isImgur = data.domain === "imgur.com";
+  const isImgurGallery = isImgur
+    ? matches[4]
+      ? matches[4].substring(0, 3) == "/a/"
+      : false
+    : false;
+
+  const threeExt = matches[4]
+    ? matches[4].substring(matches[4].length - 4, matches[4].length)
+    : false;
+  const fourExt = matches[4]
+    ? matches[4].substring(matches[4].length - 5, matches[4].length)
+    : false;
+  if (threeExt === ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
+    return { code: "IMG" };
+  }
+
+  if (threeExt == ".gif") {
+    return { code: "GIF" };
+  }
+
+  if (fourExt == ".gifv" || matches[2] == ".redd") {
+    return { code: "VID", fourExt: fourExt };
+  }
+
+  if (isGallery) {
+    return { code: "GAL" };
+  }
+
+  if (isImgurGallery) {
+    return { code: "IGL", hash: matches[4] ? matches[4].substring(3) : "" };
+  }
+
+  return { code: "WEB" };
 };

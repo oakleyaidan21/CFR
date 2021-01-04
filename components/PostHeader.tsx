@@ -11,7 +11,11 @@ import {
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { RedditContent, Submission } from "snoowrap";
-import { getTimeSincePosted, getUriImage } from "../util/util";
+import {
+  determinePostType,
+  getTimeSincePosted,
+  getUriImage,
+} from "../util/util";
 import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
 import ImageWithIndicator from "./ImageWithIndicator";
@@ -28,9 +32,8 @@ import Sub from "../screens/Subreddit";
 type Props = {
   data: Submission;
   navigation: any;
+  showPlaceholder?: boolean;
 };
-
-const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/;
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -92,108 +95,83 @@ const PostHeader: React.FC<Props> = (props) => {
   }, []);
 
   const renderContent = useCallback(() => {
-    const matches = data.url.match(postRegex);
-
-    // SELF POST
-    if (isSelf) {
-      return data.selftext_html ? (
-        <MDRenderer
-          data={data.selftext_html as string}
-          onLinkPress={openInWeb}
-        />
-      ) : null;
-    }
-
-    const crosspost = data.crosspost_parent_list;
-    // CROSSPOST
-    if (crosspost) {
-      return (
-        <CrossPostItem data={crosspost[0]} navigation={props.navigation} />
-      );
-    }
-
-    if (!matches)
-      return <Text style={{ color: "white" }}>unknown regex {data.url}</Text>;
-
-    const isGallery = data.is_gallery;
-    const isImgur = data.domain === "imgur.com";
-    const isImgurGallery = isImgur
-      ? matches[4]
-        ? matches[4].substring(0, 3) == "/a/"
-        : false
-      : false;
-
-    const threeExt = matches[4]
-      ? matches[4].substring(matches[4].length - 4, matches[4].length)
-      : false;
-    const fourExt = matches[4]
-      ? matches[4].substring(matches[4].length - 5, matches[4].length)
-      : false;
-
-    // IMAGE
-    if (threeExt == ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
-      return (
-        <>
-          <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
-            <ImageWithIndicator
-              source={{ uri: data.url }}
-              style={{ width: "100%", height: contentHeight }}
-              resizeMode={FastImage.resizeMode.contain}
+    const postType = determinePostType(data);
+    switch (postType.code) {
+      case "SLF":
+        return data.selftext_html ? (
+          <MDRenderer
+            data={data.selftext_html as string}
+            onLinkPress={openInWeb}
+          />
+        ) : null;
+      case "XPT":
+        return (
+          <CrossPostItem data={postType.xpst} navigation={props.navigation} />
+        );
+      case "IDK":
+        return false;
+      case "IMG":
+        return props.showPlaceholder ? (
+          <View style={{ height: contentHeight }} />
+        ) : (
+          <>
+            <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
+              <ImageWithIndicator
+                source={{ uri: data.url }}
+                style={{ width: "100%", height: contentHeight }}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </TouchableWithoutFeedback>
+            <ImageViewer
+              visible={showImageViewer}
+              images={[{ uri: data.url }]}
+              close={() => setShowImageViewer(false)}
             />
-          </TouchableWithoutFeedback>
-          <ImageViewer
-            visible={showImageViewer}
-            images={[{ uri: data.url }]}
-            close={() => setShowImageViewer(false)}
+          </>
+        );
+      case "GIF":
+        return props.showPlaceholder ? (
+          <View style={{ height: contentHeight }} />
+        ) : (
+          <ImageWithIndicator
+            source={{ uri: data.url }}
+            style={{ width: "100%", height: contentHeight }}
+            resizeMode={FastImage.resizeMode.contain}
           />
-        </>
-      );
+        );
+      case "VID":
+        return props.showPlaceholder ? (
+          <View style={{ height: contentHeight }} />
+        ) : (
+          <View style={{ width: "100%", height: contentHeight }}>
+            <VideoPlayer
+              source={
+                postType.fourExt == ".gifv"
+                  ? data.url.substring(0, data.url.length - 4) + "mp4"
+                  : (data.media?.reddit_video?.hls_url as string)
+              }
+            />
+          </View>
+        );
+      case "GAL":
+        return props.showPlaceholder ? (
+          <View style={{ height: contentHeight }} />
+        ) : (
+          <View style={{ width: "100%", height: contentHeight }}>
+            <GalleryViewer images={mapRedditGalleryImages()} />
+          </View>
+        );
+      case "IGL":
+        return props.showPlaceholder ? (
+          <View style={{ height: contentHeight }} />
+        ) : (
+          <View style={{ width: "100%", height: contentHeight }}>
+            <ImgurAlbumViewer imgurHash={postType.hash} />
+          </View>
+        );
+      default:
+        return false;
     }
-
-    // GIF
-    if (threeExt == ".gif") {
-      return (
-        <ImageWithIndicator
-          source={{ uri: data.url }}
-          style={{ width: "100%", height: contentHeight }}
-          resizeMode={FastImage.resizeMode.contain}
-        />
-      );
-    }
-    // VIDEO
-    if (fourExt == ".gifv" || matches[2] === ".redd") {
-      return (
-        <View style={{ width: "100%", height: contentHeight }}>
-          <VideoPlayer
-            source={
-              fourExt == ".gifv"
-                ? data.url.substring(0, data.url.length - 4) + "mp4"
-                : (data.media?.reddit_video?.hls_url as string)
-            }
-          />
-        </View>
-      );
-    }
-
-    // REDDIT GALLERY
-    if (isGallery) {
-      return (
-        <View style={{ width: "100%", height: contentHeight }}>
-          <GalleryViewer images={mapRedditGalleryImages()} />
-        </View>
-      );
-    }
-
-    // IMGUR GALLERY
-    if (isImgurGallery) {
-      return (
-        <View style={{ width: "100%", height: contentHeight }}>
-          <ImgurAlbumViewer imgurHash={matches[4].substring(3)} />
-        </View>
-      );
-    }
-    // return <Text style={{ color: "white" }}>Impl! {data.url}</Text>;
-    return false;
   }, [showContent, showImageViewer]);
 
   const content = renderContent();

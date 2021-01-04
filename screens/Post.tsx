@@ -4,6 +4,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  InteractionManager,
 } from "react-native";
 import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
@@ -18,15 +19,18 @@ type Props = {
 };
 
 const Post: React.FC<Props> = (props) => {
-  const { snoowrap } = useContext(SnooContext);
-
   const [data, setData] = useState<Submission>(props.route.params.data);
   const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
   const [fetchingComments, setFetchingComments] = useState(false);
+  const [transitionOver, setTransitionOver] = useState(false);
 
   useEffect(() => {
-    getComments();
+    InteractionManager.runAfterInteractions(() => {
+      getComments();
+      setTransitionOver(true);
+      console.log("OVER!");
+    });
   }, []);
 
   const getComments = () => {
@@ -53,11 +57,15 @@ const Post: React.FC<Props> = (props) => {
         {/* padding view to make translucent header look more natural */}
         <View style={{ height: 50, width: "100%", backgroundColor: "black" }} />
         <View style={{ backgroundColor: "black" }}>
-          <PostHeader data={data} navigation={props.navigation} />
+          <PostHeader
+            data={data}
+            navigation={props.navigation}
+            showPlaceholder={!transitionOver}
+          />
         </View>
       </View>
     );
-  }, [data.score, data.id]);
+  }, [data.score, data.id, transitionOver]);
 
   const renderListEmtpy = useCallback(() => {
     return (

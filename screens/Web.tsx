@@ -8,6 +8,7 @@ import {
   Easing,
   StyleSheet,
   ActivityIndicator,
+  InteractionManager,
 } from "react-native";
 import Text from "../components/style/Text";
 import { WebView } from "react-native-webview";
@@ -24,6 +25,13 @@ const Web: React.FC<Props> = (props) => {
   const webRef = useRef<WebView>(null);
   const [loading, setLoading] = useState(true);
   const [currUrl, setCurrUrl] = useState(props.route.params.url);
+  const [showWeb, setShowWeb] = useState(false);
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setShowWeb(true);
+    });
+  });
 
   const onNavigationStateChange = useCallback((navState) => {
     if (currUrl !== navState.url) {
@@ -83,15 +91,17 @@ const Web: React.FC<Props> = (props) => {
         />
       </View>
 
-      <WebView
-        javaScriptCanOpenWindowsAutomatically={false}
-        style={{ flex: 1, opacity: 0.99 }} // Opacity set to 0.99 to fix completely random bug: https://github.com/react-native-webview/react-native-webview/issues/811
-        onNavigationStateChange={onNavigationStateChange}
-        source={{ uri: props.route.params.url }}
-        ref={webRef}
-        onLoadStart={onLoadStart}
-        onLoadEnd={onLoadEnd}
-      />
+      {showWeb && (
+        <WebView
+          javaScriptCanOpenWindowsAutomatically={false}
+          style={{ flex: 1, opacity: 0.99 }} // Opacity set to 0.99 to fix completely random bug: https://github.com/react-native-webview/react-native-webview/issues/811
+          onNavigationStateChange={onNavigationStateChange}
+          source={{ uri: props.route.params.url }}
+          ref={webRef}
+          onLoadStart={onLoadStart}
+          onLoadEnd={onLoadEnd}
+        />
+      )}
     </View>
   );
 };

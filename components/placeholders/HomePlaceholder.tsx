@@ -33,7 +33,7 @@ const s = StyleSheet.create({
   },
   block: {
     width: "100%",
-    height: 150,
+    height: 160,
     marginBottom: 10,
     borderRadius: 3,
   },
