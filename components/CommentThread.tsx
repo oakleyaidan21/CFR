@@ -90,14 +90,14 @@ const CommentThread: React.FC<Props> = (props) => {
               justifyContent: "space-between",
               alignItems: "center",
             }}>
-            {data.replies.length > 0 && (
-              <Text style={{ color: "grey" }}>
-                {data.replies.length == 1
-                  ? "1 reply"
-                  : data.replies.length + " replies"}
-              </Text>
-            )}
             <Score data={data} iconSize={20} />
+            <Text style={{ color: "grey" }}>
+              {data.replies.length == 1
+                ? "1 reply"
+                : data.replies.length == 0
+                ? ""
+                : data.replies.length + " replies"}
+            </Text>
           </View>
         </View>
         {/* REPLIES */}

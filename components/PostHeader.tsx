@@ -39,12 +39,10 @@ type Props = {
 const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
-  const { snoowrap } = useContext(SnooContext);
   const [showContent, setShowContent] = useState(true);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(props.data.saved);
-  const [headerHeight, setHeaderHeight] = useState(0);
   const { data } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
@@ -72,10 +70,6 @@ const PostHeader: React.FC<Props> = (props) => {
         });
   }, [saving, isSaved]);
 
-  const onHeaderLayout = useCallback(({ nativeEvent }) => {
-    setHeaderHeight(nativeEvent.layout.height);
-  }, []);
-
   const openLink = useCallback(
     (url) => {
       // check if it's a reddit post
@@ -93,12 +87,7 @@ const PostHeader: React.FC<Props> = (props) => {
             break;
         }
         if (id !== "") {
-          snoowrap
-            ?.getSubmission(id)
-            .fetch()
-            .then((s) => {
-              props.navigation.navigate("Post", { data: s });
-            });
+          props.navigation.navigate("LoadPost", { id: id });
         } else {
           props.navigation.navigate("Web", { url: url });
         }
@@ -208,7 +197,7 @@ const PostHeader: React.FC<Props> = (props) => {
   return (
     <View style={s.container}>
       {/* POST INFO */}
-      <View onLayout={onHeaderLayout}>
+      <View>
         <View style={s.row}>
           <Text style={{ color: "grey" }}>
             <Text>{subreddit.display_name}</Text>

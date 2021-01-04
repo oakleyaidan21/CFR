@@ -19,7 +19,6 @@ type Props = {
 };
 
 const Post: React.FC<Props> = (props) => {
-  const { snoowrap } = useContext(SnooContext);
   const [data, setData] = useState<Submission>(props.route.params.data);
   const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
@@ -30,7 +29,6 @@ const Post: React.FC<Props> = (props) => {
     InteractionManager.runAfterInteractions(() => {
       getComments();
       setTransitionOver(true);
-      console.log("OVER!");
     });
   }, []);
 
@@ -51,7 +49,7 @@ const Post: React.FC<Props> = (props) => {
   const openLink = useCallback((url) => {
     // check if it's a reddit post
     const tokens = url.split("/");
-    let id = "";
+    let id = null;
     switch (tokens[2]) {
       case "redd.it":
         id = tokens[3];
@@ -62,13 +60,8 @@ const Post: React.FC<Props> = (props) => {
       default:
         break;
     }
-    if (id !== "") {
-      snoowrap
-        ?.getSubmission(id)
-        .fetch()
-        .then((s) => {
-          props.navigation.navigate("Post", { data: s });
-        });
+    if (id) {
+      props.navigation.navigate("LoadPost", { id: id });
     } else {
       props.navigation.navigate("Web", { url: url });
     }

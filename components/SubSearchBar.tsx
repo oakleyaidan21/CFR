@@ -82,12 +82,13 @@ const SubSearchBar: React.FC<Props> = (props) => {
             style={{
               alignItems: "center",
               justifyContent: "center",
-              marginHorizontal: 5,
+
+              width: 50,
             }}>
             {searching ? (
-              <ActivityIndicator color="white" />
+              <ActivityIndicator color="grey" />
             ) : (
-              <Icon name="search" color="white" />
+              <Icon name="search" color="grey" />
             )}
           </View>
           <TextInput
@@ -101,7 +102,7 @@ const SubSearchBar: React.FC<Props> = (props) => {
             onSubmitEditing={searchForPosts}
           />
           <TouchableOpacity onPress={close}>
-            <Icon name="close" color="white" style={{ marginHorizontal: 5 }} />
+            <Icon name="close" color="grey" style={{ width: 50 }} />
           </TouchableOpacity>
         </Fade>
       )}
@@ -116,7 +117,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderRadius: 3,
-    borderColor: "white",
+    borderColor: "grey",
     height: 50,
   },
 });
