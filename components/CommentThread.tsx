@@ -63,15 +63,19 @@ const CommentThread: React.FC<Props> = (props) => {
               alignItems: "center",
               justifyContent: "space-between",
             }}>
-            <View
+            <Text
               style={{
-                flexDirection: "row",
-                alignItems: "center",
+                color:
+                  data.distinguished == "moderator"
+                    ? "lightgreen"
+                    : data.author.name == op.name
+                    ? "lightblue"
+                    : "grey",
+                fontWeight: "bold",
               }}>
-              <Text style={{ color: "grey", fontWeight: "bold" }}>
-                {data.author.name}
-              </Text>
-            </View>
+              {data.author.name}
+            </Text>
+
             <Text style={{ color: "grey" }}>
               {getTimeSincePosted(data.created_utc)}
             </Text>
