@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { Submission } from "snoowrap";
-import { getTimeSincePosted } from "../util/util";
+import { RedditContent, Submission } from "snoowrap";
+import { getTimeSincePosted, getUriImage } from "../util/util";
 import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
 import ImageWithIndicator from "./ImageWithIndicator";
@@ -22,20 +22,13 @@ import VideoPlayer from "./VideoPlayer";
 import PostListItem from "./PostListItem";
 import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
+import CrossPostItem from "./CrossPostItem";
+import Sub from "../screens/Subreddit";
 
 type Props = {
   data: Submission;
   navigation: any;
 };
-
-function getUriImage(uri: string) {
-  return uri !== null &&
-    uri !== undefined &&
-    uri.includes("/") &&
-    uri.includes(".")
-    ? uri
-    : "";
-}
 
 const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/;
 
@@ -115,19 +108,7 @@ const PostHeader: React.FC<Props> = (props) => {
     // CROSSPOST
     if (crosspost) {
       return (
-        <View
-          style={{
-            backgroundColor: "rgb(30,30,30)",
-            borderRadius: 3,
-          }}>
-          <PostListItem
-            index={0}
-            onPress={() =>
-              props.navigation.navigate("Post", { data: crosspost[0] })
-            }
-            data={crosspost[0]}
-          />
-        </View>
+        <CrossPostItem data={crosspost[0]} navigation={props.navigation} />
       );
     }
 

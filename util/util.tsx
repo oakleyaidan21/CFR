@@ -41,3 +41,12 @@ export const getTimeSincePosted = (utc: number) => {
   }
   return time + "" + timeType;
 };
+
+export const getUriImage = (uri: string) => {
+  return uri !== null &&
+    uri !== undefined &&
+    uri.includes("/") &&
+    uri.includes(".")
+    ? uri
+    : "";
+};
