@@ -71,6 +71,18 @@ const PostScroller: React.FC<Props> = (props) => {
     }
   }, [listing]);
 
+  const onEndReached = useCallback(() => {
+    if (listing) {
+      setFetchingMore(true);
+      (listing as any)
+        .fetchMore({ amount: 25, append: true })
+        .then((result: any) => {
+          setListing(result);
+          setFetchingMore(false);
+        });
+    }
+  }, [listing]);
+
   const refreshPosts = () => {
     setRefreshing(true);
     getPosts().then(() => setRefreshing(false));
@@ -87,23 +99,13 @@ const PostScroller: React.FC<Props> = (props) => {
         keyExtractor={(item, index) => item.id + index.toString()}
         getItemLayout={(data, index) => {
           return {
-            length: 160,
-            offset: 160 * index,
+            length: 170,
+            offset: 170 * index,
             index,
           };
         }}
         ListEmptyComponent={renderListEmtpy}
-        onEndReached={() => {
-          if (listing) {
-            setFetchingMore(true);
-            (listing as any)
-              .fetchMore({ amount: 25, append: true })
-              .then((result: any) => {
-                setListing(result);
-                setFetchingMore(false);
-              });
-          }
-        }}
+        onEndReached={onEndReached}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

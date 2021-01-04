@@ -1,9 +1,9 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
-import { getTimeSincePosted } from "../util/util";
+import { getTimeSincePosted, getUriImage } from "../util/util";
 import Score from "./Score";
 import Flair from "./style/Flair";
 
@@ -12,15 +12,6 @@ type Props = {
   onPress: any;
   index: number;
 };
-
-function getUriImage(uri: string) {
-  return uri !== null &&
-    uri !== undefined &&
-    uri.includes("/") &&
-    uri.includes(".")
-    ? uri
-    : "";
-}
 
 const PostListItem: React.FC<Props> = (props) => {
   const { data, index } = props;
@@ -86,9 +77,12 @@ const PostListItem: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 160,
+    margin: 10,
+    marginBottom: 0,
     paddingHorizontal: 10,
     borderRadius: 3,
+    backgroundColor: "rgb(30,30,30)",
   },
   image: {
     width: 100,
