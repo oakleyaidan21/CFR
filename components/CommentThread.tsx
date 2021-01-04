@@ -80,7 +80,7 @@ const CommentThread: React.FC<Props> = (props) => {
               {getTimeSincePosted(data.created_utc)}
             </Text>
           </View>
-          {/* HERE TO SPACE MDRENDER EVENLY; SEEMS JANK, TRUST ME IT'S NEEDED */}
+          {/* HERE TO SPACE MDRENDER EVENLY. SEEMS JANK, TRUST ME IT'S NEEDED */}
           <Text></Text>
           <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* COMMENT INFO */}
@@ -90,7 +90,6 @@ const CommentThread: React.FC<Props> = (props) => {
               justifyContent: "space-between",
               alignItems: "center",
             }}>
-            <Score data={data} iconSize={20} />
             {data.replies.length > 0 && (
               <Text style={{ color: "grey" }}>
                 {data.replies.length == 1
@@ -98,6 +97,7 @@ const CommentThread: React.FC<Props> = (props) => {
                   : data.replies.length + " replies"}
               </Text>
             )}
+            <Score data={data} iconSize={20} />
           </View>
         </View>
         {/* REPLIES */}

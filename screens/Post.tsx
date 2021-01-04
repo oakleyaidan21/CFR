@@ -19,6 +19,7 @@ type Props = {
 };
 
 const Post: React.FC<Props> = (props) => {
+  const { snoowrap } = useContext(SnooContext);
   const [data, setData] = useState<Submission>(props.route.params.data);
   const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
@@ -47,8 +48,30 @@ const Post: React.FC<Props> = (props) => {
     return false;
   };
 
-  const openInWeb = useCallback((url) => {
-    props.navigation.navigate("Web", { url: url });
+  const openLink = useCallback((url) => {
+    // check if it's a reddit post
+    const tokens = url.split("/");
+    let id = "";
+    switch (tokens[2]) {
+      case "redd.it":
+        id = tokens[3];
+        break;
+      case "www.reddit.com":
+        id = tokens[6];
+        break;
+      default:
+        break;
+    }
+    if (id !== "") {
+      snoowrap
+        ?.getSubmission(id)
+        .fetch()
+        .then((s) => {
+          props.navigation.navigate("Post", { data: s });
+        });
+    } else {
+      props.navigation.navigate("Web", { url: url });
+    }
   }, []);
 
   const renderPostHeader = useCallback(() => {
@@ -88,7 +111,7 @@ const Post: React.FC<Props> = (props) => {
             data={item}
             level={0}
             op={data.author}
-            onLinkPress={openInWeb}
+            onLinkPress={openLink}
           />
         </View>
       );

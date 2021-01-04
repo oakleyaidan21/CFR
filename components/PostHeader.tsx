@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useContext, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -28,6 +28,7 @@ import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
 import CrossPostItem from "./CrossPostItem";
 import Sub from "../screens/Subreddit";
+import SnooContext from "../context/SnooContext";
 
 type Props = {
   data: Submission;
@@ -38,6 +39,7 @@ type Props = {
 const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
+  const { snoowrap } = useContext(SnooContext);
   const [showContent, setShowContent] = useState(true);
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -74,11 +76,38 @@ const PostHeader: React.FC<Props> = (props) => {
     setHeaderHeight(nativeEvent.layout.height);
   }, []);
 
-  const openInWeb = useCallback(
-    (url) =>
-      props.navigation.navigate("Web", {
-        url: typeof url === "string" ? url : data.url,
-      }),
+  const openLink = useCallback(
+    (url) => {
+      // check if it's a reddit post
+      if (typeof url === "string") {
+        const tokens = url.split("/");
+        let id = "";
+        switch (tokens[2]) {
+          case "redd.it":
+            id = tokens[3];
+            break;
+          case "www.reddit.com":
+            id = tokens[6];
+            break;
+          default:
+            break;
+        }
+        if (id !== "") {
+          snoowrap
+            ?.getSubmission(id)
+            .fetch()
+            .then((s) => {
+              props.navigation.navigate("Post", { data: s });
+            });
+        } else {
+          props.navigation.navigate("Web", { url: url });
+        }
+      } else {
+        props.navigation.navigate("Web", {
+          url: typeof url === "string" ? url : data.url,
+        });
+      }
+    },
 
     [],
   );
@@ -101,7 +130,7 @@ const PostHeader: React.FC<Props> = (props) => {
         return data.selftext_html ? (
           <MDRenderer
             data={data.selftext_html as string}
-            onLinkPress={openInWeb}
+            onLinkPress={openLink}
           />
         ) : null;
       case "XPT":
@@ -194,7 +223,7 @@ const PostHeader: React.FC<Props> = (props) => {
         {/* MAIN CONTENT */}
         <View style={{ flexDirection: "row", flex: 1, width: "100%" }}>
           {/* THUMBNAIL */}
-          <TouchableOpacity onPress={openInWeb}>
+          <TouchableOpacity onPress={openLink}>
             <FastImage style={s.image} source={{ uri: imgUrl }} />
           </TouchableOpacity>
           {/* TITLE/FLAIR/POINTS*/}
@@ -203,7 +232,7 @@ const PostHeader: React.FC<Props> = (props) => {
             disabled={isSelf}
             onPress={() => {
               if (!content) {
-                openInWeb(null);
+                openLink(null);
               } else {
                 setShowContent(!showContent);
               }
