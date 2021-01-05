@@ -78,10 +78,10 @@ const CFR: React.FC = () => {
         userSubs: userSubs,
         setUserSubs: setUserSubs,
       }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
-        <StatusBar backgroundColor="black" barStyle="light-content" />
+      <View style={{ flex: 1, backgroundColor: "black" }}>
+        <StatusBar backgroundColor="rgba(0,0,0,0.8" barStyle="light-content" />
         {snoowrap ? <MainNavigator /> : null}
-      </SafeAreaView>
+      </View>
     </SnooContext.Provider>
   );
 };

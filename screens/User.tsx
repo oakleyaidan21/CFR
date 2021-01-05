@@ -13,7 +13,7 @@ const User: React.FC<Props> = (props) => {
   const renderHeader = useCallback(() => {
     return (
       <View style={{ width: "100%" }}>
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 10, height: 50 }}>
           <FastImage
             source={{ uri: userData.icon_img }}
             style={{ width: 60, height: 60, borderRadius: 30 }}
@@ -34,7 +34,7 @@ const User: React.FC<Props> = (props) => {
 
   return (
     <FlatList
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}
       data={[]}
       renderItem={null}
       ListHeaderComponent={renderHeader}

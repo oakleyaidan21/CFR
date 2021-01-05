@@ -25,27 +25,29 @@ const Profile: React.FC<Props> = (props) => {
 
   const renderHeader = useCallback(() => {
     return (
-      <View style={s.header}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          {user && (
-            <FastImage
-              source={{ uri: user?.icon_img }}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                marginRight: 10,
-              }}
-            />
-          )}
-          <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
-            onPress={() => setShowUserDropdown(!showUserDropdown)}>
-            <Text style={{ fontWeight: "bold" }}>
-              {user ? user.name : "No user"}
-            </Text>
-            <Icon name="arrow-drop-down" color="white" />
-          </TouchableOpacity>
+      <View style={s.paddingContainer}>
+        <View style={s.header}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            {user && (
+              <FastImage
+                source={{ uri: user?.icon_img }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  marginRight: 10,
+                }}
+              />
+            )}
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={() => setShowUserDropdown(!showUserDropdown)}>
+              <Text style={{ fontWeight: "bold" }}>
+                {user ? user.name : "No user"}
+              </Text>
+              <Icon name="arrow-drop-down" color="white" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -53,16 +55,7 @@ const Profile: React.FC<Props> = (props) => {
 
   const renderDropdown = useCallback(() => {
     return (
-      <View
-        style={{
-          position: "absolute",
-          top: 80,
-          left: 10,
-          backgroundColor: "rgba(0,0,0,0.8)",
-          padding: 10,
-          minWidth: 200,
-          borderRadius: 3,
-        }}>
+      <View style={s.dropdown}>
         {Object.entries(users).map((u: any) => {
           return u[0] === user?.name ? null : (
             <TouchableOpacity
@@ -109,13 +102,27 @@ const Profile: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   header: {
-    height: 70,
-    backgroundColor: "rgba(0,0,0,0.8)",
+    height: 50,
+
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
+  },
+  dropdown: {
+    position: "absolute",
+    top: 80,
+    left: 10,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    padding: 10,
+    minWidth: 200,
+    borderRadius: 3,
+  },
+  paddingContainer: {
+    height: 100,
+    backgroundColor: "rgba(0,0,0,.8)",
+    justifyContent: "flex-end",
   },
 });
 

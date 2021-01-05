@@ -34,33 +34,35 @@ const TabBar: React.FC<any> = (props) => {
   };
 
   return (
-    <View style={s.container}>
-      <View style={s.iconGroupContainer}>
-        {state.routes.map((route: { name: string }, i: number) => {
-          const focused = index === i;
-          const { name } = route;
+    <View style={s.absoluteContainer}>
+      <View style={s.container}>
+        <View style={s.iconGroupContainer}>
+          {state.routes.map((route: { name: string }, i: number) => {
+            const focused = index === i;
+            const { name } = route;
 
-          return (
-            <TouchableOpacity
-              onLayout={(event) => {
-                let newPositions = positions;
-                newPositions[i] = event.nativeEvent.layout.x;
-                setPositions(newPositions);
-              }}
-              key={name}
-              style={s.tabBarIconContainer}
-              onPress={() => {
-                navigation.navigate(name);
-              }}>
-              <Icon
-                name={iconName(name)}
-                color={focused ? "white" : "grey"}
-                size={30}
-              />
-              {focused && <TempTabBarIndicator />}
-            </TouchableOpacity>
-          );
-        })}
+            return (
+              <TouchableOpacity
+                onLayout={(event) => {
+                  let newPositions = positions;
+                  newPositions[i] = event.nativeEvent.layout.x;
+                  setPositions(newPositions);
+                }}
+                key={name}
+                style={s.tabBarIconContainer}
+                onPress={() => {
+                  navigation.navigate(name);
+                }}>
+                <Icon
+                  name={iconName(name)}
+                  color={focused ? "white" : "grey"}
+                  size={30}
+                />
+                {focused && <TempTabBarIndicator />}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </View>
     </View>
   );
@@ -73,9 +75,13 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
-    backgroundColor: "rgba(0,0,0,0.8)",
+  },
+  absoluteContainer: {
+    height: 70,
     position: "absolute",
     bottom: 0,
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
   },
   iconGroupContainer: {
     width: 350,

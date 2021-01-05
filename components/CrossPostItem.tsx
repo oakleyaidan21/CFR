@@ -17,8 +17,6 @@ type Props = {
 };
 
 const CrossPostItem: React.FC<Props> = (props) => {
-  const [gettingPost, setGettingPost] = useState(false);
-  const { snoowrap } = useContext(SnooContext);
   const { data } = props;
   const imgUrl =
     !getUriImage(data.thumbnail) ||
@@ -30,14 +28,7 @@ const CrossPostItem: React.FC<Props> = (props) => {
       : data.thumbnail;
 
   const getXPost = useCallback(() => {
-    setGettingPost(true);
-    snoowrap
-      ?.getSubmission(data.id)
-      .fetch()
-      .then((d) => {
-        setGettingPost(false);
-        props.navigation.navigate("Post", { data: d });
-      });
+    props.navigation.navigate("LoadPost", { id: data.id });
   }, []);
 
   return (
@@ -51,14 +42,10 @@ const CrossPostItem: React.FC<Props> = (props) => {
           borderRadius: 3,
           backgroundColor: "black",
         }}>
-        {gettingPost ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <FastImage
-            style={{ width: "100%", height: "100%", borderRadius: 3 }}
-            source={{ uri: imgUrl }}
-          />
-        )}
+        <FastImage
+          style={{ width: "100%", height: "100%", borderRadius: 3 }}
+          source={{ uri: imgUrl }}
+        />
       </View>
       <View style={{ flex: 1, height: 50, marginLeft: 10 }}>
         <Text style={{ color: "grey" }} numberOfLines={1}>

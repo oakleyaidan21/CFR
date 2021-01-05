@@ -4,7 +4,8 @@ import Text from "../components/style/Text";
 
 const CreatePost: React.FC = (props) => {
   return (
-    <View style={{ flex: 1, marginBottom: 50 }}>
+    <View
+      style={{ flex: 1, marginBottom: 50, backgroundColor: "rgb(20,20,20)" }}>
       <View style={s.postType}>
         <Text style={s.postTypeText}>Self</Text>
       </View>

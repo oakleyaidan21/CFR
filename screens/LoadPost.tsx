@@ -3,6 +3,7 @@ import { InteractionManager, StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Submission } from "snoowrap";
 import PostPlaceholder from "../components/placeholders/PostPlaceholder";
+import StandardHeader from "../components/StandardHeader";
 import SnooContext from "../context/SnooContext";
 import Post from "./Post";
 
@@ -43,13 +44,7 @@ const LoadPost: React.FC<Props> = (props) => {
       ) : (
         <PostPlaceholder />
       )}
-      <View style={s.headerContainer}>
-        <Icon
-          name="arrow-back"
-          color="white"
-          onPress={props.navigation.goBack}
-        />
-      </View>
+      <StandardHeader navigation={props.navigation} />
     </View>
   );
 };

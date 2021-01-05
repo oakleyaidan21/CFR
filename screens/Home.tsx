@@ -39,7 +39,7 @@ const Home: React.FC<Props> = (props) => {
   }, [user]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}>
       {/* POST SCROLLER */}
       {renderHomeScroller()}
     </View>

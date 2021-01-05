@@ -6,7 +6,7 @@ const h = Dimensions.get("window").height;
 
 const PostPlaceholder: React.FC = (props) => {
   return (
-    <View style={{ height: h, marginTop: 50 }}>
+    <View style={{ height: h, marginTop: 100 }}>
       <PlaceholderContainer style={{ padding: 10 }} flash={true}>
         <View
           style={{

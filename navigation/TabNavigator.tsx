@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 const TabNavigator: React.FC = () => {
   return (
     <Tab.Navigator
-      sceneContainerStyle={{ backgroundColor: "rgb(20,20,20)" }}
+      sceneContainerStyle={{ backgroundColor: "black" }}
       tabBar={(props) => <TabBar {...props} />}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Explore" component={Explore} />

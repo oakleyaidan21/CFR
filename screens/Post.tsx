@@ -70,7 +70,9 @@ const Post: React.FC<Props> = (props) => {
     return (
       <View>
         {/* padding view to make translucent header look more natural */}
-        <View style={{ height: 50, width: "100%", backgroundColor: "black" }} />
+        <View
+          style={{ height: 100, width: "100%", backgroundColor: "black" }}
+        />
         <View style={{ backgroundColor: "black" }}>
           <PostHeader
             data={data}
@@ -126,7 +128,7 @@ const Post: React.FC<Props> = (props) => {
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
-          height: 50,
+          height: 100,
         }}>
         <TouchableOpacity onPress={getComments} disabled={fetchingComments}>
           {fetchingComments ? (

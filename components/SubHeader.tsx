@@ -131,7 +131,6 @@ const s = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: "rgba(0,0,0,0.8)",
     justifyContent: "space-between",
     height: 60,
   },

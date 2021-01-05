@@ -7,7 +7,6 @@ import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import Text from "./style/Text";
 import SubHeader from "./SubHeader";
-import { Icon } from "react-native-elements";
 import Fade from "./animations/Fade";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
@@ -122,30 +121,36 @@ const HomeHeader: React.FC<Props> = (props) => {
   ];
 
   return (
-    <View style={s.container}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {showSubs ? (
-          <SectionList
-            ref={scrollRef}
-            horizontal={true}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.8)",
-              width: "100%",
-              height: 60,
-            }}
-            showsHorizontalScrollIndicator={false}
-            sections={sections as any}
-            ListFooterComponent={renderFooter}
-          />
-        ) : (
-          <View style={{ flex: 1 }}>{renderSubHeader()}</View>
-        )}
+    <View style={s.paddingContainer}>
+      <View style={s.container}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {showSubs ? (
+            <SectionList
+              ref={scrollRef}
+              horizontal={true}
+              style={{
+                width: "100%",
+                height: 60,
+              }}
+              showsHorizontalScrollIndicator={false}
+              sections={sections as any}
+              ListFooterComponent={renderFooter}
+            />
+          ) : (
+            <View style={{ flex: 1 }}>{renderSubHeader()}</View>
+          )}
+        </View>
       </View>
     </View>
   );
 };
 
 const s = StyleSheet.create({
+  paddingContainer: {
+    height: 100,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    justifyContent: "flex-end",
+  },
   container: {
     width: "100%",
     position: "relative",

@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import Swiper from "react-native-swiper";
 
 import { Listing, Submission } from "snoowrap";
+import StandardHeader from "../components/StandardHeader";
 import Text from "../components/style/Text";
 import Post from "./Post";
 
@@ -55,28 +56,9 @@ const PostSwiper: React.FC<Props> = (props) => {
         {renderPosts()}
       </Swiper>
       {/* HEADER */}
-      <View style={s.headerContainer}>
-        <Icon
-          name="arrow-back"
-          color="white"
-          onPress={props.navigation.goBack}
-        />
-      </View>
+      <StandardHeader navigation={props.navigation} />
     </View>
   );
 };
-
-const s = StyleSheet.create({
-  headerContainer: {
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: 10,
-    position: "absolute",
-    top: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-});
 
 export default PostSwiper;

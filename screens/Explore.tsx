@@ -192,7 +192,7 @@ const Explore: React.FC<Props> = (props) => {
   }, [query, searchingSubs, searchingSubmissions]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}>
       {searchFocused ? (
         renderListEmpty()
       ) : results.length > 0 ? (
@@ -201,7 +201,7 @@ const Explore: React.FC<Props> = (props) => {
           data={results}
           renderItem={renderItem}
           ListFooterComponent={renderFooter}
-          ListHeaderComponent={<View style={{ marginTop: 60 }} />}
+          ListHeaderComponent={<View style={{ marginTop: 100 }} />}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>
@@ -218,7 +218,7 @@ const Explore: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   searchInput: {
-    height: "100%",
+    height: 50,
     borderWidth: 2,
     borderColor: "white",
     borderRadius: 3,
@@ -243,7 +243,8 @@ const s = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(0,0,0,0.8)",
     paddingVertical: 5,
-    height: 60,
+    height: 100,
+    justifyContent: "flex-end",
   },
 });
 
