@@ -80,9 +80,9 @@ const CFR: React.FC = () => {
       }}>
       <View style={{ flex: 1, backgroundColor: "black" }}>
         <StatusBar
-          backgroundColor="rgba(0,0,0,0.8)"
           barStyle="light-content"
           translucent
+          backgroundColor="transparent"
         />
         {snoowrap ? <MainNavigator /> : null}
       </View>

@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { View, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Listing, Submission, Subreddit } from "snoowrap";
 import PostScroller from "../components/PostScroller";
 import SubHeader from "../components/SubHeader";
@@ -12,26 +13,26 @@ type Props = {
   navigation: any;
 };
 
+const headerHeight = 60 + getStatusBarHeight();
+
 const Sub: React.FC<Props> = (props) => {
   const { data } = props.route.params;
 
-  const [currentCategory, setCurrentCategory] = useState<string>("Hot");
-  const [currentTimeframe, setCurrentTimeframe] = useState<string>("Hour");
-
-  const imgUrl = data.icon_img
-    ? data.icon_img
-    : data.community_icon
-    ? data.community_icon
-    : "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png";
-
   const renderHeader = useCallback(() => {
     return (
-      <SubHeader
-        data={data}
-        navigation={props.navigation}
-        fromHome={false}
-        onSubPress={null}
-      />
+      <View
+        style={{
+          height: headerHeight,
+          justifyContent: "flex-end",
+          backgroundColor: "rgba(0,0,0,0.8)",
+        }}>
+        <SubHeader
+          data={data}
+          navigation={props.navigation}
+          fromHome={false}
+          onSubPress={null}
+        />
+      </View>
     );
   }, []);
 
