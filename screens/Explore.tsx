@@ -16,11 +16,14 @@ import {
   LayoutAnimation,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { Listing, Subreddit } from "snoowrap";
+import { getStatusBarHeight } from "react-native-status-bar-height";
+import { Subreddit } from "snoowrap";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import SnooContext from "../context/SnooContext";
 import { searchForSubs, searchPosts } from "../util/snoowrap/snoowrapFunctions";
+
+const headerHeight = 60 + getStatusBarHeight();
 
 type Props = {
   navigation: any;
@@ -201,7 +204,7 @@ const Explore: React.FC<Props> = (props) => {
           data={results}
           renderItem={renderItem}
           ListFooterComponent={renderFooter}
-          ListHeaderComponent={<View style={{ marginTop: 100 }} />}
+          ListHeaderComponent={<View style={{ marginTop: headerHeight }} />}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>
@@ -243,7 +246,7 @@ const s = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(0,0,0,0.8)",
     paddingVertical: 5,
-    height: 100,
+    height: headerHeight,
     justifyContent: "flex-end",
   },
 });

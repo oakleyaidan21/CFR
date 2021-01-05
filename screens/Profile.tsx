@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 import { useDispatch, useSelector } from "react-redux";
 import Text from "../components/style/Text";
 import SnooContext from "../context/SnooContext";
@@ -10,6 +11,8 @@ import User from "./User";
 type Props = {
   navigation: any;
 };
+
+const headerHeight = 60 + getStatusBarHeight();
 
 const Profile: React.FC<Props> = (props) => {
   const { user } = useContext(SnooContext);
@@ -88,7 +91,7 @@ const Profile: React.FC<Props> = (props) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}>
       {/* HEADER */}
       {renderHeader()}
       {/* USER INFO */}
@@ -112,7 +115,7 @@ const s = StyleSheet.create({
   },
   dropdown: {
     position: "absolute",
-    top: 80,
+    top: headerHeight + 10,
     left: 10,
     backgroundColor: "rgba(0,0,0,0.8)",
     padding: 10,
@@ -120,7 +123,7 @@ const s = StyleSheet.create({
     borderRadius: 3,
   },
   paddingContainer: {
-    height: 100,
+    height: headerHeight,
     backgroundColor: "rgba(0,0,0,.8)",
     justifyContent: "flex-end",
   },

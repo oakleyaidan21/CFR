@@ -79,7 +79,11 @@ const CFR: React.FC = () => {
         setUserSubs: setUserSubs,
       }}>
       <View style={{ flex: 1, backgroundColor: "black" }}>
-        <StatusBar backgroundColor="rgba(0,0,0,0.8" barStyle="light-content" />
+        <StatusBar
+          backgroundColor="rgba(0,0,0,0.8)"
+          barStyle="light-content"
+          translucent
+        />
         {snoowrap ? <MainNavigator /> : null}
       </View>
     </SnooContext.Provider>

@@ -4,8 +4,6 @@ import {
   Linking,
   TouchableOpacity,
   Dimensions,
-  Animated,
-  Easing,
   StyleSheet,
   ActivityIndicator,
   InteractionManager,
@@ -13,6 +11,7 @@ import {
 import Text from "../components/style/Text";
 import { WebView } from "react-native-webview";
 import { Icon } from "react-native-elements";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 type Props = {
   navigation: any;
@@ -57,22 +56,25 @@ const Web: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {/* URL AND PROGRESS */}
-      <View style={{ width: "100%", justifyContent: "center" }}>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", height: 50 }}>
-          <TouchableOpacity
-            style={{ margin: 10 }}
-            onPress={props.navigation.goBack}>
-            <Icon name="close" color="white" size={30} />
-          </TouchableOpacity>
-          <Text style={{ color: "grey", flex: 1 }} numberOfLines={1}>
-            {currUrl}
-          </Text>
-          <View style={{ width: 50 }}>
-            {loading && <ActivityIndicator color="grey" />}
+      <View style={s.paddingContainer}>
+        <View style={{ width: "100%", justifyContent: "center" }}>
+          <View
+            style={{ flexDirection: "row", alignItems: "center", height: 60 }}>
+            <TouchableOpacity
+              style={{ margin: 10 }}
+              onPress={props.navigation.goBack}>
+              <Icon name="close" color="white" size={30} />
+            </TouchableOpacity>
+            <Text style={{ color: "grey", flex: 1 }} numberOfLines={1}>
+              {currUrl}
+            </Text>
+            <View style={{ width: 50 }}>
+              {loading && <ActivityIndicator color="grey" />}
+            </View>
           </View>
         </View>
       </View>
+
       {/* WEB FUNCTIONS */}
       <View style={s.webFunctions}>
         <Icon name="arrow-back" color="white" onPress={goBack} size={30} />
@@ -113,6 +115,10 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+  },
+  paddingContainer: {
+    height: 60 + getStatusBarHeight(),
+    justifyContent: "flex-end",
   },
 });
 

@@ -5,6 +5,7 @@ import { WebView } from "react-native-webview";
 import Snoowrap from "snoowrap";
 import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
 import { Icon } from "react-native-elements";
+import StandardHeader from "../components/StandardHeader";
 
 interface Props {
   navigation: any;
@@ -43,15 +44,8 @@ const Login: React.FC<Props> = (props) => {
     <View
       style={{
         flex: 1,
-        borderRadius: 10,
       }}>
-      <View style={s.header}>
-        <Icon
-          name="arrow-back"
-          color="white"
-          onPress={props.navigation.goBack}
-        />
-      </View>
+      <StandardHeader navigation={props.navigation} relative />
       <WebView
         source={{ uri: url }}
         style={{ backgroundColor: "black" }}

@@ -1,9 +1,10 @@
-import React, { useContext, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
-import SnooContext from "../context/SnooContext";
-import TabBarIndicator from "./animations/TabBarIndicator";
 import TempTabBarIndicator from "./animations/TempTabBarIndicator";
+
+const wh = Dimensions.get("window").height;
+const sh = Dimensions.get("screen").height;
 
 const TabBar: React.FC<any> = (props) => {
   const { state, navigation } = props;
@@ -77,7 +78,7 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    height: 70,
+    height: wh === sh ? 70 : 50,
     position: "absolute",
     bottom: 0,
     width: "100%",

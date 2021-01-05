@@ -8,6 +8,7 @@ import SubmissionListingContext from "../context/SubmissionListingContext";
 import Text from "./style/Text";
 import SubHeader from "./SubHeader";
 import Fade from "./animations/Fade";
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 const anonSubs = ["Front Page", "Popular", "All"];
@@ -147,7 +148,7 @@ const HomeHeader: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   paddingContainer: {
-    height: 100,
+    height: 60 + getStatusBarHeight(),
     backgroundColor: "rgba(0,0,0,0.8)",
     justifyContent: "flex-end",
   },
