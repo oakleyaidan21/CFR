@@ -1,27 +1,42 @@
-import React, { useCallback } from "react";
-import { Text, View } from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { InteractionManager, StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Listing, Submission } from "snoowrap";
 import PostScroller from "../components/PostScroller";
+import SnooContext from "../context/SnooContext";
 import SubmissionListingProvider from "../providers/ListingProvider";
+import { searchPosts } from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
-  route: { params: { data: Listing<Submission>; query: string } };
+  route: { params: { query: string } };
   navigation: any;
 };
 
 const SubmissionSearchResults: React.FC<Props> = (props) => {
+  const { snoowrap } = useContext(SnooContext);
+
+  const [data, setData] = useState();
+
+  const searchAllSubmissions = useCallback(() => {
+    console.log("searching");
+    if (snoowrap) {
+      searchPosts(snoowrap, "all", props.route.params.query).then((r: any) => {
+        console.log("searched!", r.length);
+        setData(r);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      searchAllSubmissions();
+    });
+  }, []);
+
   const renderHeader = useCallback(() => {
     return (
-      <View
-        style={{
-          height: 50,
-          backgroundColor: "rgba(0,0,0,0.8)",
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "center",
-        }}>
+      <View style={s.headerContainer}>
         <Icon
           name="arrow-back"
           color="white"
@@ -40,7 +55,7 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
         initialSubreddit={"none"}
         initialCategory={"none"}
         initialTimeframe={"none"}
-        listing={props.route.params.data}>
+        listing={data}>
         <PostScroller
           currentSubreddit={"Search Results"}
           header={renderHeader()}
@@ -55,5 +70,16 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  headerContainer: {
+    height: 50,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+});
 
 export default SubmissionSearchResults;

@@ -21,18 +21,24 @@ const SubredditItem: React.FC<Props> = (props) => {
 
   return (
     <TouchableOpacity style={s.container} onPress={props.onPress}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <FastImage
-          source={{ uri: imgUrl }}
-          style={{ width: 30, height: 30, borderRadius: 15, marginRight: 10 }}
-        />
-        <Text>{data.display_name}</Text>
+      <View style={s.imageContainer}>
+        <FastImage source={{ uri: imgUrl }} style={s.imageContainer} />
       </View>
-      <View style={{ paddingVertical: 10 }}>
-        <Text numberOfLines={2}>{data.public_description}</Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <Text>{data.subscribers} Subscribers</Text>
+      <View style={{ flex: 1, justifyContent: "space-between" }}>
+        <Text style={{ fontWeight: "bold" }}>{data.display_name}</Text>
+        {data.public_description.length > 0 && (
+          <Text numberOfLines={2}>{data.public_description}</Text>
+        )}
+        <View style={{ flexDirection: "row", marginTop: 10 }}>
+          <Text style={{ color: "grey" }}>
+            {data.subscribers > 999999
+              ? (data.subscribers / 1000000).toPrecision(3) + "M "
+              : data.subscribers > 9999
+              ? (data.subscribers / 1000).toPrecision(3) + "k "
+              : data.subscribers + " "}
+            Subscribers
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -40,8 +46,27 @@ const SubredditItem: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginTop: 10,
+    marginHorizontal: 10,
     padding: 10,
+    backgroundColor: "rgb(30,30,30)",
+    borderRadius: 3,
+    height: 90,
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+  },
+  imageContainer: {
+    width: 70,
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    borderRadius: 50,
   },
 });
 

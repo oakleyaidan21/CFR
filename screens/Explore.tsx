@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   TextInput,
@@ -6,9 +12,11 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  InteractionManager,
+  LayoutAnimation,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { Subreddit } from "snoowrap";
+import { Listing, Subreddit } from "snoowrap";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import SnooContext from "../context/SnooContext";
@@ -18,9 +26,9 @@ type Props = {
   navigation: any;
 };
 
-const Search: React.FC<Props> = (props) => {
+const Explore: React.FC<Props> = (props) => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Array<Subreddit>>([]);
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchingSubs, setSearchingSubs] = useState(false);
   const [searchingSubmissions, setSearchingSubmissions] = useState(false);
@@ -37,15 +45,18 @@ const Search: React.FC<Props> = (props) => {
   );
 
   const onFocus = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSearchFocused(true);
   }, []);
 
   const onBlur = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSearchFocused(false);
   }, []);
 
   const searchSubs = useCallback(() => {
     searchRef.current?.blur();
+    setResults([]);
     if (snoowrap) {
       setSearchingSubs(true);
       searchForSubs(snoowrap, query).then((r: any) => {
@@ -55,22 +66,24 @@ const Search: React.FC<Props> = (props) => {
     }
   }, [query]);
 
-  const searchAllSubmissions = useCallback(() => {
-    searchRef.current?.blur();
-    if (snoowrap) {
-      setSearchingSubmissions(true);
-      searchPosts(snoowrap, "all", query).then((r: any) => {
-        props.navigation.navigate("SearchResults", { data: r, query: query });
-        setSearchingSubmissions(false);
-      });
-    }
-  }, [query]);
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      //get popular subreddits
+      getPopularSubs();
+    });
+  }, []);
+
+  const getPopularSubs = useCallback(() => {
+    snoowrap?.getPopularSubreddits().then((subs) => {
+      setResults(subs);
+    });
+  }, []);
 
   const renderHeader = useCallback(() => {
     return (
       <View style={s.headerContainer}>
         <View style={s.searchInput}>
-          <Icon name="search" color="white" style={{ marginHorizontal: 5 }} />
+          <Icon name="search" color="white" style={{ width: 50 }} />
           <TextInput
             ref={searchRef}
             onChangeText={onValueChange}
@@ -82,18 +95,6 @@ const Search: React.FC<Props> = (props) => {
             value={query}
             selectionColor={"#00af64"}
           />
-          {results.length > 0 && (
-            <View style={{ marginHorizontal: 5 }}>
-              <Icon
-                name="close"
-                color="white"
-                onPress={() => {
-                  setResults([]);
-                  setQuery("");
-                }}
-              />
-            </View>
-          )}
         </View>
       </View>
     );
@@ -152,7 +153,9 @@ const Search: React.FC<Props> = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={s.searchType}
-          onPress={searchAllSubmissions}
+          onPress={() =>
+            props.navigation.navigate("SearchResults", { query: query })
+          }
           disabled={query.length === 0 || searchingSubmissions}>
           {searchingSubmissions ? (
             <ActivityIndicator color="white" />
@@ -190,7 +193,9 @@ const Search: React.FC<Props> = (props) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {results.length > 0 ? (
+      {searchFocused ? (
+        renderListEmpty()
+      ) : results.length > 0 ? (
         <FlatList
           style={{ flex: 1 }}
           data={results}
@@ -199,7 +204,9 @@ const Search: React.FC<Props> = (props) => {
           ListHeaderComponent={<View style={{ marginTop: 60 }} />}
         />
       ) : (
-        renderListEmpty()
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator color="white" />
+        </View>
       )}
 
       <View style={{ position: "absolute", top: 0, width: "100%" }}>
@@ -240,4 +247,4 @@ const s = StyleSheet.create({
   },
 });
 
-export default Search;
+export default Explore;

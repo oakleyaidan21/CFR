@@ -10,7 +10,6 @@ import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
-import SnooContext from "../context/SnooContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = {

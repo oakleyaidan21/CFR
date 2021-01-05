@@ -29,6 +29,12 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
     }
   }, [subreddit, category, timeframe]);
 
+  useEffect(() => {
+    if (props.listing) {
+      setListing(props.listing);
+    }
+  }, [props.listing]);
+
   const getPosts = () => {
     return getGeneralPosts(snoowrap, subreddit, category, timeframe)
       .then((posts: any) => {

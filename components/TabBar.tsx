@@ -10,15 +10,13 @@ const TabBar: React.FC<any> = (props) => {
   const { index } = state;
   const [positions, setPositions] = useState<Array<number>>([0, 0, 0, 0, 0]);
 
-  const { user } = useContext(SnooContext);
-
   const iconName = (name: string) => {
     switch (name) {
       case "Home": {
         return "home";
       }
-      case "Search": {
-        return "search";
+      case "Explore": {
+        return "explore";
       }
       case "CreatePost": {
         return "add";
