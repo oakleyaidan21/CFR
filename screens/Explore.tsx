@@ -16,10 +16,11 @@ import {
   LayoutAnimation,
   KeyboardAvoidingView,
   Platform,
+  SectionList,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { getStatusBarHeight } from "react-native-status-bar-height";
-import { Subreddit } from "snoowrap";
+import { Listing, Subreddit } from "snoowrap";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import SnooContext from "../context/SnooContext";
@@ -34,6 +35,8 @@ type Props = {
 const Explore: React.FC<Props> = (props) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Array<Subreddit>>([]);
+  const [popularSubs, setPopularSubs] = useState<Listing<Subreddit>>();
+  const [newSubs, setNewSubs] = useState<Listing<Subreddit>>();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchingSubs, setSearchingSubs] = useState(false);
   const [searchingSubmissions, setSearchingSubmissions] = useState(false);
@@ -41,6 +44,21 @@ const Explore: React.FC<Props> = (props) => {
   const searchRef = useRef<TextInput>(null);
 
   const { snoowrap } = useContext(SnooContext);
+
+  const sections = [
+    {
+      data: popularSubs,
+      renderItem: ({ item }: any) => renderItem({ item: item }),
+      keyExtractor: (item: Subreddit) => item.display_name + "Sl",
+      title: "Popular Subs",
+    },
+    {
+      data: newSubs,
+      renderItem: ({ item }: any) => renderItem({ item: item }),
+      keyExtractor: (item: Subreddit) => item.display_name + "SlN",
+      title: "New Subs",
+    },
+  ];
 
   const onValueChange = useCallback(
     (text) => {
@@ -75,14 +93,33 @@ const Explore: React.FC<Props> = (props) => {
     InteractionManager.runAfterInteractions(() => {
       //get popular subreddits
       getPopularSubs();
+      getNewSubs();
     });
   }, []);
 
   const getPopularSubs = useCallback(() => {
-    snoowrap?.getPopularSubreddits().then((subs) => {
-      setResults(subs);
-    });
-  }, []);
+    if (!popularSubs) {
+      snoowrap?.getPopularSubreddits({ limit: 6 }).then((subs: any) => {
+        setPopularSubs(subs.slice(1));
+      });
+    } else {
+      // popularSubs.fetchMore({ amount: 5, append: true }).then((r) => {
+      //   console.log("ARRRR:", r.length);
+      // });
+    }
+  }, [popularSubs]);
+
+  const getNewSubs = useCallback(() => {
+    if (!newSubs) {
+      snoowrap?.getNewSubreddits({ limit: 6 }).then((subs: any) => {
+        setNewSubs(subs.slice(1));
+      });
+    } else {
+      // popularSubs.fetchMore({ amount: 5, append: true }).then((r) => {
+      //   console.log("ARRRR:", r.length);
+      // });
+    }
+  }, [newSubs]);
 
   const renderHeader = useCallback(() => {
     return (
@@ -100,6 +137,14 @@ const Explore: React.FC<Props> = (props) => {
             value={query}
             selectionColor={"#00af64"}
           />
+          {results.length > 0 && (
+            <Icon
+              name="close"
+              color="white"
+              style={{ width: 50 }}
+              onPress={() => setResults([])}
+            />
+          )}
         </View>
       </View>
     );
@@ -196,6 +241,16 @@ const Explore: React.FC<Props> = (props) => {
     );
   }, [query, searchingSubs, searchingSubmissions]);
 
+  const renderSectionHeader = useCallback((info) => {
+    return (
+      <View style={{ paddingHorizontal: 10, paddingTop: 5 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+          {info.section.title}
+        </Text>
+      </View>
+    );
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}
@@ -207,8 +262,17 @@ const Explore: React.FC<Props> = (props) => {
           style={{ flex: 1 }}
           data={results}
           renderItem={renderItem}
+          keyExtractor={(item) => item.display_name}
           ListFooterComponent={renderFooter}
           ListHeaderComponent={<View style={{ marginTop: headerHeight }} />}
+        />
+      ) : popularSubs ? (
+        <SectionList
+          style={{ flex: 1 }}
+          sections={sections as any}
+          stickySectionHeadersEnabled={false}
+          ListHeaderComponent={<View style={{ marginTop: headerHeight }} />}
+          renderSectionHeader={renderSectionHeader}
         />
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>
