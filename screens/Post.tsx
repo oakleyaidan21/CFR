@@ -49,6 +49,7 @@ const Post: React.FC<Props> = (props) => {
   const openLink = useCallback((url) => {
     // check if it's a reddit post
     const tokens = url.split("/");
+
     let id = null;
     switch (tokens[2]) {
       case "redd.it":
@@ -57,6 +58,8 @@ const Post: React.FC<Props> = (props) => {
       case "www.reddit.com":
         id = tokens[6];
         break;
+      case "old.reddit.com":
+        id = tokens[6];
       default:
         break;
     }

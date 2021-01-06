@@ -83,6 +83,8 @@ const PostHeader: React.FC<Props> = (props) => {
           case "www.reddit.com":
             id = tokens[6];
             break;
+          case "old.reddit.com":
+            id = tokens[6];
           default:
             break;
         }

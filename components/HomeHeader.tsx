@@ -1,5 +1,11 @@
 import React, { useContext, useRef, memo, useCallback, useState } from "react";
-import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  LayoutAnimation,
+  SectionList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
@@ -7,7 +13,6 @@ import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import Text from "./style/Text";
 import SubHeader from "./SubHeader";
-import Fade from "./animations/Fade";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
@@ -32,21 +37,19 @@ const HomeHeader: React.FC<Props> = (props) => {
   const renderGlobalSub = useCallback(
     (sub: any, index: number, size: number) => {
       return (
-        <Fade show={true} delay={(index + 1) * 70}>
-          <GlobalSubBubble
-            sub={sub}
-            size={size}
-            onPress={() => {
-              setShowSubs(false);
-              setSubreddit(sub);
-              scrollRef.current?.scrollToLocation({
-                viewOffset: 0,
-                itemIndex: 0,
-                sectionIndex: 0,
-              });
-            }}
-          />
-        </Fade>
+        <GlobalSubBubble
+          sub={sub}
+          size={size}
+          onPress={() => {
+            animateHeaderChange();
+            setSubreddit(sub);
+            scrollRef.current?.scrollToLocation({
+              viewOffset: 0,
+              itemIndex: 0,
+              sectionIndex: 0,
+            });
+          }}
+        />
       );
     },
     [userSubs],
@@ -55,21 +58,19 @@ const HomeHeader: React.FC<Props> = (props) => {
   const renderSub = useCallback(
     (sub: any, index: number, size: number) => {
       return (
-        <Fade show={true} delay={index > 5 ? 0 : (index + 5) * 70}>
-          <SubBubble
-            sub={sub}
-            size={size}
-            onPress={() => {
-              setShowSubs(false);
-              setSubreddit(sub);
-              scrollRef.current?.scrollToLocation({
-                viewOffset: 0,
-                itemIndex: 0,
-                sectionIndex: 0,
-              });
-            }}
-          />
-        </Fade>
+        <SubBubble
+          sub={sub}
+          size={size}
+          onPress={() => {
+            setShowSubs(false);
+            setSubreddit(sub);
+            scrollRef.current?.scrollToLocation({
+              viewOffset: 0,
+              itemIndex: 0,
+              sectionIndex: 0,
+            });
+          }}
+        />
       );
     },
     [userSubs],
@@ -101,12 +102,20 @@ const HomeHeader: React.FC<Props> = (props) => {
     return (
       <SubHeader
         data={currentSub}
-        onSubPress={() => setShowSubs(true)}
+        onSubPress={animateHeaderChange}
         navigation={props.navigation}
         fromHome={true}
       />
     );
   }, [currentSub, category]);
+
+  const animateHeaderChange = useCallback(() => {
+    LayoutAnimation.configureNext({
+      duration: 200,
+      create: { duration: 200, type: "linear", property: "opacity" },
+    });
+    setShowSubs(!showSubs);
+  }, [showSubs]);
 
   const sections = [
     {
