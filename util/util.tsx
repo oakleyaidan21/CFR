@@ -65,7 +65,7 @@ export const determinePostType = (data: Submission) => {
     return { code: "IDK" };
   }
   const isGallery = data.is_gallery;
-  const isImgur = data.domain === "imgur.com";
+  const isImgur = data.domain == "imgur.com";
   const isImgurGallery = isImgur
     ? matches[4]
       ? matches[4].substring(0, 3) == "/a/"
@@ -78,7 +78,12 @@ export const determinePostType = (data: Submission) => {
   const fourExt = matches[4]
     ? matches[4].substring(matches[4].length - 5, matches[4].length)
     : false;
-  if (threeExt === ".jpg" || threeExt == ".png" || threeExt == ".jpeg") {
+  if (
+    threeExt == ".jpg" ||
+    threeExt == ".png" ||
+    threeExt == ".jpeg" ||
+    threeExt == ".webp"
+  ) {
     return { code: "IMG" };
   }
 

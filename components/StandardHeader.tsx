@@ -2,10 +2,12 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import Text from "./style/Text";
 
 type Props = {
   navigation: any;
   relative?: boolean;
+  label?: string;
 };
 
 const StandardHeader: React.FC<Props> = (props) => {
@@ -21,6 +23,11 @@ const StandardHeader: React.FC<Props> = (props) => {
           color="white"
           onPress={props.navigation.goBack}
         />
+        {props.label && (
+          <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+            {props.label}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -38,8 +45,9 @@ const s = StyleSheet.create({
   container: {
     width: "100%",
     height: 60,
-    justifyContent: "center",
-    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
     padding: 10,
   },
 });

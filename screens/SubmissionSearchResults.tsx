@@ -4,6 +4,7 @@ import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Listing, Submission } from "snoowrap";
 import PostScroller from "../components/PostScroller";
+import StandardHeader from "../components/StandardHeader";
 import SnooContext from "../context/SnooContext";
 import SubmissionListingProvider from "../providers/ListingProvider";
 import { searchPosts } from "../util/snoowrap/snoowrapFunctions";
@@ -36,16 +37,11 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
 
   const renderHeader = useCallback(() => {
     return (
-      <View style={s.headerContainer}>
-        <Icon
-          name="arrow-back"
-          color="white"
-          onPress={props.navigation.goBack}
-        />
-        <Text style={{ color: "white", fontWeight: "bold", marginLeft: 10 }}>
-          {'Search Results for "' + props.route.params.query + '"'}
-        </Text>
-      </View>
+      <StandardHeader
+        navigation={props.navigation}
+        label={'Search Results for "' + props.route.params.query + '"'}
+        relative={true}
+      />
     );
   }, []);
 

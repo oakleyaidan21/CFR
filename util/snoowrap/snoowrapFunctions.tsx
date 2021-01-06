@@ -96,6 +96,9 @@ export const getGeneralPosts = async (
          */
         return getNew(snoowrap, name);
       }
+      case "Rising": {
+        return getRising(snoowrap, name);
+      }
     }
   }
 };
@@ -160,6 +163,31 @@ export const getHot = async (
     default: {
       return snoowrap
         .getHot(subName)
+        .then((posts: Listing<Submission>) => {
+          return posts;
+        })
+        .catch((error: Error) => console.log("error getting posts", error));
+    }
+  }
+};
+
+export const getRising = async (
+  snoowrap: snoowrap | undefined | null,
+  subName: string,
+) => {
+  if (!snoowrap) return [];
+  switch (subName) {
+    case "Front Page": {
+      return snoowrap
+        .getRising()
+        .then((posts: Listing<Submission>) => {
+          return posts;
+        })
+        .catch((error: Error) => console.log("error getting posts", error));
+    }
+    default: {
+      return snoowrap
+        .getRising(subName)
         .then((posts: Listing<Submission>) => {
           return posts;
         })

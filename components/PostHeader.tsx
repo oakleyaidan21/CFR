@@ -187,6 +187,7 @@ const PostHeader: React.FC<Props> = (props) => {
             <ImgurAlbumViewer imgurHash={postType.hash} />
           </View>
         );
+
       default:
         return false;
     }

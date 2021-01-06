@@ -14,6 +14,8 @@ import {
   ActivityIndicator,
   InteractionManager,
   LayoutAnimation,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { getStatusBarHeight } from "react-native-status-bar-height";
@@ -195,7 +197,9 @@ const Explore: React.FC<Props> = (props) => {
   }, [query, searchingSubs, searchingSubmissions]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}>
       {searchFocused ? (
         renderListEmpty()
       ) : results.length > 0 ? (
@@ -215,7 +219,7 @@ const Explore: React.FC<Props> = (props) => {
       <View style={{ position: "absolute", top: 0, width: "100%" }}>
         {renderHeader()}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

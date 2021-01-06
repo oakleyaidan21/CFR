@@ -14,7 +14,7 @@ type Props = {
   isVisible: boolean;
 };
 
-const categories = ["Hot", "New", "Top", "Cont."];
+const categories = ["Hot", "New", "Rising", "Top", "Cont."];
 const times = ["hour", "day", "week", "month", "year", "all"];
 
 const CategoryPicker: React.FC<Props> = (props) => {

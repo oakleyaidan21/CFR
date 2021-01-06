@@ -30,7 +30,9 @@ if (
 
 const App = () => {
   useEffect(() => {
-    changeBarColors(true, "#50000000", "transparent");
+    if (Platform.OS === "android") {
+      changeBarColors(true, "#50000000", "transparent");
+    }
   }, []);
 
   return (
