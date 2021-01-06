@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { LogBox, Platform, UIManager } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import CFR from "./CFR";
 import { decode, encode } from "base-64";
 import { persistor, store } from "./redux/store";
+import { changeBarColors } from "react-native-immersive-bars";
 
 // These next three blocks are for snoowrap shenannigans
 declare var global: any;
@@ -28,6 +29,10 @@ if (
 }
 
 const App = () => {
+  useEffect(() => {
+    changeBarColors(true, "#50000000", "transparent");
+  }, []);
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

@@ -111,6 +111,7 @@ const PostScroller: React.FC<Props> = (props) => {
             refreshing={refreshing}
             onRefresh={refreshPosts}
             tintColor={"white"}
+            style={{ backgroundColor: "black" }}
             progressBackgroundColor={"black"}
             colors={["white", "#00af64"]}
           />

@@ -78,7 +78,7 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    height: wh === sh ? 70 : 50,
+    height: wh === sh ? 70 : 98,
     position: "absolute",
     bottom: 0,
     width: "100%",
