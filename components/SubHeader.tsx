@@ -1,8 +1,9 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Subreddit } from "snoowrap";
+import SnooContext from "../context/SnooContext";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import CategoryPicker from "./CategoryPicker";
 import GlobalSubBubble from "./GlobalSubBubble";
@@ -16,13 +17,33 @@ type Props = {
   fromHome: boolean;
 };
 
+const globalSubs = ["Front Page", "Popular", "All", "Saved"];
+
 const SubHeader: React.FC<Props> = (props) => {
-  const { data } = props;
+  const { snoowrap } = useContext(SnooContext);
   const { subreddit, category, timeframe } = useContext(
     SubmissionListingContext,
   );
+  const [data, setData] = useState<string | Subreddit>(props.data);
   const [showCatPicker, setShowCatPicker] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
+
+  useEffect(() => {
+    if (typeof props.data == "string" && !globalSubs.includes(props.data)) {
+      getSub();
+    }
+  }, []);
+
+  const getSub = useCallback(() => {
+    snoowrap
+      ?.getSubreddit(
+        typeof props.data == "string" ? props.data : props.data.display_name,
+      )
+      .fetch()
+      .then((s) => {
+        setData(s);
+      });
+  }, [props.data]);
 
   const isString = typeof data === "string";
 
@@ -38,7 +59,7 @@ const SubHeader: React.FC<Props> = (props) => {
         case "Popular":
           return "local-fire-department";
         default:
-          return "closed";
+          return "times";
       }
     } else {
       return data.icon_img
