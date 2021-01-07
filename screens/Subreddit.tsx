@@ -9,7 +9,7 @@ import SubHeader from "../components/SubHeader";
 import SubmissionListingProvider from "../providers/ListingProvider";
 
 type Props = {
-  route: { params: { data: Subreddit } };
+  route: { params: { data: Subreddit | string } };
   navigation: any;
 };
 
@@ -39,7 +39,7 @@ const Sub: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <SubmissionListingProvider
-        initialSubreddit={data.display_name}
+        initialSubreddit={typeof data == "string" ? data : data.display_name}
         initialCategory={"Hot"}
         initialTimeframe={"Day"}>
         <PostScroller

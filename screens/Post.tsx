@@ -12,6 +12,7 @@ import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { getStatusBarHeight } from "react-native-status-bar-height";
+import { parseLink } from "../util/util";
 
 type Props = {
   navigation: any;
@@ -47,26 +48,17 @@ const Post: React.FC<Props> = (props) => {
   };
 
   const openLink = useCallback((url) => {
-    // check if it's a reddit post
-    const tokens = url.split("/");
-
-    let id = null;
-    switch (tokens[2]) {
-      case "redd.it":
-        id = tokens[3];
+    const r = parseLink(url);
+    switch (r.type) {
+      case "post":
+        props.navigation.navigate("LoadPost", { id: r.id });
         break;
-      case "www.reddit.com":
-        id = tokens[6];
+      case "sub":
+        props.navigation.navigate("Subreddit", { data: r.sub });
         break;
-      case "old.reddit.com":
-        id = tokens[6];
       default:
+        props.navigation.navigate("Web", { url: url });
         break;
-    }
-    if (id) {
-      props.navigation.navigate("LoadPost", { id: id });
-    } else {
-      props.navigation.navigate("Web", { url: url });
     }
   }, []);
 

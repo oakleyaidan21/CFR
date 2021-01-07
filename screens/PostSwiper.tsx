@@ -1,11 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Icon } from "react-native-elements";
+import { View } from "react-native";
 import Swiper from "react-native-swiper";
-
 import { Listing, Submission } from "snoowrap";
 import StandardHeader from "../components/StandardHeader";
-import Text from "../components/style/Text";
 import Post from "./Post";
 
 type Props = {
@@ -43,7 +40,7 @@ const PostSwiper: React.FC<Props> = (props) => {
         />
       );
     });
-  }, [currPosts.length]);
+  }, [currPosts]);
 
   return (
     <View style={{ flex: 1 }}>

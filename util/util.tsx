@@ -105,3 +105,31 @@ export const determinePostType = (data: Submission) => {
 
   return { code: "WEB" };
 };
+
+export const parseLink = (url: string) => {
+  const tokens = url.split("/");
+  let id = null;
+  if (tokens.length < 3) {
+    return { type: "web" };
+  }
+  switch (tokens[2]) {
+    case "redd.it":
+      id = tokens[3];
+      break;
+    case "www.reddit.com":
+      id = tokens[6];
+      break;
+    case "old.reddit.com":
+      id = tokens[6];
+    default:
+      break;
+  }
+  if (id) {
+    return { type: "post", id: id };
+  } else {
+    if (tokens[1] == "r") {
+      return { type: "sub", sub: tokens[2] };
+    }
+  }
+  return { type: "web" };
+};

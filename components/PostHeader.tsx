@@ -15,6 +15,7 @@ import {
   determinePostType,
   getTimeSincePosted,
   getUriImage,
+  parseLink,
 } from "../util/util";
 import Spin from "./animations/Spin";
 import ImageViewer from "./ImageViewer";
@@ -74,28 +75,21 @@ const PostHeader: React.FC<Props> = (props) => {
     (url) => {
       // check if it's a reddit post
       if (typeof url === "string") {
-        const tokens = url.split("/");
-        let id = "";
-        switch (tokens[2]) {
-          case "redd.it":
-            id = tokens[3];
+        const r = parseLink(url);
+        switch (r.type) {
+          case "post":
+            props.navigation.navigate("LoadPost", { id: r.id });
             break;
-          case "www.reddit.com":
-            id = tokens[6];
+          case "sub":
+            props.navigation.navigate("Subreddit", { data: r.sub });
             break;
-          case "old.reddit.com":
-            id = tokens[6];
           default:
+            props.navigation.navigate("Web", { url: url });
             break;
-        }
-        if (id !== "") {
-          props.navigation.navigate("LoadPost", { id: id });
-        } else {
-          props.navigation.navigate("Web", { url: url });
         }
       } else {
         props.navigation.navigate("Web", {
-          url: typeof url === "string" ? url : data.url,
+          url: data.url,
         });
       }
     },
