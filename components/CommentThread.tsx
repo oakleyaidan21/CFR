@@ -24,7 +24,6 @@ const CommentThread: React.FC<Props> = (props) => {
   const [showReplies, setShowReplies] = useState(false);
 
   const animateReplies = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowReplies(!showReplies);
   };
 

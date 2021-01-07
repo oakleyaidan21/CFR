@@ -51,6 +51,11 @@ const Profile: React.FC<Props> = (props) => {
               <Icon name="arrow-drop-down" color="white" />
             </TouchableOpacity>
           </View>
+          <Icon
+            name="settings"
+            color="white"
+            onPress={() => props.navigation.navigate("Settings")}
+          />
         </View>
       </View>
     );

@@ -13,6 +13,7 @@ import PostSwiper from "../screens/PostSwiper";
 import Subreddit from "../screens/Subreddit";
 import SubmissionSearchResults from "../screens/SubmissionSearchResults";
 import LoadPost from "../screens/LoadPost";
+import Settings from "../screens/Settings";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,7 @@ const MainNavigator: React.FC = () => {
             component={SubmissionSearchResults}
           />
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

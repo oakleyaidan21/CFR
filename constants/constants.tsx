@@ -1,0 +1,1 @@
+export const DETAILED_POST_HEIGHT = 200;

@@ -2,6 +2,7 @@ const initialPersistingState = {
   refreshToken: null,
   authCode: null,
   users: {},
+  postItemView: "simple",
 };
 
 const persistingReducer = (state = initialPersistingState, action: any) => {
@@ -18,6 +19,9 @@ const persistingReducer = (state = initialPersistingState, action: any) => {
     }
     case "LOGOUT": {
       return { ...state, authCode: "none", refreshToken: "none" };
+    }
+    case "SET_POST_ITEM_VIEW": {
+      return { ...state, postItemView: action.postItemView };
     }
     default: {
       return state;

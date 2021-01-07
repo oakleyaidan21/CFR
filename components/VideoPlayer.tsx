@@ -10,13 +10,17 @@ import { Icon } from "react-native-elements";
 import Video from "react-native-video";
 import Slider from "@react-native-community/slider";
 import Fade from "./animations/Fade";
+import Text from "./style/Text";
 
 type Props = {
   source: string;
+  hasControls?: boolean;
+  autoPlay?: boolean;
+  muted?: boolean;
 };
 
 const VideoPlayer: React.FC<Props> = (props) => {
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(!props.autoPlay);
   const [isLoading, setIsLoading] = useState(true);
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -41,6 +45,7 @@ const VideoPlayer: React.FC<Props> = (props) => {
 
   const onEnd = () => {
     setFinished(true);
+    setCurrentVideoTime(duration);
     setPaused(true);
   };
 
@@ -75,36 +80,53 @@ const VideoPlayer: React.FC<Props> = (props) => {
           onLoadStart={onLoadStart}
           onSeek={onSeek}
           onEnd={onEnd}
+          volume={props.muted ? 0 : 1}
+          poster={"http://clipart-library.com/images/8T65a4KGc.png"}
+          posterResizeMode={"contain"}
           onBuffer={onBuffer}
         />
       </TouchableWithoutFeedback>
       {/* CONTROLS */}
-      <Fade show={showControls} style={s.controlBar}>
-        <View style={s.controlBar}>
-          {isBuffering ? (
-            <View style={{ width: 50 }}>
-              <ActivityIndicator color="white" />
-            </View>
-          ) : (
-            <TouchableOpacity
-              onPress={() => (finished ? replay() : setPaused(!paused))}>
-              <Icon
-                name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
-                color="white"
-                size={50}
-              />
-            </TouchableOpacity>
-          )}
-          <Slider
-            style={{ flex: 1 }}
-            value={currentVideoTime}
-            minimumValue={0}
-            onValueChange={seekVideo}
-            maximumValue={duration}
-            minimumTrackTintColor={"#00af64"}
-          />
-        </View>
-      </Fade>
+      {props.hasControls && (
+        <Fade show={showControls} style={s.controlBar}>
+          <View style={s.controlBar}>
+            {isBuffering ? (
+              <View style={{ width: 50 }}>
+                <ActivityIndicator color="white" />
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={() => (finished ? replay() : setPaused(!paused))}>
+                <Icon
+                  name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
+                  color="white"
+                  size={50}
+                />
+              </TouchableOpacity>
+            )}
+            <Text>
+              {Math.floor(currentVideoTime / 60) +
+                ":" +
+                (currentVideoTime % 60 < 10 ? "0" : "") +
+                Math.floor(currentVideoTime % 60)}
+            </Text>
+            <Slider
+              style={{ flex: 1, marginHorizontal: 3 }}
+              value={currentVideoTime}
+              minimumValue={0}
+              onValueChange={seekVideo}
+              maximumValue={duration}
+              minimumTrackTintColor={"#00af64"}
+            />
+            <Text>
+              {Math.floor(duration / 60) +
+                ":" +
+                (duration % 60 < 10 ? "0" : "") +
+                (duration % 60)}
+            </Text>
+          </View>
+        </Fade>
+      )}
     </View>
   );
 };

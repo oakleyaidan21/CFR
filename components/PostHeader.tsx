@@ -102,8 +102,9 @@ const PostHeader: React.FC<Props> = (props) => {
   const mapRedditGalleryImages = useCallback(() => {
     let urls = [];
 
-    for (const i of Object.entries(data.media_metadata)) {
-      urls.push({ uri: i[1].s.u });
+    const metadata = (data as any).media_metadata;
+    for (const i of Object.entries(metadata)) {
+      urls.push({ uri: (i[1] as any).s.u });
     }
     return urls;
   }, []);
@@ -164,6 +165,8 @@ const PostHeader: React.FC<Props> = (props) => {
                   ? data.url.substring(0, data.url.length - 4) + "mp4"
                   : (data.media?.reddit_video?.hls_url as string)
               }
+              hasControls={true}
+              autoPlay={false}
             />
           </View>
         );
@@ -180,7 +183,7 @@ const PostHeader: React.FC<Props> = (props) => {
           <View style={{ height: contentHeight }} />
         ) : (
           <View style={{ width: "100%", height: contentHeight }}>
-            <ImgurAlbumViewer imgurHash={postType.hash} />
+            <ImgurAlbumViewer imgurHash={postType.hash as string} />
           </View>
         );
 
