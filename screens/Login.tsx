@@ -6,6 +6,7 @@ import Snoowrap from "snoowrap";
 import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
 import { Icon } from "react-native-elements";
 import StandardHeader from "../components/StandardHeader";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   navigation: any;
@@ -41,11 +42,11 @@ const Login: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
 
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
       }}>
-      <StandardHeader navigation={props.navigation} relative />
+      <StandardHeader navigation={props.navigation} relative safe />
       <WebView
         source={{ uri: url }}
         style={{ backgroundColor: "black" }}
@@ -62,7 +63,7 @@ const Login: React.FC<Props> = (props) => {
         }}
         renderError={() => <ActivityIndicator />}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

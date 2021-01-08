@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import TempTabBarIndicator from "./animations/TempTabBarIndicator";
 
@@ -78,7 +84,7 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    height: wh === sh ? 70 : 55,
+    height: wh === sh ? (Platform.OS === "android" ? 75 : 70) : 105,
     position: "absolute",
     bottom: 0,
     width: "100%",

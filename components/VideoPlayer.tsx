@@ -11,12 +11,14 @@ import Video from "react-native-video";
 import Slider from "@react-native-community/slider";
 import Fade from "./animations/Fade";
 import Text from "./style/Text";
+import VideoPoster from "./VideoPoster";
 
 type Props = {
   source: string;
   hasControls?: boolean;
   autoPlay?: boolean;
   muted?: boolean;
+  poster: string;
 };
 
 const VideoPlayer: React.FC<Props> = (props) => {
@@ -27,6 +29,7 @@ const VideoPlayer: React.FC<Props> = (props) => {
   const [finished, setFinished] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const videoRef = useRef<Video>(null);
 
@@ -68,23 +71,30 @@ const VideoPlayer: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <TouchableWithoutFeedback onPress={() => setShowControls(!showControls)}>
-        <Video
-          source={{ uri: props.source }}
-          style={{ flex: 1 }}
-          resizeMode={"contain"}
-          paused={paused}
-          ref={videoRef}
-          repeat={false}
-          onProgress={onProgress}
-          onLoad={onLoad}
-          onLoadStart={onLoadStart}
-          onSeek={onSeek}
-          onEnd={onEnd}
-          volume={props.muted ? 0 : 1}
-          poster={"http://clipart-library.com/images/8T65a4KGc.png"}
-          posterResizeMode={"contain"}
-          onBuffer={onBuffer}
-        />
+        <>
+          <Video
+            source={{ uri: props.source }}
+            style={{ flex: 1 }}
+            resizeMode={"contain"}
+            paused={paused}
+            selectedVideoTrack={{
+              type: "resolution",
+              value: 1080,
+            }}
+            ref={videoRef}
+            onReadyForDisplay={() => setIsLoaded(true)}
+            repeat={false}
+            onProgress={onProgress}
+            onLoad={onLoad}
+            onLoadStart={onLoadStart}
+            onSeek={onSeek}
+            onEnd={onEnd}
+            volume={props.muted ? 0 : 1}
+            posterResizeMode={"contain"}
+            onBuffer={onBuffer}
+          />
+          {!isLoaded && <VideoPoster source={props.poster} />}
+        </>
       </TouchableWithoutFeedback>
       {/* CONTROLS */}
       {props.hasControls && (

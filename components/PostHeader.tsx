@@ -167,6 +167,7 @@ const PostHeader: React.FC<Props> = (props) => {
               }
               hasControls={true}
               autoPlay={false}
+              poster={imgUrl}
             />
           </View>
         );

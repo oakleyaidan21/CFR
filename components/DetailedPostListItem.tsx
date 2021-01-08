@@ -9,6 +9,7 @@ import {
   getTimeSincePosted,
   getUriImage,
 } from "../util/util";
+import GalleryViewer from "./GalleryViewer";
 import ImageWithIndicator from "./ImageWithIndicator";
 import Score from "./Score";
 import SimpleVideo from "./SimpleVideo";
@@ -36,6 +37,16 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
 
   const isSelf = data.is_self;
 
+  const mapRedditGalleryImages = useCallback(() => {
+    let urls = [];
+
+    const metadata = (data as any).media_metadata;
+    for (const i of Object.entries(metadata)) {
+      urls.push({ uri: (i[1] as any).s.u });
+    }
+    return urls;
+  }, []);
+
   const renderContent = useCallback(() => {
     const postType = determinePostType(data);
     switch (postType.code) {
@@ -57,7 +68,6 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         );
 
       case "VID":
-        console.log("url:", data.media?.reddit_video?.dash_url);
         return (
           <View style={{ flex: 1 }}>
             <SimpleVideo
@@ -66,12 +76,17 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
                   ? data.url.substring(0, data.url.length - 4) + "mp4"
                   : (data.media?.reddit_video?.hls_url as string)
               }
-              play={false}
+              play={true}
+              posterSource={imgUrl}
             />
           </View>
         );
       case "WEB":
         return null;
+      case "GAL":
+        return (
+          <GalleryViewer images={mapRedditGalleryImages()} noModal={true} />
+        );
       default:
         return null;
     }
@@ -165,6 +180,7 @@ const s = StyleSheet.create({
     backgroundColor: "rgb(0,0,0)",
     marginTop: 10,
     borderRadius: 3,
+    overflow: "hidden",
   },
 });
 

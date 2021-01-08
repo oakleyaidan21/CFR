@@ -101,37 +101,34 @@ const PostScroller: React.FC<Props> = (props) => {
     getPosts().then(() => setRefreshing(false));
   };
 
-  const getItemLayout =
-    postItemView == "simple"
-      ? useCallback(
-          (data: any, index) => {
-            if (postItemView == "simple") {
-              return {
-                length: 170,
-                offset: 170 * index,
-                index,
-              };
-            } else {
-              // DOESNT WORK SINCE POST HEIGHTS CAN VARY
-              const postType = determinePostType(data[index]);
-              let l = 170;
-              if (
-                postType.code == "IMG" ||
-                postType.code == "GIF" ||
-                postType.code == "VID"
-              ) {
-                l = 170 + DETAILED_POST_HEIGHT + 10;
-              }
-              return {
-                length: l,
-                offset: l + flatlistHeight,
-                index,
-              };
-            }
-          },
-          [postItemView, listing, flatlistHeight],
-        )
-      : undefined;
+  const getItemLayout = useCallback(
+    (data: any, index) => {
+      if (postItemView == "simple") {
+        return {
+          length: 170,
+          offset: 170 * index,
+          index,
+        };
+      } else {
+        // DOESNT WORK SINCE POST HEIGHTS CAN VARY
+        const postType = determinePostType(data[index]);
+        let l = 170;
+        if (
+          postType.code == "IMG" ||
+          postType.code == "GIF" ||
+          postType.code == "VID"
+        ) {
+          l = 170 + DETAILED_POST_HEIGHT + 10;
+        }
+        return {
+          length: l,
+          offset: l + flatlistHeight,
+          index,
+        };
+      }
+    },
+    [postItemView, listing, flatlistHeight],
+  );
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -142,9 +139,10 @@ const PostScroller: React.FC<Props> = (props) => {
         renderItem={renderItem}
         data={listing}
         keyExtractor={(item, index) => item.id + index.toString()}
-        getItemLayout={getItemLayout}
+        getItemLayout={postItemView == "simple" ? getItemLayout : undefined}
         ListEmptyComponent={renderListEmtpy}
         onEndReached={onEndReached}
+        removeClippedSubviews={postItemView != "simple"}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

@@ -6,6 +6,7 @@ import ImageWithIndicator from "./ImageWithIndicator";
 
 type Props = {
   images: Array<{ uri: string }>;
+  noModal?: boolean;
 };
 
 const GalleryViewer: React.FC<Props> = (props) => {
@@ -15,7 +16,9 @@ const GalleryViewer: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       {images.length > 0 && (
-        <TouchableWithoutFeedback onPress={() => setShowGallery(true)}>
+        <TouchableWithoutFeedback
+          onPress={() => setShowGallery(true)}
+          disabled={props.noModal}>
           <ImageWithIndicator
             source={{ uri: images[0].uri }}
             style={{ flex: 1 }}
@@ -23,11 +26,14 @@ const GalleryViewer: React.FC<Props> = (props) => {
           />
         </TouchableWithoutFeedback>
       )}
-      <ImageViewer
-        visible={showGallery}
-        images={images}
-        close={() => setShowGallery(false)}
-      />
+      {!props.noModal && (
+        <ImageViewer
+          visible={showGallery}
+          images={images}
+          close={() => setShowGallery(false)}
+        />
+      )}
+
       <View style={s.pageLength}>
         <Text style={{ color: "white", fontWeight: "bold" }}>
           {images.length} images

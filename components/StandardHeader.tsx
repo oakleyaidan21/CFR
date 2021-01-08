@@ -8,13 +8,14 @@ type Props = {
   navigation: any;
   relative?: boolean;
   label?: string;
+  safe?: boolean;
 };
 
 const StandardHeader: React.FC<Props> = (props) => {
   return (
     <View
       style={[
-        s.paddingContainer,
+        !props.safe ? s.paddingContainer : {},
         { position: props.relative ? "relative" : "absolute" },
       ]}>
       <View style={s.container}>
