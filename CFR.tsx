@@ -19,6 +19,7 @@ const CFR: React.FC = () => {
   const [snoowrap, setSnoowrap] = useState<Snoowrap | null>(null);
   const [user, setUser] = useState<RedditUser | null>(null);
   const [userSubs, setUserSubs] = useState<Array<Subreddit>>([]);
+  const [unreadInbox, setUnreadInbox] = useState<Array<any>>([]);
 
   const getSubs = (r: Snoowrap) => {
     getUserSubs(r).then((subs: any) => {
@@ -35,6 +36,7 @@ const CFR: React.FC = () => {
         setSnoowrap(r);
         r.getMe().then((me: any) => {
           setUser(me);
+          r.getUnreadMessages().then((ib) => setUnreadInbox(ib));
           SplashScreen.hide();
           getSubs(r);
         });
@@ -51,6 +53,7 @@ const CFR: React.FC = () => {
         initializeSnoowrap(authCode).then((r: any) => {
           let newUsers = users;
           r.getMe().then((me: any) => {
+            r.getUnreadMessages().then((ib: any) => setUnreadInbox(ib));
             console.log("new refresh token:", r.refreshToken);
             newUsers[me.name] = r.refreshToken;
             setUser(me);
@@ -77,6 +80,8 @@ const CFR: React.FC = () => {
         setUser: setUser,
         userSubs: userSubs,
         setUserSubs: setUserSubs,
+        unreadInbox: unreadInbox,
+        setUnreadInbox: setUnreadInbox,
       }}>
       <View style={{ flex: 1, backgroundColor: "black" }}>
         <StatusBar

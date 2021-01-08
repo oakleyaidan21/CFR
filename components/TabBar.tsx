@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dimensions,
   Platform,
@@ -7,7 +7,9 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import SnooContext from "../context/SnooContext";
 import TempTabBarIndicator from "./animations/TempTabBarIndicator";
+import UnreadDot from "./animations/UnreadDot";
 
 const wh = Dimensions.get("window").height;
 const sh = Dimensions.get("screen").height;
@@ -15,6 +17,7 @@ const sh = Dimensions.get("screen").height;
 const TabBar: React.FC<any> = (props) => {
   const { state, navigation } = props;
   const { index } = state;
+  const { unreadInbox } = useContext(SnooContext);
   const [positions, setPositions] = useState<Array<number>>([0, 0, 0, 0, 0]);
 
   const iconName = (name: string) => {
@@ -66,6 +69,11 @@ const TabBar: React.FC<any> = (props) => {
                   size={30}
                 />
                 {focused && <TempTabBarIndicator />}
+                {name == "Inbox" && unreadInbox.length > 0 && (
+                  <View style={s.dotContainer}>
+                    <UnreadDot color="#00af64" />
+                  </View>
+                )}
               </TouchableOpacity>
             );
           })}
@@ -84,7 +92,8 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    height: wh === sh ? (Platform.OS === "android" ? 75 : 70) : 105,
+    // height: wh === sh ? (Platform.OS === "android" ? 75 : 70) : 105,
+    height: Platform.OS === "android" ? 50 + (sh - wh) : 70,
     position: "absolute",
     bottom: 0,
     width: "100%",
@@ -104,7 +113,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  newDot: {
+  dotContainer: {
     position: "absolute",
     top: 10,
     right: 8,

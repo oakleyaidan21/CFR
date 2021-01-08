@@ -52,12 +52,12 @@ const Explore: React.FC<Props> = (props) => {
       keyExtractor: (item: Subreddit) => item.display_name + "Sl",
       title: "Popular Subs",
     },
-    newSubs && {
-      data: newSubs,
-      renderItem: ({ item }: any) => renderItem({ item: item }),
-      keyExtractor: (item: Subreddit) => item.display_name + "SlN",
-      title: "New Subs",
-    },
+    // newSubs && {
+    //   data: newSubs,
+    //   renderItem: ({ item }: any) => renderItem({ item: item }),
+    //   keyExtractor: (item: Subreddit) => item.display_name + "SlN",
+    //   title: "New Subs",
+    // },
   ];
 
   const onValueChange = useCallback(
