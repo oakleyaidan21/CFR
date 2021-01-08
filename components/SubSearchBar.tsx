@@ -18,7 +18,6 @@ import { Icon } from "react-native-elements";
 
 import { Subreddit } from "snoowrap";
 import SnooContext from "../context/SnooContext";
-import { searchPosts } from "../util/snoowrap/snoowrapFunctions";
 import Fade from "./animations/Fade";
 
 type Props = {
@@ -51,20 +50,6 @@ const SubSearchBar: React.FC<Props> = (props) => {
   useEffect(() => {
     expand(1, () => setShowContent(true));
   }, []);
-
-  const searchForPosts = useCallback(() => {
-    setSearching(true);
-    if (snoowrap) {
-      searchPosts(
-        snoowrap,
-        typeof sub === "string" ? sub : sub.display_name,
-        query,
-      ).then((r) => {
-        setSearching(false);
-        props.onSearch(r, query);
-      });
-    }
-  }, [query, sub]);
 
   const close = useCallback(() => {
     setShowContent(false);
@@ -99,7 +84,7 @@ const SubSearchBar: React.FC<Props> = (props) => {
             }
             placeholderTextColor={"rgb(200,200,200)"}
             onChangeText={setQuery}
-            onSubmitEditing={searchForPosts}
+            onSubmitEditing={() => props.onSearch(sub, query)}
           />
           <TouchableOpacity onPress={close}>
             <Icon name="close" color="grey" style={{ width: 50 }} />

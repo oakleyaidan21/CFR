@@ -78,9 +78,9 @@ const SubHeader: React.FC<Props> = (props) => {
         <SubSearchBar
           sub={data}
           close={() => setShowSearchBar(false)}
-          onSearch={(r: any, query: string) =>
+          onSearch={(sub: any, query: string) =>
             props.navigation.navigate("SearchResults", {
-              data: r,
+              sub: sub,
               query: query,
             })
           }

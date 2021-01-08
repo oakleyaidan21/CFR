@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { InteractionManager, StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { Listing, Submission } from "snoowrap";
+import { Listing, Submission, Subreddit } from "snoowrap";
 import PostScroller from "../components/PostScroller";
 import StandardHeader from "../components/StandardHeader";
 import SnooContext from "../context/SnooContext";
@@ -10,7 +10,7 @@ import SubmissionListingProvider from "../providers/ListingProvider";
 import { searchPosts } from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
-  route: { params: { query: string } };
+  route: { params: { query: string; sub: Subreddit | string } };
   navigation: any;
 };
 
@@ -19,10 +19,16 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
 
   const [data, setData] = useState();
 
-  const searchAllSubmissions = useCallback(() => {
+  const searchSubmissions = useCallback(() => {
     console.log("searching");
     if (snoowrap) {
-      searchPosts(snoowrap, "all", props.route.params.query).then((r: any) => {
+      searchPosts(
+        snoowrap,
+        typeof props.route.params.sub === "string"
+          ? props.route.params.sub
+          : props.route.params.sub.display_name,
+        props.route.params.query,
+      ).then((r: any) => {
         console.log("searched!", r.length);
         setData(r);
       });
@@ -31,7 +37,7 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      searchAllSubmissions();
+      searchSubmissions();
     });
   }, []);
 

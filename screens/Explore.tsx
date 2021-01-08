@@ -204,7 +204,10 @@ const Explore: React.FC<Props> = (props) => {
         <TouchableOpacity
           style={s.searchType}
           onPress={() =>
-            props.navigation.navigate("SearchResults", { query: query })
+            props.navigation.navigate("SearchResults", {
+              query: query,
+              sub: "all",
+            })
           }
           disabled={query.length === 0 || searchingSubmissions}>
           {searchingSubmissions ? (
