@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import SnooContext from "../context/SnooContext";
-import TempTabBarIndicator from "./animations/TempTabBarIndicator";
+import TabBarIndicator from "./animations/TabBarIndicator";
 import UnreadDot from "./animations/UnreadDot";
 
 const wh = Dimensions.get("window").height;
@@ -68,7 +68,7 @@ const TabBar: React.FC<any> = (props) => {
                   color={focused ? "white" : "grey"}
                   size={30}
                 />
-                {focused && <TempTabBarIndicator />}
+                {focused && <TabBarIndicator />}
                 {name == "Inbox" && unreadInbox && unreadInbox.length > 0 && (
                   <View style={s.dotContainer}>
                     <UnreadDot color="#00af64" />

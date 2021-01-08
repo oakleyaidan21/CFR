@@ -4,6 +4,7 @@ import SnooContext from "../context/SnooContext";
 import Text from "../components/style/Text";
 import InboxItem from "../components/InboxItem";
 import { HEADER_HEIGHT, INBOX_ITEM_HEIGHT } from "../constants/constants";
+import TabBarIndicator from "../components/animations/TabBarIndicator";
 
 const Inbox: React.FC = (props) => {
   const { unreadInbox, setUnreadInbox, snoowrap, user } = useContext(
@@ -26,23 +27,29 @@ const Inbox: React.FC = (props) => {
     return (
       <View style={s.headerContainer}>
         <View style={s.inboxTypeContainer}>
-          <TouchableOpacity onPress={() => setShowUnread(true)}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: showUnread ? "green" : "white",
-              }}>
-              Unread
-            </Text>
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: 100,
+            }}
+            onPress={() => setShowUnread(true)}>
+            <Text style={{ fontWeight: "bold", fontSize: 30 }}>Unread</Text>
+            <View style={{ height: 20 }}>
+              {showUnread && <TabBarIndicator relative width={120} />}
+            </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setShowUnread(false)}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: !showUnread ? "green" : "white",
-              }}>
-              Read
-            </Text>
+          <TouchableOpacity
+            onPress={() => setShowUnread(false)}
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: 100,
+            }}>
+            <Text style={{ fontWeight: "bold", fontSize: 30 }}>Read</Text>
+            <View style={{ height: 20 }}>
+              {!showUnread && <TabBarIndicator relative width={100} />}
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -91,14 +98,13 @@ const Inbox: React.FC = (props) => {
 
 const s = StyleSheet.create({
   headerContainer: {
-    width: "100%",
     backgroundColor: "rgba(0,0,0,0.8)",
     paddingVertical: 5,
     height: HEADER_HEIGHT,
     justifyContent: "flex-end",
   },
   inboxTypeContainer: {
-    width: "50%",
+    width: "60%",
     justifyContent: "space-between",
     alignItems: "center",
     height: 60,

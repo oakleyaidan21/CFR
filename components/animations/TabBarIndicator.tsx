@@ -1,39 +1,35 @@
 import React, { useEffect, useRef } from "react";
-import { Animated, Easing } from "react-native";
+import { View, Animated, Easing } from "react-native";
 
 type Props = {
-  pos: any;
-  name: string;
+  relative?: boolean;
+  width?: number;
 };
 
 const TabBarIndicator: React.FC<Props> = (props) => {
-  const moveAnim = useRef(new Animated.Value(0)).current;
+  const expandAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    moveIndicator();
-  }, [props.pos]);
-
-  const moveIndicator = () => {
-    Animated.timing(moveAnim, {
-      toValue: props.pos,
+    Animated.timing(expandAnimation, {
+      toValue: 1,
       duration: 200,
-      easing: Easing.elastic(0.9),
       useNativeDriver: true,
+      // easing: Easing.elastic(1),
     }).start();
-  };
+  }, []);
 
   return (
     <Animated.View
       style={{
-        width: 50,
+        width: props.width ? props.width : 50,
         height: 5,
         borderRadius: 2,
-        position: "absolute",
+        position: props.relative ? "relative" : "absolute",
         bottom: 0,
         backgroundColor: "#00af64",
         transform: [
           {
-            translateX: moveAnim,
+            scaleX: expandAnimation,
           },
         ],
       }}
