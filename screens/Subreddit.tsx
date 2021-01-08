@@ -2,18 +2,16 @@ import React, { useCallback, useState } from "react";
 import { View, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Listing, Submission, Subreddit } from "snoowrap";
 import PostScroller from "../components/PostScroller";
 import SubHeader from "../components/SubHeader";
+import { HEADER_HEIGHT } from "../constants/constants";
 import SubmissionListingProvider from "../providers/ListingProvider";
 
 type Props = {
   route: { params: { data: Subreddit | string } };
   navigation: any;
 };
-
-const headerHeight = 60 + getStatusBarHeight();
 
 const Sub: React.FC<Props> = (props) => {
   const { data } = props.route.params;
@@ -22,7 +20,7 @@ const Sub: React.FC<Props> = (props) => {
     return (
       <View
         style={{
-          height: headerHeight,
+          height: HEADER_HEIGHT,
           justifyContent: "flex-end",
           backgroundColor: "rgba(0,0,0,0.8)",
         }}>

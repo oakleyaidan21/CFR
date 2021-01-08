@@ -19,14 +19,12 @@ import {
   SectionList,
 } from "react-native";
 import { Icon } from "react-native-elements";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 import { Listing, Subreddit } from "snoowrap";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
+import { HEADER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
 import { searchForSubs, searchPosts } from "../util/snoowrap/snoowrapFunctions";
-
-const headerHeight = 60 + getStatusBarHeight();
 
 type Props = {
   navigation: any;
@@ -267,14 +265,14 @@ const Explore: React.FC<Props> = (props) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.display_name}
           ListFooterComponent={renderFooter}
-          ListHeaderComponent={<View style={{ marginTop: headerHeight }} />}
+          ListHeaderComponent={<View style={{ marginTop: HEADER_HEIGHT }} />}
         />
       ) : popularSubs ? (
         <SectionList
           style={{ flex: 1 }}
           sections={sections as any}
           stickySectionHeadersEnabled={false}
-          ListHeaderComponent={<View style={{ marginTop: headerHeight }} />}
+          ListHeaderComponent={<View style={{ marginTop: HEADER_HEIGHT }} />}
           renderSectionHeader={renderSectionHeader}
         />
       ) : (
@@ -317,7 +315,7 @@ const s = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(0,0,0,0.8)",
     paddingVertical: 5,
-    height: headerHeight,
+    height: HEADER_HEIGHT,
     justifyContent: "flex-end",
   },
 });

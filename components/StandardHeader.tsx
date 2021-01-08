@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
-import { getStatusBarHeight } from "react-native-status-bar-height";
+import { HEADER_HEIGHT } from "../constants/constants";
 import Text from "./style/Text";
 
 type Props = {
@@ -36,7 +36,7 @@ const StandardHeader: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   paddingContainer: {
-    height: 60 + getStatusBarHeight(),
+    height: HEADER_HEIGHT,
     justifyContent: "flex-end",
     position: "absolute",
     width: "100%",

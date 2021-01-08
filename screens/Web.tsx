@@ -11,7 +11,7 @@ import {
 import Text from "../components/style/Text";
 import { WebView } from "react-native-webview";
 import { Icon } from "react-native-elements";
-import { getStatusBarHeight } from "react-native-status-bar-height";
+import { HEADER_HEIGHT } from "../constants/constants";
 
 type Props = {
   navigation: any;
@@ -117,7 +117,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   paddingContainer: {
-    height: 60 + getStatusBarHeight(),
+    height: HEADER_HEIGHT,
     justifyContent: "flex-end",
   },
 });

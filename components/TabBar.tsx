@@ -69,7 +69,7 @@ const TabBar: React.FC<any> = (props) => {
                   size={30}
                 />
                 {focused && <TempTabBarIndicator />}
-                {name == "Inbox" && unreadInbox.length > 0 && (
+                {name == "Inbox" && unreadInbox && unreadInbox.length > 0 && (
                   <View style={s.dotContainer}>
                     <UnreadDot color="#00af64" />
                   </View>
@@ -92,8 +92,7 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    // height: wh === sh ? (Platform.OS === "android" ? 75 : 70) : 105,
-    height: Platform.OS === "android" ? 50 + (sh - wh) : 70,
+    height: Platform.OS === "android" ? 55 + (sh - wh) : 70,
     position: "absolute",
     bottom: 0,
     width: "100%",

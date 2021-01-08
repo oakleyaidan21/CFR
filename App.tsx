@@ -18,7 +18,7 @@ if (!global.atob) {
   global.atob = decode;
 }
 
-LogBox.ignoreLogs(["Setting a timer"]);
+LogBox.ignoreLogs(["Setting a timer", "Require cycle"]);
 
 // For android layout animations
 if (

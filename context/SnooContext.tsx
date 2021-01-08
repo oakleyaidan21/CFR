@@ -1,5 +1,11 @@
 import { createContext } from "react";
-import Snoowrap, { Listing, RedditUser, Subreddit } from "snoowrap";
+import Snoowrap, {
+  Comment,
+  Listing,
+  PrivateMessage,
+  RedditUser,
+  Subreddit,
+} from "snoowrap";
 
 interface SnooContextInterface {
   snoowrap: null | Snoowrap;
@@ -8,7 +14,7 @@ interface SnooContextInterface {
   setUser: any;
   userSubs: Array<Subreddit>;
   setUserSubs: any;
-  unreadInbox: Array<any>;
+  unreadInbox: Listing<PrivateMessage | Comment> | null;
   setUnreadInbox: any;
 }
 
@@ -19,7 +25,7 @@ const SnooContext = createContext<SnooContextInterface>({
   setUser: null,
   userSubs: [],
   setUserSubs: null,
-  unreadInbox: [],
+  unreadInbox: null,
   setUnreadInbox: null,
 });
 

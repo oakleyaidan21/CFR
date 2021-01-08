@@ -1,7 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { SectionList, View } from "react-native";
+import { SectionList, StyleSheet, View } from "react-native";
 import SnooContext from "../context/SnooContext";
 import Text from "../components/style/Text";
+import InboxItem from "../components/InboxItem";
+import { HEADER_HEIGHT } from "../constants/constants";
 
 const Inbox: React.FC = (props) => {
   const { unreadInbox, setUnreadInbox, snoowrap, user } = useContext(
@@ -10,8 +12,6 @@ const Inbox: React.FC = (props) => {
 
   const [unread, setUnread] = useState(unreadInbox);
   const [read, setRead] = useState([]);
-
-  console.log(read);
 
   useEffect(() => {
     if (user) {
@@ -23,27 +23,31 @@ const Inbox: React.FC = (props) => {
 
   const sections = [
     {
-      data: unread,
-      renderItem: ({ item }: any) => <Text>{item.author.name}</Text>,
+      data: unread ? unread : [],
+      renderItem: ({ item }: any) => <InboxItem messageData={item} />,
       keyExtractor: (item: any) => item.id,
-      title: "Unread Mesages",
+      title: "Unread Messages",
     },
     {
       data: read,
-      renderItem: ({ item }: any) => <Text>{item.author.name}</Text>,
+      renderItem: ({ item }: any) => <InboxItem messageData={item} read />,
       keyExtractor: (item: any) => item.id,
-      title: "Read Mesages",
+      title: "Read Messages",
     },
   ];
 
   const renderSectionHeader = useCallback((info) => {
     return (
-      <View style={{ paddingHorizontal: 10, paddingTop: 5 }}>
+      <View>
         <Text style={{ fontWeight: "bold", fontSize: 20 }}>
           {info.section.title}
         </Text>
       </View>
     );
+  }, []);
+
+  const renderHeader = useCallback(() => {
+    return <View style={s.headerContainer}></View>;
   }, []);
 
   return (
@@ -52,7 +56,9 @@ const Inbox: React.FC = (props) => {
         <SectionList
           style={{ flex: 1 }}
           sections={sections}
+          contentContainerStyle={{ padding: 10 }}
           renderSectionHeader={renderSectionHeader}
+          ListHeaderComponent={<View style={{ marginTop: HEADER_HEIGHT }} />}
         />
       ) : (
         <View
@@ -60,8 +66,21 @@ const Inbox: React.FC = (props) => {
           <Text>No user</Text>
         </View>
       )}
+      <View style={{ position: "absolute", top: 0, width: "100%" }}>
+        {renderHeader()}
+      </View>
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  headerContainer: {
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    paddingVertical: 5,
+    height: HEADER_HEIGHT,
+    justifyContent: "flex-end",
+  },
+});
 
 export default Inbox;

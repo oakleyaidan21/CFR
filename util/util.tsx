@@ -39,7 +39,8 @@ export const getTimeSincePosted = (utc: number) => {
       }
     }
   }
-  return time + "" + timeType;
+  const toReturn = time + "" + timeType;
+  return toReturn == "0m" ? "Just now" : toReturn;
 };
 
 export const getUriImage = (uri: string) => {

@@ -11,8 +11,8 @@ import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getStatusBarHeight } from "react-native-status-bar-height";
 import { parseLink } from "../util/util";
+import { HEADER_HEIGHT } from "../constants/constants";
 
 type Props = {
   navigation: any;
@@ -68,7 +68,7 @@ const Post: React.FC<Props> = (props) => {
         {/* padding view to make translucent header look more natural */}
         <View
           style={{
-            height: 60 + getStatusBarHeight(),
+            height: HEADER_HEIGHT,
             width: "100%",
             backgroundColor: "black",
           }}
