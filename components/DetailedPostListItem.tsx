@@ -83,13 +83,13 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
           </View>
         );
       case "WEB":
-        return null;
+        return <View style={{ flex: 1 }} />;
       case "GAL":
         return (
           <GalleryViewer images={mapRedditGalleryImages()} noModal={true} />
         );
       default:
-        return null;
+        return <View style={{ flex: 1 }} />;
     }
   }, [props.viewable]);
 
@@ -133,7 +133,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         </View>
       </View>
       {/* CONTENT */}
-      {content && <View style={s.contentContainer}>{content}</View>}
+      <View style={s.contentContainer}>{content}</View>
       {/* BOTTOM BAR */}
       <View style={[s.row, { justifyContent: "space-between" }]}>
         <Score data={data} iconSize={20} />

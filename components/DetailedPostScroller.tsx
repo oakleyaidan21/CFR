@@ -102,29 +102,11 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
 
   const getItemLayout = useCallback(
     (data: any, index) => {
-      // if (postItemView == "simple") {
-      //   return {
-      //     length: 170,
-      //     offset: 170 * index,
-      //     index,
-      //   };
-      // } else {
-      //   // DOESNT WORK SINCE POST HEIGHTS CAN VARY
-      //   const postType = determinePostType(data[index]);
-      //   let l = 170;
-      //   if (
-      //     postType.code == "IMG" ||
-      //     postType.code == "GIF" ||
-      //     postType.code == "VID"
-      //   ) {
-      //     l = 170 + DETAILED_POST_HEIGHT + 10;
-      //   }
-      //   return {
-      //     length: l,
-      //     offset: l + flatlistHeight,
-      //     index,
-      //   };
-      // }
+      return {
+        length: DETAILED_POST_HEIGHT + 10,
+        offset: (DETAILED_POST_HEIGHT + 10) * index,
+        index,
+      };
     },
     [listing, flatlistHeight],
   );
@@ -141,7 +123,7 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
         renderItem={renderItem}
         data={listing}
         keyExtractor={(item, index) => item.id + index.toString()}
-        getItemLayout={undefined}
+        getItemLayout={getItemLayout}
         ListEmptyComponent={renderListEmtpy}
         onEndReached={onEndReached}
         viewabilityConfig={{
