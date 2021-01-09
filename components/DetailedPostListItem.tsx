@@ -14,12 +14,13 @@ import ImageWithIndicator from "./ImageWithIndicator";
 import Score from "./Score";
 import SimpleVideo from "./SimpleVideo";
 import Flair from "./style/Flair";
-import VideoPlayer from "./VideoPlayer";
+import VideoPoster from "./VideoPoster";
 
 type Props = {
   data: Submission;
   onPress: any;
   index: number;
+  viewable: boolean;
 };
 
 const DetailedPostListItem: React.FC<Props> = (props) => {
@@ -74,9 +75,9 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
               source={
                 postType.fourExt == ".gifv"
                   ? data.url.substring(0, data.url.length - 4) + "mp4"
-                  : (data.media?.reddit_video?.hls_url as string)
+                  : (data.media?.reddit_video?.fallback_url as string)
               }
-              play={true}
+              play={props.viewable}
               posterSource={imgUrl}
             />
           </View>
@@ -90,7 +91,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       default:
         return null;
     }
-  }, []);
+  }, [props.viewable]);
 
   const content = renderContent();
 
@@ -187,7 +188,8 @@ const s = StyleSheet.create({
 function postPropsAreEqual(prevPost: Props, nextPost: Props) {
   return (
     prevPost.data.id === nextPost.data.id &&
-    prevPost.data.score === nextPost.data.score
+    prevPost.data.score === nextPost.data.score &&
+    prevPost.viewable === nextPost.viewable
   );
 }
 
