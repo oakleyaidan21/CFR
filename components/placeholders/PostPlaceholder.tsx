@@ -1,5 +1,6 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet, View, Dimensions } from "react-native";
+import { POST_ITEM_HEIGHT } from "../../constants/constants";
 import PlaceholderContainer from "./PlaceholderContainer";
 
 const h = Dimensions.get("window").height;
@@ -54,7 +55,7 @@ const s = StyleSheet.create({
   },
   block: {
     width: "100%",
-    height: 160,
+    height: POST_ITEM_HEIGHT,
     marginBottom: 10,
     borderRadius: 3,
   },

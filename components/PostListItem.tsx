@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
+import { POST_ITEM_HEIGHT } from "../constants/constants";
 import { getTimeSincePosted, getUriImage } from "../util/util";
 import Score from "./Score";
 import Flair from "./style/Flair";
@@ -77,7 +78,7 @@ const PostListItem: React.FC<Props> = (props) => {
 
 const s = StyleSheet.create({
   container: {
-    height: 160,
+    height: POST_ITEM_HEIGHT,
     margin: 10,
     marginBottom: 0,
     paddingHorizontal: 10,

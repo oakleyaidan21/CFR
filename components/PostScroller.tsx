@@ -16,7 +16,7 @@ import PostScrollerFooter from "./PostScrollerFooter";
 import SnooContext from "../context/SnooContext";
 import { useSelector } from "react-redux";
 import { determinePostType } from "../util/util";
-import { DETAILED_POST_HEIGHT } from "../constants/constants";
+import { DETAILED_POST_HEIGHT, POST_ITEM_HEIGHT } from "../constants/constants";
 
 type Props = {
   header: any;
@@ -95,8 +95,8 @@ const PostScroller: React.FC<Props> = (props) => {
   const getItemLayout = useCallback(
     (data: any, index) => {
       return {
-        length: 170,
-        offset: 170 * index,
+        length: POST_ITEM_HEIGHT + 10,
+        offset: (POST_ITEM_HEIGHT + 10) * index,
         index,
       };
     },

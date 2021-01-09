@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { POST_ITEM_HEIGHT } from "../../constants/constants";
 import PlaceholderContainer from "./PlaceholderContainer";
 
 const HomePlaceholder: React.FC = (props) => {
@@ -33,7 +34,7 @@ const s = StyleSheet.create({
   },
   block: {
     width: "100%",
-    height: 160,
+    height: POST_ITEM_HEIGHT,
     marginBottom: 10,
     borderRadius: 3,
   },

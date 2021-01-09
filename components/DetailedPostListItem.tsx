@@ -3,7 +3,10 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
-import { DETAILED_POST_HEIGHT } from "../constants/constants";
+import {
+  DETAILED_POST_CONTENT_HEIGHT,
+  DETAILED_POST_HEIGHT,
+} from "../constants/constants";
 import {
   determinePostType,
   getTimeSincePosted,
@@ -97,10 +100,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
 
   return (
     <TouchableOpacity
-      style={[
-        s.container,
-        { height: 160 + (content ? DETAILED_POST_HEIGHT + 10 : 0) },
-      ]}
+      style={[s.container]}
       onPress={() => props.onPress(index)}>
       {/* POST INFO */}
       <View style={s.row}>
@@ -155,6 +155,7 @@ const s = StyleSheet.create({
     marginBottom: 0,
     paddingHorizontal: 10,
     borderRadius: 3,
+    height: DETAILED_POST_HEIGHT,
     backgroundColor: "rgb(30,30,30)",
   },
   image: {
@@ -176,7 +177,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   contentContainer: {
-    height: DETAILED_POST_HEIGHT,
+    height: DETAILED_POST_CONTENT_HEIGHT,
     width: "100%",
     backgroundColor: "rgb(0,0,0)",
     marginTop: 10,
