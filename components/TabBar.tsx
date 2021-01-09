@@ -92,7 +92,8 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   absoluteContainer: {
-    height: Platform.OS === "android" ? 55 + (sh - wh) : 70,
+    // height: Platform.OS === "android" ? 55 + (sh - wh) : 70,
+    height: Platform.OS === "android" ? 75 : 70,
     position: "absolute",
     bottom: 0,
     width: "100%",

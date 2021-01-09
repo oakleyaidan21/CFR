@@ -6,7 +6,11 @@ import InboxItem from "../components/InboxItem";
 import { HEADER_HEIGHT, INBOX_ITEM_HEIGHT } from "../constants/constants";
 import TabBarIndicator from "../components/animations/TabBarIndicator";
 
-const Inbox: React.FC = (props) => {
+type Props = {
+  navigation: any;
+};
+
+const Inbox: React.FC<Props> = (props) => {
   const { unreadInbox, setUnreadInbox, snoowrap, user } = useContext(
     SnooContext,
   );
@@ -58,7 +62,17 @@ const Inbox: React.FC = (props) => {
 
   const renderItem = useCallback(
     ({ item, index }) => {
-      return <InboxItem messageData={item} read={!showUnread} />;
+      return (
+        <InboxItem
+          messageData={item}
+          read={!showUnread}
+          onPress={() =>
+            item.parent_id
+              ? props.navigation.navigate("LoadPost", { id: item.parent_id })
+              : console.log("press")
+          }
+        />
+      );
     },
     [showUnread],
   );
