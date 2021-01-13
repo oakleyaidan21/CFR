@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import FastImage from "react-native-fast-image";
 import { Subreddit } from "snoowrap";
+import { SUB_ITEM_HEIGHT } from "../constants/constants";
 import Text from "./style/Text";
 
 type Props = {
@@ -50,7 +51,7 @@ const s = StyleSheet.create({
     padding: 10,
     backgroundColor: "rgb(30,30,30)",
     borderRadius: 3,
-    height: 100,
+    height: SUB_ITEM_HEIGHT,
     justifyContent: "center",
     flexDirection: "row",
   },

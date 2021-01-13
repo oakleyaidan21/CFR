@@ -74,7 +74,60 @@ const SubHeader: React.FC<Props> = (props) => {
 
   return (
     <View style={s.container}>
-      {showSearchBar ? (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {!props.fromHome && (
+          <Icon
+            name="arrow-back"
+            color="white"
+            onPress={props.navigation.goBack}
+          />
+        )}
+        <TouchableOpacity
+          onPress={props.onSubPress}
+          style={{ flexDirection: "row", alignItems: "center" }}>
+          {!isString ? (
+            <FastImage
+              source={{ uri: imgUrl }}
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 20,
+                marginHorizontal: 10,
+              }}
+            />
+          ) : (
+            <GlobalSubBubble
+              sub={data}
+              onPress={null}
+              size={40}
+              hideText={true}
+            />
+          )}
+          {!showSearchBar && (
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              {typeof data === "string" ? data : data.display_name}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+      {!showSearchBar && (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center" }}
+            onPress={() => setShowCatPicker(!showCatPicker)}>
+            <Text style={{ color: "grey", fontWeight: "bold" }}>
+              {category}
+            </Text>
+            <Icon name="arrow-drop-down" color="grey" />
+          </TouchableOpacity>
+          {subreddit !== "Front Page" && subreddit !== "Saved" && (
+            <TouchableOpacity onPress={() => setShowSearchBar(true)}>
+              <Icon name="search" color="grey" style={{ marginLeft: 10 }} />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+      {showSearchBar && (
         <SubSearchBar
           sub={data}
           close={() => setShowSearchBar(false)}
@@ -85,63 +138,12 @@ const SubHeader: React.FC<Props> = (props) => {
             })
           }
         />
-      ) : (
-        <>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            {!props.fromHome && (
-              <Icon
-                name="arrow-back"
-                color="white"
-                onPress={props.navigation.goBack}
-              />
-            )}
-            <TouchableOpacity
-              onPress={props.onSubPress}
-              style={{ flexDirection: "row", alignItems: "center" }}>
-              {!isString ? (
-                <FastImage
-                  source={{ uri: imgUrl }}
-                  style={{
-                    height: 40,
-                    width: 40,
-                    borderRadius: 20,
-                    marginHorizontal: 10,
-                  }}
-                />
-              ) : (
-                <GlobalSubBubble
-                  sub={data}
-                  onPress={null}
-                  size={40}
-                  hideText={true}
-                />
-              )}
-              <Text style={{ color: "white", fontWeight: "bold" }}>
-                {typeof data === "string" ? data : data.display_name}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
-              onPress={() => setShowCatPicker(!showCatPicker)}>
-              <Text style={{ color: "grey", fontWeight: "bold" }}>
-                {category}
-              </Text>
-              <Icon name="arrow-drop-down" color="grey" />
-            </TouchableOpacity>
-            {subreddit !== "Front Page" && subreddit !== "Saved" && (
-              <TouchableOpacity onPress={() => setShowSearchBar(true)}>
-                <Icon name="search" color="grey" style={{ marginLeft: 10 }} />
-              </TouchableOpacity>
-            )}
-          </View>
-          <CategoryPicker
-            isVisible={showCatPicker}
-            close={() => setShowCatPicker(false)}
-          />
-        </>
       )}
+
+      <CategoryPicker
+        isVisible={showCatPicker}
+        close={() => setShowCatPicker(false)}
+      />
     </View>
   );
 };

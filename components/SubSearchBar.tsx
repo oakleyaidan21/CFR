@@ -31,7 +31,6 @@ const SubSearchBar: React.FC<Props> = (props) => {
   const { sub } = props;
   const [showContent, setShowContent] = useState(false);
   const [query, setQuery] = useState("");
-  const [searching, setSearching] = useState(false);
   const { snoowrap } = useContext(SnooContext);
 
   const expand = useCallback((value, callback) => {
@@ -63,19 +62,6 @@ const SubSearchBar: React.FC<Props> = (props) => {
         <Fade
           show={showContent}
           style={{ flexDirection: "row", flex: 1, alignItems: "center" }}>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-
-              width: 50,
-            }}>
-            {searching ? (
-              <ActivityIndicator color="grey" />
-            ) : (
-              <Icon name="search" color="grey" />
-            )}
-          </View>
           <TextInput
             style={{ flex: 1, color: "white" }}
             placeholder={
@@ -86,8 +72,14 @@ const SubSearchBar: React.FC<Props> = (props) => {
             onChangeText={setQuery}
             onSubmitEditing={() => props.onSearch(sub, query)}
           />
-          <TouchableOpacity onPress={close}>
-            <Icon name="close" color="grey" style={{ width: 50 }} />
+          <TouchableOpacity
+            onPress={close}
+            style={{
+              width: 40,
+              justifyContent: "center",
+              alignItems: "center",
+            }}>
+            <Icon name="close" color="grey" />
           </TouchableOpacity>
         </Fade>
       )}
@@ -103,7 +95,8 @@ const s = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 3,
     borderColor: "grey",
-    height: 50,
+    height: 40,
+    paddingLeft: 10,
   },
 });
 

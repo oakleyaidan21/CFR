@@ -5,7 +5,7 @@ import PlaceholderContainer from "./PlaceholderContainer";
 
 const h = Dimensions.get("window").height;
 
-const PostPlaceholder: React.FC = (props) => {
+const PostPlaceholder = () => {
   return (
     <View style={{ height: h, marginTop: 100 }}>
       <PlaceholderContainer style={{ padding: 10 }} flash={true}>

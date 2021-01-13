@@ -20,6 +20,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Listing, Subreddit } from "snoowrap";
+import SearchSubsPlaceholder from "../components/placeholders/SearchSubsPlaceholder";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import { HEADER_HEIGHT } from "../constants/constants";
@@ -36,9 +37,7 @@ const Explore: React.FC<Props> = (props) => {
   const [popularSubs, setPopularSubs] = useState<Listing<Subreddit>>();
   const [newSubs, setNewSubs] = useState<Listing<Subreddit>>();
   const [searchFocused, setSearchFocused] = useState(false);
-  const [searchingSubs, setSearchingSubs] = useState(false);
-  const [searchingSubmissions, setSearchingSubmissions] = useState(false);
-
+  const [searching, setSearching] = useState(false);
   const searchRef = useRef<TextInput>(null);
 
   const { snoowrap } = useContext(SnooContext);
@@ -79,10 +78,10 @@ const Explore: React.FC<Props> = (props) => {
     searchRef.current?.blur();
     setResults([]);
     if (snoowrap) {
-      setSearchingSubs(true);
+      setSearching(true);
       searchForSubs(snoowrap, query).then((r: any) => {
         setResults(r);
-        setSearchingSubs(false);
+        setSearching(false);
       });
     }
   }, [query]);
@@ -136,12 +135,14 @@ const Explore: React.FC<Props> = (props) => {
             selectionColor={"#00af64"}
           />
           {results.length > 0 && (
-            <Icon
-              name="close"
-              color="white"
-              style={{ width: 50 }}
-              onPress={() => setResults([])}
-            />
+            <View
+              style={{
+                width: 50,
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <Icon name="close" color="white" onPress={() => setResults([])} />
+            </View>
           )}
         </View>
       </View>
@@ -164,15 +165,17 @@ const Explore: React.FC<Props> = (props) => {
 
   const renderListEmpty = useCallback(() => {
     return (
-      <View style={s.searchTypeContainer}>
-        <TouchableOpacity
-          style={s.searchType}
-          onPress={searchSubs}
-          disabled={query.length === 0 || searchingSubs}>
-          {searchingSubs ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <>
+      <View
+        style={[
+          s.searchTypeContainer,
+          { marginBottom: searchFocused ? 0 : 50 },
+        ]}>
+        {!searching ? (
+          <>
+            <TouchableOpacity
+              style={s.searchType}
+              onPress={searchSubs}
+              disabled={query.length === 0}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Icon
                   name="class"
@@ -196,22 +199,16 @@ const Explore: React.FC<Props> = (props) => {
                 }}>
                 Search for subreddits by name or topic
               </Text>
-            </>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={s.searchType}
-          onPress={() =>
-            props.navigation.navigate("SearchResults", {
-              query: query,
-              sub: "all",
-            })
-          }
-          disabled={query.length === 0 || searchingSubmissions}>
-          {searchingSubmissions ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={s.searchType}
+              onPress={() =>
+                props.navigation.navigate("SearchResults", {
+                  query: query,
+                  sub: "all",
+                })
+              }
+              disabled={query.length === 0}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Icon
                   name="group-work"
@@ -235,12 +232,14 @@ const Explore: React.FC<Props> = (props) => {
                 }}>
                 Search all of reddit
               </Text>
-            </>
-          )}
-        </TouchableOpacity>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <SearchSubsPlaceholder />
+        )}
       </View>
     );
-  }, [query, searchingSubs, searchingSubmissions]);
+  }, [query, searching, searchFocused]);
 
   const renderSectionHeader = useCallback((info) => {
     return (
@@ -256,7 +255,7 @@ const Explore: React.FC<Props> = (props) => {
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      {searchFocused ? (
+      {searchFocused || searching ? (
         renderListEmpty()
       ) : results.length > 0 ? (
         <FlatList
@@ -309,7 +308,6 @@ const s = StyleSheet.create({
     width: "100%",
     flex: 1,
     marginTop: 70,
-    marginBottom: 50,
   },
   headerContainer: {
     width: "100%",
