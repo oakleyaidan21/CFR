@@ -36,17 +36,23 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
     <View style={{ ...props.style }}>
       <FastImage {...props} onLoadEnd={onLoadEnd} onProgress={onProgress} />
       {progress !== 1 && (
-        <Animated.View
+        <View
           style={{
             position: "absolute",
-            top: -5,
-            height: 2,
-            left: WINDOW_WIDTH / 2 - 110,
-            width: 200,
-            backgroundColor: "#00af64",
-            transform: [{ scaleX: progress }],
-          }}
-        />
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+          <Animated.View
+            style={{
+              height: 2,
+              width: 200,
+              backgroundColor: "#00af64",
+              transform: [{ scaleX: progress }],
+            }}
+          />
+        </View>
       )}
     </View>
   );

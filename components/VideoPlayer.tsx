@@ -19,6 +19,9 @@ type Props = {
   autoPlay?: boolean;
   muted?: boolean;
   poster: string;
+  navigation: any;
+  canFullscreen: boolean;
+  title?: string;
 };
 
 const VideoPlayer: React.FC<Props> = (props) => {
@@ -98,42 +101,67 @@ const VideoPlayer: React.FC<Props> = (props) => {
       </TouchableWithoutFeedback>
       {/* CONTROLS */}
       {props.hasControls && (
-        <Fade show={showControls} style={s.controlBar}>
+        <Fade show={showControls} style={s.controlBarContainer}>
           <View style={s.controlBar}>
-            {isBuffering ? (
-              <View style={{ width: 50 }}>
+            <View style={{ width: 50, height: 50, justifyContent: "center" }}>
+              {isBuffering ? (
                 <ActivityIndicator color="white" />
+              ) : (
+                <TouchableOpacity
+                  onPress={() => (finished ? replay() : setPaused(!paused))}>
+                  <Icon
+                    name={
+                      finished ? "refresh" : paused ? "play-arrow" : "pause"
+                    }
+                    color="white"
+                    size={50}
+                  />
+                </TouchableOpacity>
+              )}
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                alignItems: "center",
+              }}>
+              <View style={{ width: 50, alignItems: "center" }}>
+                <Text>
+                  {Math.floor(currentVideoTime / 60) +
+                    ":" +
+                    (currentVideoTime % 60 < 10 ? "0" : "") +
+                    Math.floor(currentVideoTime % 60)}
+                </Text>
               </View>
-            ) : (
-              <TouchableOpacity
-                onPress={() => (finished ? replay() : setPaused(!paused))}>
-                <Icon
-                  name={finished ? "refresh" : paused ? "play-arrow" : "pause"}
-                  color="white"
-                  size={50}
-                />
-              </TouchableOpacity>
-            )}
-            <Text>
-              {Math.floor(currentVideoTime / 60) +
-                ":" +
-                (currentVideoTime % 60 < 10 ? "0" : "") +
-                Math.floor(currentVideoTime % 60)}
-            </Text>
-            <Slider
-              style={{ flex: 1, marginHorizontal: 3 }}
-              value={currentVideoTime}
-              minimumValue={0}
-              onValueChange={seekVideo}
-              maximumValue={duration}
-              minimumTrackTintColor={"#00af64"}
-            />
-            <Text>
-              {Math.floor(duration / 60) +
-                ":" +
-                (duration % 60 < 10 ? "0" : "") +
-                (duration % 60)}
-            </Text>
+              <Slider
+                style={{ flex: 1 }}
+                value={currentVideoTime}
+                minimumValue={0}
+                onValueChange={seekVideo}
+                maximumValue={duration}
+                minimumTrackTintColor={"#00af64"}
+              />
+              <View style={{ width: 50, alignItems: "center" }}>
+                <Text>
+                  {Math.floor(duration / 60) +
+                    ":" +
+                    (duration % 60 < 10 ? "0" : "") +
+                    (duration % 60)}
+                </Text>
+              </View>
+              {props.canFullscreen && (
+                <TouchableOpacity
+                  onPress={() =>
+                    props.navigation.navigate("RedditVideo", {
+                      source: props.source,
+                      poster: props.poster,
+                      title: props.title,
+                    })
+                  }>
+                  <Icon name={"aspect-ratio"} color="white" />
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
         </Fade>
       )}
@@ -142,12 +170,16 @@ const VideoPlayer: React.FC<Props> = (props) => {
 };
 
 const s = StyleSheet.create({
-  controlBar: {
+  controlBarContainer: {
     position: "absolute",
-    bottom: 0,
-    zIndex: 10,
-    height: 50,
+    height: "100%",
     width: "100%",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
+  controlBar: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

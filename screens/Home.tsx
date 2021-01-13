@@ -23,7 +23,7 @@ const Home: React.FC<Props> = (props) => {
 
   const onPostPress = useCallback(
     (data: Listing<Submission>, index: number) => {
-      props.navigation.navigate("PostSwiper", {
+      props.navigation.push("PostSwiper", {
         posts: data,
         index: index,
       });

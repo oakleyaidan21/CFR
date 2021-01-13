@@ -9,6 +9,7 @@ type Props = {
   relative?: boolean;
   label?: string;
   safe?: boolean;
+  content?: any;
 };
 
 const StandardHeader: React.FC<Props> = (props) => {
@@ -29,6 +30,7 @@ const StandardHeader: React.FC<Props> = (props) => {
             {props.label}
           </Text>
         )}
+        {props.content && props.content}
       </View>
     </View>
   );

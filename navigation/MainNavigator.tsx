@@ -14,6 +14,7 @@ import Subreddit from "../screens/Subreddit";
 import SubmissionSearchResults from "../screens/SubmissionSearchResults";
 import LoadPost from "../screens/LoadPost";
 import Settings from "../screens/Settings";
+import RedditVideo from "../screens/RedditVideo";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ const MainNavigator: React.FC = () => {
           <Stack.Screen name="Web" component={Web} />
           <Stack.Screen name="LoadPost" component={LoadPost} />
           <Stack.Screen name="Subreddit" component={Subreddit} />
+          <Stack.Screen name="RedditVideo" component={RedditVideo} />
           <Stack.Screen
             name="SearchResults"
             component={SubmissionSearchResults}

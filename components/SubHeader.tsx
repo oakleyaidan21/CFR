@@ -29,8 +29,14 @@ const SubHeader: React.FC<Props> = (props) => {
   const [showSearchBar, setShowSearchBar] = useState(false);
 
   useEffect(() => {
-    if (typeof props.data == "string" && !globalSubs.includes(props.data)) {
-      getSub();
+    if (typeof props.data == "string") {
+      if (!globalSubs.includes(props.data)) {
+        getSub();
+      }
+    } else {
+      if (Object.keys(props.data).length < 5) {
+        getSub();
+      }
     }
   }, []);
 

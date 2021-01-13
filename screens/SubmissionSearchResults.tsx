@@ -62,7 +62,7 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
           currentSubreddit={"Search Results"}
           header={renderHeader()}
           onPress={(data: Listing<Submission>, index: number) =>
-            props.navigation.navigate("PostSwiper", {
+            props.navigation.push("PostSwiper", {
               posts: data,
               index: index,
             })

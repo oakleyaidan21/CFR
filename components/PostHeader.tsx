@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { RedditContent, Submission } from "snoowrap";
+import { Submission } from "snoowrap";
 import {
   determinePostType,
   getTimeSincePosted,
@@ -24,12 +24,9 @@ import MDRenderer from "./MDRenderer";
 import GalleryViewer from "./GalleryViewer";
 import Flair from "./style/Flair";
 import VideoPlayer from "./VideoPlayer";
-import PostListItem from "./PostListItem";
 import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
 import CrossPostItem from "./CrossPostItem";
-import Sub from "../screens/Subreddit";
-import SnooContext from "../context/SnooContext";
 
 type Props = {
   data: Submission;
@@ -165,9 +162,12 @@ const PostHeader: React.FC<Props> = (props) => {
                   ? data.url.substring(0, data.url.length - 4) + "mp4"
                   : (data.media?.reddit_video?.hls_url as string)
               }
+              navigation={props.navigation}
               hasControls={true}
               autoPlay={false}
               poster={imgUrl}
+              title={data.title}
+              canFullscreen={true}
             />
           </View>
         );
@@ -200,8 +200,13 @@ const PostHeader: React.FC<Props> = (props) => {
       {/* POST INFO */}
       <View>
         <View style={s.row}>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("Subreddit", { data: subreddit })
+            }>
+            <Text style={{ color: "grey" }}>{subreddit.display_name}</Text>
+          </TouchableOpacity>
           <Text style={{ color: "grey" }}>
-            <Text>{subreddit.display_name}</Text>
             <Text> | </Text>
             <Text>{data.author.name}</Text>
             <Text> | </Text>
@@ -311,13 +316,6 @@ const s = StyleSheet.create({
     height: 50,
   },
 });
-
-function postPropsAreEqual(prevPost: Props, nextPost: Props) {
-  return (
-    prevPost.data.id === nextPost.data.id &&
-    prevPost.data.score === nextPost.data.score
-  );
-}
 
 // export default memo(PostHeader, postPropsAreEqual);
 

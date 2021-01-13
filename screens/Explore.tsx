@@ -25,7 +25,7 @@ import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
 import { HEADER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
-import { searchForSubs, searchPosts } from "../util/snoowrap/snoowrapFunctions";
+import { searchForSubs } from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
   navigation: any;
