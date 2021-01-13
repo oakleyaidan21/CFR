@@ -14,6 +14,7 @@ import SubmissionListingContext from "../context/SubmissionListingContext";
 import Text from "./style/Text";
 import SubHeader from "./SubHeader";
 import { HEADER_HEIGHT } from "../constants/constants";
+import Fade from "./animations/Fade";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 const anonSubs = ["Front Page", "Popular", "All"];
@@ -100,20 +101,18 @@ const HomeHeader: React.FC<Props> = (props) => {
 
   const renderSubHeader = useCallback(() => {
     return (
-      <SubHeader
-        data={currentSub}
-        onSubPress={animateHeaderChange}
-        navigation={props.navigation}
-        fromHome={true}
-      />
+      <Fade show={true}>
+        <SubHeader
+          data={currentSub}
+          onSubPress={animateHeaderChange}
+          navigation={props.navigation}
+          fromHome={true}
+        />
+      </Fade>
     );
   }, [currentSub, category]);
 
   const animateHeaderChange = useCallback(() => {
-    LayoutAnimation.configureNext({
-      duration: 200,
-      create: { duration: 200, type: "linear", property: "opacity" },
-    });
     setShowSubs(!showSubs);
   }, [showSubs]);
 
@@ -135,17 +134,19 @@ const HomeHeader: React.FC<Props> = (props) => {
       <View style={s.container}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {showSubs ? (
-            <SectionList
-              ref={scrollRef}
-              horizontal={true}
-              style={{
-                width: "100%",
-                height: 60,
-              }}
-              showsHorizontalScrollIndicator={false}
-              sections={sections as any}
-              ListFooterComponent={renderFooter}
-            />
+            <Fade show={true}>
+              <SectionList
+                ref={scrollRef}
+                horizontal={true}
+                style={{
+                  width: "100%",
+                  height: 60,
+                }}
+                showsHorizontalScrollIndicator={false}
+                sections={sections as any}
+                ListFooterComponent={renderFooter}
+              />
+            </Fade>
           ) : (
             <View style={{ flex: 1 }}>{renderSubHeader()}</View>
           )}
