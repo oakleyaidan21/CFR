@@ -1,17 +1,11 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import {
-  HEADER_HEIGHT,
-  POST_ITEM_HEIGHT,
-  SUB_ITEM_HEIGHT,
-} from "../../constants/constants";
+import { SUB_ITEM_HEIGHT } from "../../constants/constants";
 import PlaceholderContainer from "./PlaceholderContainer";
 
 const SearchSubsPlaceholder = () => {
   return (
-    <PlaceholderContainer
-      style={{ flex: 1, padding: 10, marginTop: 35 }}
-      flash={true}>
+    <PlaceholderContainer style={{ flex: 1, padding: 10 }} flash={true}>
       <View style={s.block} />
       <View style={s.block} />
       <View style={s.block} />

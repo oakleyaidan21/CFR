@@ -307,7 +307,7 @@ const s = StyleSheet.create({
   searchTypeContainer: {
     width: "100%",
     flex: 1,
-    marginTop: 70,
+    marginTop: HEADER_HEIGHT,
   },
   headerContainer: {
     width: "100%",
