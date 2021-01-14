@@ -23,7 +23,7 @@ import { Listing, Subreddit } from "snoowrap";
 import SearchSubsPlaceholder from "../components/placeholders/SearchSubsPlaceholder";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
-import { HEADER_HEIGHT } from "../constants/constants";
+import { HEADER_HEIGHT, TAB_CONTAINER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
 import { searchForSubs } from "../util/snoowrap/snoowrapFunctions";
 
@@ -161,7 +161,10 @@ const Explore: React.FC<Props> = (props) => {
     [results],
   );
 
-  const renderFooter = useCallback(() => <View style={{ height: 50 }} />, []);
+  const renderFooter = useCallback(
+    () => <View style={{ height: TAB_CONTAINER_HEIGHT + 10 }} />,
+    [],
+  );
 
   const renderListEmpty = useCallback(() => {
     return (
@@ -275,9 +278,7 @@ const Explore: React.FC<Props> = (props) => {
           renderSectionHeader={renderSectionHeader}
         />
       ) : (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator color="white" />
-        </View>
+        <SearchSubsPlaceholder />
       )}
 
       <View style={{ position: "absolute", top: 0, width: "100%" }}>

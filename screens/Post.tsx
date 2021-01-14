@@ -128,13 +128,16 @@ const Post: React.FC<Props> = (props) => {
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
-          height: 100,
+          height: 200,
+          marginBottom: 10,
         }}>
         <TouchableOpacity onPress={getComments} disabled={fetchingComments}>
           {fetchingComments ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text>Get more comments?</Text>
+            <Text style={{ color: "grey", fontWeight: "bold" }}>
+              Get more comments?
+            </Text>
           )}
         </TouchableOpacity>
       </View>

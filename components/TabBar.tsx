@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { TAB_CONTAINER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
 import TabBarIndicator from "./animations/TabBarIndicator";
 import UnreadDot from "./animations/UnreadDot";
@@ -84,20 +85,19 @@ const TabBar: React.FC<any> = (props) => {
 };
 
 const s = StyleSheet.create({
+  absoluteContainer: {
+    height: TAB_CONTAINER_HEIGHT,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
+  },
   container: {
     height: 50,
     width: "100%",
     flexDirection: "row",
     justifyContent: "center",
     alignContent: "center",
-  },
-  absoluteContainer: {
-    // height: Platform.OS === "android" ? 55 + (sh - wh) : 70,
-    height: Platform.OS === "android" ? 75 : 70,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    backgroundColor: "rgba(0,0,0,0.8)",
   },
   iconGroupContainer: {
     width: 350,

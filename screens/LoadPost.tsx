@@ -42,7 +42,7 @@ const LoadPost: React.FC<Props> = (props) => {
           route={{ params: { data: postData } }}
         />
       ) : (
-        <PostPlaceholder />
+        <PostPlaceholder navigation={props.navigation} />
       )}
       <StandardHeader navigation={props.navigation} />
     </View>

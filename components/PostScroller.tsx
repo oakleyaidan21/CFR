@@ -6,17 +6,16 @@ import React, {
   useRef,
 } from "react";
 import { FlatList, RefreshControl, View } from "react-native";
-import { Submission, Subreddit } from "snoowrap";
+import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import HomePlaceholder from "./placeholders/HomePlaceholder";
 import PostListItem from "./PostListItem";
-import DetailedPostListItem from "./DetailedPostListItem";
 import Text from "./style/Text";
 import PostScrollerFooter from "./PostScrollerFooter";
-import SnooContext from "../context/SnooContext";
-import { useSelector } from "react-redux";
-import { determinePostType } from "../util/util";
-import { DETAILED_POST_HEIGHT, POST_ITEM_HEIGHT } from "../constants/constants";
+import {
+  POST_ITEM_HEIGHT,
+  TAB_CONTENT_AREA_HEIGHT,
+} from "../constants/constants";
 
 type Props = {
   header: any;
@@ -62,8 +61,12 @@ const PostScroller: React.FC<Props> = (props) => {
       <HomePlaceholder />
     ) : (
       <View
-        style={{ height: 500, justifyContent: "center", alignItems: "center" }}>
-        <Text>No results...</Text>
+        style={{
+          height: TAB_CONTENT_AREA_HEIGHT,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Text style={{ color: "grey", fontWeight: "bold" }}>No results...</Text>
       </View>
     );
   }, [listing]);
