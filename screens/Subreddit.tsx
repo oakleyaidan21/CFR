@@ -34,10 +34,12 @@ const Sub: React.FC<Props> = (props) => {
     );
   }, []);
 
+  const subName = typeof data == "string" ? data : data.display_name;
+
   return (
     <View style={{ flex: 1 }}>
       <SubmissionListingProvider
-        initialSubreddit={typeof data == "string" ? data : data.display_name}
+        initialSubreddit={subName}
         initialCategory={"Hot"}
         initialTimeframe={"Day"}>
         <PostScroller
@@ -47,6 +49,7 @@ const Sub: React.FC<Props> = (props) => {
             props.navigation.push("PostSwiper", {
               posts: data,
               index: index,
+              prevScreen: subName,
             })
           }
         />

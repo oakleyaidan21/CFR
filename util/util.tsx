@@ -1,6 +1,8 @@
 import { useRef, useEffect } from "react";
 import { RedditContent, Submission } from "snoowrap";
 
+export const postRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/;
+
 export function useDidUpdateEffect(fn: any, inputs: any) {
   const didMountRef = useRef(false);
 
@@ -59,9 +61,7 @@ export const determinePostType = (data: Submission) => {
   if (data.crosspost_parent_list) {
     return { code: "XPT", xpst: data.crosspost_parent_list[0] };
   }
-  const matches = data.url.match(
-    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)$/,
-  );
+  const matches = data.url.match(postRegex);
   if (!matches) {
     return { code: "IDK" };
   }

@@ -32,6 +32,8 @@ type Props = {
 };
 
 const Explore: React.FC<Props> = (props) => {
+  const { userSubs } = useContext(SnooContext);
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Array<Subreddit>>([]);
   const [popularSubs, setPopularSubs] = useState<Listing<Subreddit>>();
@@ -48,6 +50,12 @@ const Explore: React.FC<Props> = (props) => {
       renderItem: ({ item }: any) => renderItem({ item: item }),
       keyExtractor: (item: Subreddit) => item.display_name + "Sl",
       title: "Popular Subs",
+    },
+    {
+      data: userSubs,
+      renderItem: ({ item }: any) => renderItem({ item: item }),
+      keyExtractor: (item: Subreddit) => item.display_name + "Us",
+      title: "Your Subs",
     },
     // newSubs && {
     //   data: newSubs,
@@ -244,15 +252,36 @@ const Explore: React.FC<Props> = (props) => {
     );
   }, [query, searching, searchFocused]);
 
-  const renderSectionHeader = useCallback((info) => {
+  const renderSectionHeader = useCallback(({ section }) => {
     return (
       <View style={{ paddingHorizontal: 10, paddingTop: 5 }}>
         <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-          {info.section.title}
+          {section.title}
         </Text>
       </View>
     );
   }, []);
+
+  const renderSectionFooter = useCallback(
+    ({ section }) => {
+      return section.data.length > 0 ? null : (
+        <View
+          style={{
+            width: "100%",
+            height: 100,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("Login")}>
+            <Text style={{ fontWeight: "bold", color: "#00af64" }}>Log in</Text>
+          </TouchableOpacity>
+          <Text> to view your subs!</Text>
+        </View>
+      );
+    },
+    [userSubs],
+  );
 
   return (
     <KeyboardAvoidingView
@@ -276,6 +305,9 @@ const Explore: React.FC<Props> = (props) => {
           stickySectionHeadersEnabled={false}
           ListHeaderComponent={<View style={{ marginTop: HEADER_HEIGHT }} />}
           renderSectionHeader={renderSectionHeader}
+          // renderSectionFooter={renderSectionFooter}
+          renderSectionFooter={renderSectionFooter}
+          ListFooterComponent={renderFooter}
         />
       ) : (
         <SearchSubsPlaceholder />

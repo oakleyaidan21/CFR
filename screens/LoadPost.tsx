@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { InteractionManager, StyleSheet, View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Submission } from "snoowrap";
@@ -6,10 +6,11 @@ import PostPlaceholder from "../components/placeholders/PostPlaceholder";
 import StandardHeader from "../components/StandardHeader";
 import SnooContext from "../context/SnooContext";
 import Post from "./Post";
+import Text from "../components/style/Text";
 
 type Props = {
   navigation: any;
-  route: { params: { id: string } };
+  route: { params: { id: string; screenTitle: string } };
 };
 
 const LoadPost: React.FC<Props> = (props) => {
@@ -34,6 +35,16 @@ const LoadPost: React.FC<Props> = (props) => {
       });
   };
 
+  const renderHeaderContent = useCallback(() => {
+    return (
+      <View style={{ marginLeft: 5 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+          {props.route.params.screenTitle}
+        </Text>
+      </View>
+    );
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       {postData ? (
@@ -44,7 +55,10 @@ const LoadPost: React.FC<Props> = (props) => {
       ) : (
         <PostPlaceholder navigation={props.navigation} />
       )}
-      <StandardHeader navigation={props.navigation} />
+      <StandardHeader
+        navigation={props.navigation}
+        content={renderHeaderContent()}
+      />
     </View>
   );
 };

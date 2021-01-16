@@ -28,7 +28,10 @@ const CrossPostItem: React.FC<Props> = (props) => {
       : data.thumbnail;
 
   const getXPost = useCallback(() => {
-    props.navigation.navigate("LoadPost", { id: data.id });
+    props.navigation.navigate("LoadPost", {
+      id: data.id,
+      screenTitle: "Crosspost",
+    });
   }, []);
 
   return (

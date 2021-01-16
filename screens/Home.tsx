@@ -26,6 +26,7 @@ const Home: React.FC<Props> = (props) => {
       props.navigation.push("PostSwiper", {
         posts: data,
         index: index,
+        prevScreen: "Home",
       });
     },
     [],

@@ -63,7 +63,7 @@ const HomeHeader: React.FC<Props> = (props) => {
           sub={sub}
           size={size}
           onPress={() => {
-            setShowSubs(false);
+            animateHeaderChange();
             setSubreddit(sub);
             scrollRef.current?.scrollToLocation({
               viewOffset: 0,
@@ -113,6 +113,7 @@ const HomeHeader: React.FC<Props> = (props) => {
   }, [currentSub, category]);
 
   const animateHeaderChange = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowSubs(!showSubs);
   }, [showSubs]);
 
@@ -134,19 +135,17 @@ const HomeHeader: React.FC<Props> = (props) => {
       <View style={s.container}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {showSubs ? (
-            <Fade show={true}>
-              <SectionList
-                ref={scrollRef}
-                horizontal={true}
-                style={{
-                  width: "100%",
-                  height: 60,
-                }}
-                showsHorizontalScrollIndicator={false}
-                sections={sections as any}
-                ListFooterComponent={renderFooter}
-              />
-            </Fade>
+            <SectionList
+              ref={scrollRef}
+              horizontal={true}
+              style={{
+                width: "100%",
+                height: 60,
+              }}
+              showsHorizontalScrollIndicator={false}
+              sections={sections as any}
+              ListFooterComponent={renderFooter}
+            />
           ) : (
             <View style={{ flex: 1 }}>{renderSubHeader()}</View>
           )}

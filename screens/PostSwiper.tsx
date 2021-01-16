@@ -4,9 +4,12 @@ import Swiper from "react-native-swiper";
 import { Listing, Submission } from "snoowrap";
 import StandardHeader from "../components/StandardHeader";
 import Post from "./Post";
+import Text from "../components/style/Text";
 
 type Props = {
-  route: { params: { index: number; posts: Listing<Submission> } };
+  route: {
+    params: { index: number; posts: Listing<Submission>; prevScreen: string };
+  };
   navigation: any;
 };
 
@@ -42,6 +45,16 @@ const PostSwiper: React.FC<Props> = (props) => {
     });
   }, [currPosts]);
 
+  const renderHeaderContent = useCallback(() => {
+    return (
+      <View style={{ marginLeft: 5 }}>
+        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+          {props.route.params.prevScreen}
+        </Text>
+      </View>
+    );
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <Swiper
@@ -53,7 +66,10 @@ const PostSwiper: React.FC<Props> = (props) => {
         {renderPosts()}
       </Swiper>
       {/* HEADER */}
-      <StandardHeader navigation={props.navigation} />
+      <StandardHeader
+        navigation={props.navigation}
+        content={renderHeaderContent()}
+      />
     </View>
   );
 };
