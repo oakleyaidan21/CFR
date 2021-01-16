@@ -113,7 +113,6 @@ const HomeHeader: React.FC<Props> = (props) => {
   }, [currentSub, category]);
 
   const animateHeaderChange = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowSubs(!showSubs);
   }, [showSubs]);
 
@@ -135,17 +134,19 @@ const HomeHeader: React.FC<Props> = (props) => {
       <View style={s.container}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           {showSubs ? (
-            <SectionList
-              ref={scrollRef}
-              horizontal={true}
-              style={{
-                width: "100%",
-                height: 60,
-              }}
-              showsHorizontalScrollIndicator={false}
-              sections={sections as any}
-              ListFooterComponent={renderFooter}
-            />
+            <Fade show={true} style={{ flex: 1 }}>
+              <SectionList
+                ref={scrollRef}
+                horizontal={true}
+                style={{
+                  width: "100%",
+                  height: 60,
+                }}
+                showsHorizontalScrollIndicator={false}
+                sections={sections as any}
+                ListFooterComponent={renderFooter}
+              />
+            </Fade>
           ) : (
             <View style={{ flex: 1 }}>{renderSubHeader()}</View>
           )}
