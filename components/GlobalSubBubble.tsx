@@ -10,7 +10,7 @@ type Props = {
   hideText?: boolean;
 };
 
-const GlobalSubBubble: React.FC<Props> = (props) => {
+const GlobalSubBubble = (props: Props) => {
   const getIcon = (name: string) => {
     switch (name) {
       case "Front Page":
@@ -73,4 +73,8 @@ const s = StyleSheet.create({
   },
 });
 
-export default memo(GlobalSubBubble);
+function subsAreEqual(prevComment: Props, nextComment: Props) {
+  return prevComment.sub === nextComment.sub;
+}
+
+export default memo(GlobalSubBubble, subsAreEqual);

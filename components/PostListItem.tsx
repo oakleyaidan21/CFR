@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
@@ -29,11 +29,15 @@ const PostListItem: React.FC<Props> = (props) => {
 
   const isSelf = data.is_self;
 
+  const onPress = useCallback(() => {
+    props.onPress(index);
+  }, [index]);
+
   return (
-    <TouchableOpacity style={s.container} onPress={() => props.onPress(index)}>
+    <TouchableOpacity style={s.container} onPress={onPress}>
       {/* POST INFO */}
       <View style={s.row}>
-        <Text style={{ color: "grey" }}>
+        <Text style={s.topText}>
           <Text>{subreddit.display_name}</Text>
           <Text> | </Text>
           <Text>{data.author.name}</Text>
@@ -44,14 +48,12 @@ const PostListItem: React.FC<Props> = (props) => {
         </Text>
       </View>
       {/* MAIN CONTENT */}
-      <View style={{ flexDirection: "row" }}>
+      <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
         <FastImage style={s.image} source={{ uri: imgUrl }} />
         {/* TITLE/FLAIR/POINTS*/}
         <View style={s.titleContainer}>
-          <Text
-            style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
-            numberOfLines={4}>
+          <Text style={s.titleText} numberOfLines={4}>
             {data.title}
           </Text>
           <Flair
@@ -62,14 +64,12 @@ const PostListItem: React.FC<Props> = (props) => {
         </View>
       </View>
       {/* BOTTOM BAR */}
-      <View style={[s.row, { justifyContent: "space-between" }]}>
+      <View style={s.bottomRow}>
         <Score data={data} iconSize={20} />
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={s.commentContainer}>
           <Icon name="comment" color="grey" size={15} />
           {/* COMMENTS */}
-          <Text style={{ color: "grey", marginLeft: 5 }}>
-            {data.num_comments}
-          </Text>
+          <Text style={s.commentText}>{data.num_comments}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -103,6 +103,17 @@ const s = StyleSheet.create({
     height: 30,
     alignItems: "center",
   },
+  bottomRow: {
+    flexDirection: "row",
+    height: 30,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  topText: { color: "grey", fontWeight: "bold" },
+  commentContainer: { flexDirection: "row", alignItems: "center" },
+  commentText: { color: "grey", marginLeft: 5, fontWeight: "bold" },
+  titleText: { flexShrink: 1, color: "white", fontWeight: "bold" },
+  mainContentContainer: { flexDirection: "row" },
 });
 
 function postPropsAreEqual(prevPost: Props, nextPost: Props) {

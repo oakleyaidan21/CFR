@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, memo } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
 } from "react-native";
@@ -27,14 +26,13 @@ import VideoPlayer from "./VideoPlayer";
 import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
 import CrossPostItem from "./CrossPostItem";
+import { POST_CONTENT_HEIGHT } from "../constants/constants";
 
 type Props = {
   data: Submission;
   navigation: any;
   showPlaceholder?: boolean;
 };
-
-const windowHeight = Dimensions.get("window").height;
 
 const PostHeader: React.FC<Props> = (props) => {
   const [showContent, setShowContent] = useState(true);
@@ -94,8 +92,6 @@ const PostHeader: React.FC<Props> = (props) => {
     [],
   );
 
-  const contentHeight = windowHeight - 25 - 130 - 110;
-
   const mapRedditGalleryImages = useCallback(() => {
     let urls = [];
 
@@ -124,13 +120,13 @@ const PostHeader: React.FC<Props> = (props) => {
         return false;
       case "IMG":
         return props.showPlaceholder ? (
-          <View style={{ height: contentHeight }} />
+          <View style={s.placeholderContainer} />
         ) : (
           <>
             <TouchableWithoutFeedback onPress={() => setShowImageViewer(true)}>
               <ImageWithIndicator
                 source={{ uri: data.url }}
-                style={{ width: "100%", height: contentHeight }}
+                style={s.imageContainer}
                 resizeMode={FastImage.resizeMode.contain}
               />
             </TouchableWithoutFeedback>
@@ -143,19 +139,19 @@ const PostHeader: React.FC<Props> = (props) => {
         );
       case "GIF":
         return props.showPlaceholder ? (
-          <View style={{ height: contentHeight }} />
+          <View style={s.placeholderContainer} />
         ) : (
           <ImageWithIndicator
             source={{ uri: data.url }}
-            style={{ width: "100%", height: contentHeight }}
+            style={s.imageContainer}
             resizeMode={FastImage.resizeMode.contain}
           />
         );
       case "VID":
         return props.showPlaceholder ? (
-          <View style={{ height: contentHeight }} />
+          <View style={s.placeholderContainer} />
         ) : (
-          <View style={{ width: "100%", height: contentHeight }}>
+          <View style={s.videoContainer}>
             <VideoPlayer
               source={
                 postType.fourExt == ".gifv"
@@ -173,17 +169,17 @@ const PostHeader: React.FC<Props> = (props) => {
         );
       case "GAL":
         return props.showPlaceholder ? (
-          <View style={{ height: contentHeight }} />
+          <View style={s.placeholderContainer} />
         ) : (
-          <View style={{ width: "100%", height: contentHeight }}>
+          <View style={s.imageContainer}>
             <GalleryViewer images={mapRedditGalleryImages()} />
           </View>
         );
       case "IGL":
         return props.showPlaceholder ? (
-          <View style={{ height: contentHeight }} />
+          <View style={s.placeholderContainer} />
         ) : (
-          <View style={{ width: "100%", height: contentHeight }}>
+          <View style={s.imageContainer}>
             <ImgurAlbumViewer imgurHash={postType.hash as string} />
           </View>
         );
@@ -204,9 +200,9 @@ const PostHeader: React.FC<Props> = (props) => {
             onPress={() =>
               props.navigation.navigate("Subreddit", { data: subreddit })
             }>
-            <Text style={{ color: "grey" }}>{subreddit.display_name}</Text>
+            <Text style={s.subNameText}>{subreddit.display_name}</Text>
           </TouchableOpacity>
-          <Text style={{ color: "grey" }}>
+          <Text style={s.topBarText}>
             <Text> | </Text>
             <Text>{data.author.name}</Text>
             <Text> | </Text>
@@ -216,14 +212,14 @@ const PostHeader: React.FC<Props> = (props) => {
           </Text>
         </View>
         {/* MAIN CONTENT */}
-        <View style={{ flexDirection: "row", flex: 1, width: "100%" }}>
+        <View style={s.mainContentContainer}>
           {/* THUMBNAIL */}
           <TouchableOpacity onPress={openLink}>
             <FastImage style={s.image} source={{ uri: imgUrl }} />
           </TouchableOpacity>
           {/* TITLE/FLAIR/POINTS*/}
           <TouchableOpacity
-            style={{ flex: 1 }}
+            style={s.postTextContainer}
             disabled={isSelf}
             onPress={() => {
               if (!content) {
@@ -233,11 +229,7 @@ const PostHeader: React.FC<Props> = (props) => {
               }
             }}>
             <View style={s.titleContainer}>
-              <Text
-                style={{ color: "white", fontWeight: "bold" }}
-                numberOfLines={isSelf ? 10 : 4}>
-                {data.title}
-              </Text>
+              <Text style={s.titleText}>{data.title}</Text>
               <Flair
                 text={data.link_flair_text}
                 backgroundColor={data.link_flair_background_color}
@@ -249,7 +241,7 @@ const PostHeader: React.FC<Props> = (props) => {
       </View>
       {/* CONTENT */}
       {showContent && content && (
-        <View style={{ marginTop: 10 }}>{content}</View>
+        <View style={s.contentContainer}>{content}</View>
       )}
       {/* FOOTER */}
       <View>
@@ -266,21 +258,9 @@ const PostHeader: React.FC<Props> = (props) => {
           <Icon name="flag" color="grey" />
           <Icon name="more-horiz" color="grey" />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 10,
-          }}>
-          <Icon
-            name="comment"
-            color="grey"
-            style={{ marginRight: 10 }}
-            size={20}
-          />
-          <Text style={{ color: "grey", fontWeight: "bold" }}>
-            {data.num_comments} Comments
-          </Text>
+        <View style={s.commentInfoContainer}>
+          <Icon name="comment" color="grey" style={s.commentIcon} size={20} />
+          <Text style={s.numCommentText}>{data.num_comments} Comments</Text>
           <Icon name="arrow-drop-down" color="grey" />
         </View>
       </View>
@@ -315,8 +295,29 @@ const s = StyleSheet.create({
     alignItems: "center",
     height: 50,
   },
+  placeholderContainer: { height: POST_CONTENT_HEIGHT },
+  imageContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
+  videoContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
+  subNameText: { color: "grey", fontWeight: "bold" },
+  mainContentContainer: { flexDirection: "row", flex: 1, width: "100%" },
+  topBarText: { color: "grey", fontWeight: "bold" },
+  postTextContainer: { flexDirection: "row", flex: 1, width: "100%" },
+  contentContainer: { marginTop: 10 },
+  titleText: { color: "white", fontWeight: "bold" },
+  commentIcon: { marginRight: 10 },
+  numCommentText: { color: "grey", fontWeight: "bold" },
+  commentInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
 });
 
-// export default memo(PostHeader, postPropsAreEqual);
+function postsAreEqual(prevComment: Props, nextComment: Props) {
+  return (
+    prevComment.data.id === nextComment.data.id &&
+    prevComment.data.score === nextComment.data.score
+  );
+}
 
-export default PostHeader;
+export default memo(PostHeader, postsAreEqual);
