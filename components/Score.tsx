@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Icon } from "react-native-elements";
 import { Comment, Submission } from "snoowrap";
 
@@ -28,8 +28,8 @@ const Score: React.FC<Props> = (props) => {
   }, [liked, score]);
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <View style={{ transform: [{ rotate: "270deg" }] }}>
+    <View style={s.container}>
+      <View style={s.upvote}>
         <Icon
           name="forward"
           color={liked ? "#ff8b5f" : "grey"}
@@ -45,7 +45,7 @@ const Score: React.FC<Props> = (props) => {
         }}>
         {score > 9999 ? (score / 1000).toPrecision(3) + "k" : score}
       </Text>
-      <View style={{ transform: [{ rotate: "90deg" }] }}>
+      <View style={s.downvote}>
         <Icon
           name="forward"
           color={liked == false ? "#9494ff" : "grey"}
@@ -56,5 +56,11 @@ const Score: React.FC<Props> = (props) => {
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: { flexDirection: "row", alignItems: "center" },
+  upvote: { transform: [{ rotate: "270deg" }] },
+  downvote: { transform: [{ rotate: "90deg" }] },
+});
 
 export default Score;

@@ -54,14 +54,9 @@ const CommentThread: React.FC<Props> = (props) => {
           backgroundColor: "rgb(30,30,30)",
         }}>
         {/* BODY */}
-        <View style={{ padding: 10, paddingLeft: 0 }}>
+        <View style={s.bodyContainer}>
           {/* COMMENTER INFO */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}>
+          <View style={s.commenterInfoContainer}>
             <Text
               style={{
                 color:
@@ -75,7 +70,7 @@ const CommentThread: React.FC<Props> = (props) => {
               {data.author.name}
             </Text>
 
-            <Text style={{ color: "grey" }}>
+            <Text style={s.timestampText}>
               {getTimeSincePosted(data.created_utc)}
             </Text>
           </View>
@@ -83,14 +78,9 @@ const CommentThread: React.FC<Props> = (props) => {
           <Text></Text>
           <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* COMMENT INFO */}
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}>
+          <View style={s.commentInfoContainer}>
             <Score data={data} iconSize={20} />
-            <Text style={{ color: "grey" }}>
+            <Text style={s.numReplyText}>
               {data.replies.length == 1
                 ? "1 reply"
                 : data.replies.length == 0
@@ -101,9 +91,7 @@ const CommentThread: React.FC<Props> = (props) => {
         </View>
         {/* REPLIES */}
         {showReplies && data.replies.length > 0 && (
-          <View style={{ marginBottom: 5 }}>
-            {data.replies.map(renderReply)}
-          </View>
+          <View style={s.replyContainer}>{data.replies.map(renderReply)}</View>
         )}
       </View>
     </TouchableWithoutFeedback>
@@ -119,6 +107,20 @@ const s = StyleSheet.create({
     borderColor: "grey",
     marginRight: 5,
   },
+  bodyContainer: { padding: 10, paddingLeft: 0 },
+  commenterInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  timestampText: { color: "grey" },
+  commentInfoContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  numReplyText: { color: "grey" },
+  replyContainer: { marginBottom: 5 },
 });
 
 function commentsAreEqual(prevComment: Props, nextComment: Props) {

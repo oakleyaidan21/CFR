@@ -11,6 +11,8 @@ interface SubmissionListingContextInterface {
   setTimeframe: any;
   subreddit: string | Subreddit;
   setSubreddit: any;
+  failed: boolean;
+  setFailed: any;
 }
 
 const SubmissionListingContext = createContext<SubmissionListingContextInterface>(
@@ -24,6 +26,8 @@ const SubmissionListingContext = createContext<SubmissionListingContextInterface
     setTimeframe: null,
     subreddit: "Front Page",
     setSubreddit: null,
+    failed: false,
+    setFailed: null,
   },
 );
 

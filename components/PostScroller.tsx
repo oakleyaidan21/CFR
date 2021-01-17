@@ -5,7 +5,13 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import HomePlaceholder from "./placeholders/HomePlaceholder";
@@ -16,6 +22,7 @@ import {
   POST_ITEM_HEIGHT,
   TAB_CONTENT_AREA_HEIGHT,
 } from "../constants/constants";
+import { Icon } from "react-native-elements";
 
 type Props = {
   header: any;
@@ -25,7 +32,7 @@ type Props = {
 
 const PostScroller: React.FC<Props> = (props) => {
   const scrollRef = useRef<FlatList>(null);
-  const { listing, setListing, getPosts, subreddit } = useContext(
+  const { listing, setListing, getPosts, subreddit, failed } = useContext(
     SubmissionListingContext,
   );
 
@@ -107,37 +114,53 @@ const PostScroller: React.FC<Props> = (props) => {
   );
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <FlatList
-        ref={scrollRef}
-        style={{ flex: 1, width: "100%" }}
-        // onScroll={onScroll}
-        renderItem={renderItem}
-        data={listing}
-        keyExtractor={(item, index) => item.id + index.toString()}
-        getItemLayout={getItemLayout}
-        ListEmptyComponent={renderListEmtpy}
-        onEndReached={onEndReached}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={refreshPosts}
-            tintColor={"white"}
-            style={{ backgroundColor: "black" }}
-            progressBackgroundColor={"black"}
-            colors={["white", "#00af64"]}
-          />
-        }
-        stickyHeaderIndices={[0]}
-        initialNumToRender={10}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
-      />
+    <View style={s.container}>
+      {failed ? (
+        <TouchableOpacity onPress={getPosts}>
+          <Text style={s.errorText}>An error occurred :( Try again?</Text>
+          <Icon name="refresh" color="grey" size={50} />
+        </TouchableOpacity>
+      ) : (
+        <FlatList
+          ref={scrollRef}
+          style={s.list}
+          // onScroll={onScroll}
+          renderItem={renderItem}
+          data={listing}
+          keyExtractor={(item, index) => item.id + index.toString()}
+          getItemLayout={getItemLayout}
+          ListEmptyComponent={renderListEmtpy}
+          onEndReached={onEndReached}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={refreshPosts}
+              tintColor={"white"}
+              style={s.refreshControl}
+              progressBackgroundColor={"black"}
+              colors={["white", "#00af64"]}
+            />
+          }
+          stickyHeaderIndices={[0]}
+          initialNumToRender={10}
+          ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderFooter}
+        />
+      )}
     </View>
   );
 };
 
-// use basic components
-// use light components
+const s = StyleSheet.create({
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  list: { flex: 1, width: "100%" },
+  refreshControl: { backgroundColor: "black" },
+  errorText: {
+    fontWeight: "bold",
+    color: "grey",
+    marginBottom: 20,
+    fontSize: 20,
+  },
+});
 
 export default PostScroller;

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
 import { Listing, Submission } from "snoowrap";
 import DetailedPostScroller from "../components/DetailedPostScroller";
@@ -56,11 +56,15 @@ const Home: React.FC<Props> = (props) => {
   }, [user, postItemView]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}>
+    <View style={s.container}>
       {/* POST SCROLLER */}
       {renderHomeScroller()}
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "rgb(20,20,20)" },
+});
 
 export default Home;

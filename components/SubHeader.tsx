@@ -1,5 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Subreddit } from "snoowrap";
@@ -27,15 +32,20 @@ const SubHeader: React.FC<Props> = (props) => {
   const [data, setData] = useState<string | Subreddit>(props.data);
   const [showCatPicker, setShowCatPicker] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const [loadingSub, setLoadingSub] = useState(true);
 
   useEffect(() => {
     if (typeof props.data == "string") {
       if (!globalSubs.includes(props.data)) {
         getSub();
+      } else {
+        setLoadingSub(false);
       }
     } else {
       if (Object.keys(props.data).length < 5) {
         getSub();
+      } else {
+        setLoadingSub(false);
       }
     }
   }, []);
@@ -48,6 +58,7 @@ const SubHeader: React.FC<Props> = (props) => {
       .fetch()
       .then((s) => {
         setData(s);
+        setLoadingSub(false);
       });
   }, [props.data]);
 
@@ -91,16 +102,10 @@ const SubHeader: React.FC<Props> = (props) => {
         <TouchableOpacity
           onPress={props.onSubPress}
           style={{ flexDirection: "row", alignItems: "center" }}>
-          {!isString ? (
-            <FastImage
-              source={{ uri: imgUrl }}
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 20,
-                marginHorizontal: 10,
-              }}
-            />
+          {loadingSub ? (
+            <ActivityIndicator color="white" style={s.imgIcon} />
+          ) : !isString ? (
+            <FastImage source={{ uri: imgUrl }} style={s.imgIcon} />
           ) : (
             <GlobalSubBubble
               sub={data}
@@ -162,6 +167,12 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     height: 60,
+  },
+  imgIcon: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    marginHorizontal: 10,
   },
 });
 

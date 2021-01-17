@@ -21,6 +21,7 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
   const [subreddit, setSubreddit] = useState<string | Subreddit>(
     props.initialSubreddit,
   );
+  const [failed, setFailed] = useState<boolean>(false);
 
   useEffect(() => {
     if (!props.listing) {
@@ -36,6 +37,7 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
   }, [props.listing]);
 
   const getPosts = () => {
+    setFailed(false);
     return getGeneralPosts(snoowrap, subreddit, category, timeframe)
       .then((posts: any) => {
         console.log("got posts!", posts.length);
@@ -43,6 +45,7 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
         return true;
       })
       .catch((error) => {
+        setFailed(true);
         return false;
       });
   };
@@ -59,6 +62,8 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
         setCategory: setCategory,
         subreddit: subreddit,
         setSubreddit: setSubreddit,
+        failed: failed,
+        setFailed: setFailed,
       }}>
       {props.children}
     </SubmissionListingContext.Provider>
