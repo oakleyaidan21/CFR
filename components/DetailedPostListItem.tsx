@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Image,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
@@ -82,6 +83,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
   }, []);
 
   const onImagePress = useCallback(() => {
+    console.log("pressed!");
     ReactNativeHapticFeedback.trigger("impactLight", options);
     setImageCover(!imageCover);
   }, [imageCover]);
@@ -98,7 +100,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
               resizeMode={
                 imageCover
                   ? FastImage.resizeMode.cover
-                  : FastImage.resizeMode.contain
+                  : FastImage.resizeMode.stretch
               }
             />
           </TouchableWithoutFeedback>
