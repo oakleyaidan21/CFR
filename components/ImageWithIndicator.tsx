@@ -36,14 +36,7 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
     <View style={{ ...props.style }}>
       <FastImage {...props} onLoadEnd={onLoadEnd} onProgress={onProgress} />
       {progress !== 1 && (
-        <View
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
+        <View style={s.progressBarContainer}>
           <Animated.View
             style={{
               height: 2,
@@ -59,12 +52,12 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
 };
 
 const s = StyleSheet.create({
-  progressBar: {
+  progressBarContainer: {
     position: "absolute",
-    top: 0,
-    backgroundColor: "#00af64",
-    height: 2,
-    width: WINDOW_WIDTH,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

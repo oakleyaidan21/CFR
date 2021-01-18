@@ -164,13 +164,12 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         </Text>
       </View>
       {/* MAIN CONTENT */}
-      <TouchableOpacity
-        style={s.mainContentContainer}
-        onPress={onMainContentPress}>
+      <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
         <FastImage style={s.image} source={{ uri: imgUrl }} />
         {/* TITLE/FLAIR/POINTS*/}
-        <View style={s.titleContainer}>
+
+        <TouchableOpacity style={s.titleContainer} onPress={onMainContentPress}>
           <Text style={s.titleText} numberOfLines={4}>
             {data.title}
           </Text>
@@ -179,8 +178,8 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
             backgroundColor={data.link_flair_background_color}
             textColor={data.link_flair_text_color}
           />
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
       {/* CONTENT */}
       {content && <View style={s.contentContainer}>{content}</View>}
       {/* BOTTOM BAR */}

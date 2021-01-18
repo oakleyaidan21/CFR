@@ -132,6 +132,7 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
         // getItemLayout={getItemLayout}
         ListEmptyComponent={renderListEmtpy}
         onEndReached={onEndReached}
+        windowSize={15}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 60,
         }}

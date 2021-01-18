@@ -1,8 +1,11 @@
 import React, { memo, useCallback, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { Icon } from "react-native-elements";
-import FastImage from "react-native-fast-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Video from "react-native-video";
 import VideoPoster from "./VideoPoster";
 
@@ -50,12 +53,15 @@ const SimpleVideo: React.FC<Props> = (props) => {
         onProgress={onProgress}
         progressUpdateInterval={700}
         style={s.container}
-        resizeMode={"cover"}
+        resizeMode={"contain"}
         paused={!props.play}
         posterResizeMode={"contain"}
         repeat={false}
         muted={true}
       />
+      <View style={s.absoluteIconsContainer}>
+        <Icon name="volume-off" color="grey" />
+      </View>
       {showPoster && <VideoPoster source={props.posterSource} />}
       {showReplay && (
         <View style={s.replayPosterContainer}>
@@ -64,7 +70,7 @@ const SimpleVideo: React.FC<Props> = (props) => {
           </TouchableOpacity>
         </View>
       )}
-      {playing && (
+      {playing && props.play && (
         <View style={s.playingIconContainer}>
           <ActivityIndicator color={"grey"} />
         </View>
@@ -85,6 +91,15 @@ const s = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10,
+  },
+  absoluteIconsContainer: {
+    width: "100%",
+    position: "absolute",
+    top: 10,
+    paddingHorizontal: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 
