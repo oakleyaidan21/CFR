@@ -1,5 +1,11 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import React, { memo, useCallback, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
@@ -17,7 +23,13 @@ import ImageWithIndicator from "./ImageWithIndicator";
 import Score from "./Score";
 import SimpleVideo from "./SimpleVideo";
 import Flair from "./style/Flair";
-import VideoPoster from "./VideoPoster";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import { useNavigation } from "@react-navigation/native";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 type Props = {
   data: Submission;
@@ -28,6 +40,11 @@ type Props = {
 
 const DetailedPostListItem: React.FC<Props> = (props) => {
   const { data, index } = props;
+
+  const [imageCover, setImageCover] = useState<boolean>(true);
+
+  const navigation = useNavigation();
+
   const imgUrl =
     !getUriImage(data.thumbnail) ||
     data.thumbnail == "" ||
@@ -51,60 +68,92 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
     return urls;
   }, []);
 
+  const onMainContentPress = useCallback(() => {
+    props.onPress(index);
+  }, [index]);
+
+  const onVideoPress = useCallback((source, poster, title) => {
+    // props.onPress(index);
+    navigation.navigate("RedditVideo", {
+      source,
+      poster,
+      title,
+    });
+  }, []);
+
+  const onImagePress = useCallback(() => {
+    ReactNativeHapticFeedback.trigger("impactLight", options);
+    setImageCover(!imageCover);
+  }, [imageCover]);
+
   const renderContent = useCallback(() => {
     const postType = determinePostType(data);
     switch (postType.code) {
       case "IMG":
         return (
-          <ImageWithIndicator
-            source={{ uri: data.url }}
-            style={{ width: "100%", height: "100%", borderRadius: 3 }}
-            resizeMode={FastImage.resizeMode.cover}
-          />
+          <TouchableWithoutFeedback onPress={onImagePress}>
+            <ImageWithIndicator
+              source={{ uri: data.url }}
+              style={s.imageContainer}
+              resizeMode={
+                imageCover
+                  ? FastImage.resizeMode.cover
+                  : FastImage.resizeMode.contain
+              }
+            />
+          </TouchableWithoutFeedback>
         );
       case "GIF":
         return (
           <ImageWithIndicator
             source={{ uri: data.url }}
-            style={{ width: "100%", height: "100%", borderRadius: 3 }}
-            resizeMode={FastImage.resizeMode.cover}
+            style={s.imageContainer}
+            resizeMode={
+              imageCover
+                ? FastImage.resizeMode.cover
+                : FastImage.resizeMode.contain
+            }
           />
         );
 
       case "VID":
+        const videoSource =
+          postType.fourExt == ".gifv"
+            ? data.url.substring(0, data.url.length - 4) + "mp4"
+            : (data.media?.reddit_video?.fallback_url as string);
         return (
-          <View style={{ flex: 1 }}>
-            <SimpleVideo
-              source={
-                postType.fourExt == ".gifv"
-                  ? data.url.substring(0, data.url.length - 4) + "mp4"
-                  : (data.media?.reddit_video?.fallback_url as string)
-              }
-              play={props.viewable}
-              posterSource={imgUrl}
-            />
-          </View>
+          <TouchableWithoutFeedback
+            onPress={() => onVideoPress(videoSource, imgUrl, data.title)}>
+            <View style={s.flex}>
+              <SimpleVideo
+                source={videoSource}
+                play={props.viewable}
+                posterSource={imgUrl}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         );
       case "WEB":
-        return <View style={{ flex: 1 }} />;
+        // return <View style={s.flex} />;
+        return null;
       case "GAL":
         return (
           <GalleryViewer images={mapRedditGalleryImages()} noModal={true} />
         );
       default:
-        return <View style={{ flex: 1 }} />;
+        // return <View style={s.flex} />;
+        null;
     }
-  }, [props.viewable]);
+  }, [props.viewable, imageCover]);
 
   const content = renderContent();
 
   return (
-    <TouchableOpacity
-      style={[s.container]}
-      onPress={() => props.onPress(index)}>
+    <View style={[s.container]}>
+      {/* // onPress={() => props.onPress(index)}> */}
       {/* POST INFO */}
       <View style={s.row}>
-        <Text style={{ color: "grey" }}>
+        <Text style={s.postInfoText}>
           <Text>{subreddit.display_name}</Text>
           <Text> | </Text>
           <Text>{data.author.name}</Text>
@@ -115,14 +164,14 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         </Text>
       </View>
       {/* MAIN CONTENT */}
-      <View style={{ flexDirection: "row" }}>
+      <TouchableOpacity
+        style={s.mainContentContainer}
+        onPress={onMainContentPress}>
         {/* THUMBNAIL */}
         <FastImage style={s.image} source={{ uri: imgUrl }} />
         {/* TITLE/FLAIR/POINTS*/}
         <View style={s.titleContainer}>
-          <Text
-            style={{ flexShrink: 1, color: "white", fontWeight: "bold" }}
-            numberOfLines={4}>
+          <Text style={s.titleText} numberOfLines={4}>
             {data.title}
           </Text>
           <Flair
@@ -131,21 +180,19 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
             textColor={data.link_flair_text_color}
           />
         </View>
-      </View>
+      </TouchableOpacity>
       {/* CONTENT */}
-      <View style={s.contentContainer}>{content}</View>
+      {content && <View style={s.contentContainer}>{content}</View>}
       {/* BOTTOM BAR */}
-      <View style={[s.row, { justifyContent: "space-between" }]}>
+      <View style={s.bottomBarContainer}>
         <Score data={data} iconSize={20} />
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={s.numCommentContainer}>
           <Icon name="comment" color="grey" size={15} />
           {/* COMMENTS */}
-          <Text style={{ color: "grey", marginLeft: 5 }}>
-            {data.num_comments}
-          </Text>
+          <Text style={s.numCommentText}>{data.num_comments}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -155,7 +202,7 @@ const s = StyleSheet.create({
     marginBottom: 0,
     paddingHorizontal: 10,
     borderRadius: 3,
-    height: DETAILED_POST_HEIGHT,
+    // height: DETAILED_POST_HEIGHT,
     backgroundColor: "rgb(30,30,30)",
   },
   image: {
@@ -184,6 +231,19 @@ const s = StyleSheet.create({
     borderRadius: 3,
     overflow: "hidden",
   },
+  postInfoText: { color: "grey", fontWeight: "bold" },
+  imageContainer: { width: "100%", height: "100%", borderRadius: 3 },
+  flex: { flex: 1 },
+  mainContentContainer: { flexDirection: "row" },
+  titleText: { flexShrink: 1, color: "white", fontWeight: "bold" },
+  numCommentContainer: { flexDirection: "row", alignItems: "center" },
+  bottomBarContainer: {
+    flexDirection: "row",
+    height: 30,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  numCommentText: { color: "grey", marginLeft: 5, fontWeight: "bold" },
 });
 
 function postPropsAreEqual(prevPost: Props, nextPost: Props) {

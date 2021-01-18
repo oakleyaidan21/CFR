@@ -39,7 +39,7 @@ const Inbox: React.FC<Props> = (props) => {
             }}
             onPress={() => setShowUnread(true)}>
             <Text style={{ fontWeight: "bold", fontSize: 30 }}>Unread</Text>
-            <View style={{ height: 20 }}>
+            <View style={{ height: 20, marginTop: 5 }}>
               {showUnread && <TabBarIndicator relative width={120} />}
             </View>
           </TouchableOpacity>
@@ -51,7 +51,7 @@ const Inbox: React.FC<Props> = (props) => {
               width: 100,
             }}>
             <Text style={{ fontWeight: "bold", fontSize: 30 }}>Read</Text>
-            <View style={{ height: 20 }}>
+            <View style={{ height: 20, marginTop: 5 }}>
               {!showUnread && <TabBarIndicator relative width={100} />}
             </View>
           </TouchableOpacity>
@@ -121,7 +121,8 @@ const s = StyleSheet.create({
     width: "60%",
     justifyContent: "space-between",
     alignItems: "center",
-    height: 60,
+
+    height: 30,
     flexDirection: "row",
     alignSelf: "center",
   },

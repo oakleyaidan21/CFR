@@ -5,7 +5,7 @@ import React, {
   useState,
   useRef,
 } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Submission, Subreddit } from "snoowrap";
 import SubmissionListingContext from "../context/SubmissionListingContext";
 import HomePlaceholder from "./placeholders/HomePlaceholder";
@@ -13,6 +13,7 @@ import DetailedPostListItem from "./DetailedPostListItem";
 import Text from "./style/Text";
 import PostScrollerFooter from "./PostScrollerFooter";
 import { DETAILED_POST_HEIGHT } from "../constants/constants";
+import { useIsFocused } from "@react-navigation/native";
 
 type Props = {
   header: any;
@@ -27,19 +28,25 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
     SubmissionListingContext,
   );
 
+  const isFocused = useIsFocused();
+
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [flatlistHeight, setFlatlistHeight] = useState(0);
   const [viewableItems, setViewableItems] = useState<any>([]);
 
-  const itemIsViewable = useCallback((items, index) => {
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].index == index) {
-        return true;
+  const itemIsViewable = useCallback(
+    (items, index) => {
+      if (!isFocused) return false;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].index == index) {
+          return true;
+        }
       }
-    }
-    return false;
-  }, []);
+      return false;
+    },
+    [isFocused],
+  );
 
   const renderItem = useCallback(
     ({ item, index }) => {
@@ -69,9 +76,8 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
     return !listing ? (
       <HomePlaceholder />
     ) : (
-      <View
-        style={{ height: 500, justifyContent: "center", alignItems: "center" }}>
-        <Text>No results...</Text>
+      <View style={s.noResultsContainer}>
+        <Text style={s.noResultsText}>No results...</Text>
       </View>
     );
   }, [listing]);
@@ -116,14 +122,14 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={s.container}>
       <FlatList
         ref={scrollRef}
-        style={{ flex: 1, width: "100%" }}
+        style={s.flatlist}
         renderItem={renderItem}
         data={listing}
         keyExtractor={(item, index) => item.id + index.toString()}
-        getItemLayout={getItemLayout}
+        // getItemLayout={getItemLayout}
         ListEmptyComponent={renderListEmtpy}
         onEndReached={onEndReached}
         viewabilityConfig={{
@@ -136,7 +142,7 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
             refreshing={refreshing}
             onRefresh={refreshPosts}
             tintColor={"white"}
-            style={{ backgroundColor: "black" }}
+            style={s.refreshControl}
             progressBackgroundColor={"black"}
             colors={["white", "#00af64"]}
           />
@@ -149,4 +155,17 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
     </View>
   );
 };
+
+const s = StyleSheet.create({
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  flatlist: { flex: 1, width: "100%" },
+  refreshControl: { backgroundColor: "black" },
+  noResultsContainer: {
+    height: 500,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noResultsText: { color: "grey", fontWeight: "bold" },
+});
+
 export default DetailedPostScroller;
