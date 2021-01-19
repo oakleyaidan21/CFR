@@ -40,11 +40,11 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
     setFailed(false);
     return getGeneralPosts(snoowrap, subreddit, category, timeframe)
       .then((posts: any) => {
-        console.log("got posts!", posts.length);
         setListing(posts);
         return true;
       })
       .catch((error) => {
+        console.log("error here:", error);
         setFailed(true);
         return false;
       });

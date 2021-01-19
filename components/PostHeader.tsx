@@ -194,7 +194,7 @@ const PostHeader: React.FC<Props> = (props) => {
   return (
     <View style={s.container}>
       {/* POST INFO */}
-      <View>
+      <View style={s.postInfoContainer}>
         <View style={s.row}>
           <TouchableOpacity
             onPress={() =>
@@ -244,7 +244,7 @@ const PostHeader: React.FC<Props> = (props) => {
         <View style={s.contentContainer}>{content}</View>
       )}
       {/* FOOTER */}
-      <View>
+      <View style={s.footerContainer}>
         <View style={s.postControl}>
           {/* SCORE CONTROL */}
           <Score data={data} iconSize={20} />
@@ -283,11 +283,13 @@ const s = StyleSheet.create({
   titleContainer: {
     alignItems: "flex-start",
   },
+  postInfoContainer: { height: 130 },
   row: {
     flexDirection: "row",
     height: 30,
     alignItems: "center",
   },
+  footerContainer: { height: 84 },
 
   postControl: {
     flexDirection: "row",

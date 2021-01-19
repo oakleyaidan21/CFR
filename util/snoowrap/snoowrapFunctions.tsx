@@ -265,3 +265,16 @@ export const searchForSubs = (snoowrap: snoowrap, query: string) => {
       return [];
     });
 };
+
+export const getUserByName = (snoowrap: snoowrap, name: string) => {
+  return snoowrap
+    .getUser(name)
+    .fetch()
+    .then((user) => {
+      return user;
+    })
+    .catch((error) => {
+      console.log("error getting user", error);
+      return null;
+    });
+};

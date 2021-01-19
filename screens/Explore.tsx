@@ -11,21 +11,28 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator,
   InteractionManager,
   LayoutAnimation,
   KeyboardAvoidingView,
   Platform,
   SectionList,
+  Alert,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { Listing, Subreddit } from "snoowrap";
 import SearchSubsPlaceholder from "../components/placeholders/SearchSubsPlaceholder";
 import Text from "../components/style/Text";
 import SubredditItem from "../components/SubredditItem";
-import { HEADER_HEIGHT, TAB_CONTAINER_HEIGHT } from "../constants/constants";
+import {
+  HEADER_HEIGHT,
+  TAB_CONTAINER_HEIGHT,
+  TAB_CONTENT_AREA_HEIGHT,
+} from "../constants/constants";
 import SnooContext from "../context/SnooContext";
-import { searchForSubs } from "../util/snoowrap/snoowrapFunctions";
+import {
+  getUserByName,
+  searchForSubs,
+} from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
   navigation: any;
@@ -43,6 +50,14 @@ const Explore: React.FC<Props> = (props) => {
   const searchRef = useRef<TextInput>(null);
 
   const { snoowrap } = useContext(SnooContext);
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      //get popular subreddits
+      getPopularSubs();
+      getNewSubs();
+    });
+  }, []);
 
   const sections = [
     {
@@ -94,13 +109,25 @@ const Explore: React.FC<Props> = (props) => {
     }
   }, [query]);
 
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      //get popular subreddits
-      getPopularSubs();
-      getNewSubs();
+  const searchAllSubmissions = useCallback(() => {
+    props.navigation.navigate("SearchResults", {
+      query: query,
+      sub: "all",
     });
-  }, []);
+  }, [query]);
+
+  const searchUsers = useCallback(() => {
+    if (snoowrap) {
+      getUserByName(snoowrap, query)
+        .then((user) => {
+          props.navigation.navigate("UserPage", { userData: user });
+        })
+        .catch((error) => {
+          console.log("error getting user:", error);
+          Alert.alert("No user with name: " + query);
+        });
+    }
+  }, [query]);
 
   const getPopularSubs = useCallback(() => {
     if (!popularSubs) {
@@ -176,79 +203,37 @@ const Explore: React.FC<Props> = (props) => {
 
   const renderListEmpty = useCallback(() => {
     return (
-      <View
-        style={[
-          s.searchTypeContainer,
-          { marginBottom: searchFocused ? 0 : 50 },
-        ]}>
+      <KeyboardAvoidingView
+        style={s.searchTypeContainer}
+        behavior={Platform.OS == "ios" ? "padding" : "height"}>
         {!searching ? (
           <>
-            <TouchableOpacity
-              style={s.searchType}
+            <SearchType
+              title="Subreddit"
+              subtitle="Search for subreddits by name or topic"
+              icon="class"
               onPress={searchSubs}
-              disabled={query.length === 0}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon
-                  name="class"
-                  color={query.length == 0 ? "grey" : "white"}
-                  style={{ marginRight: 10 }}
-                  size={50}
-                />
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 30,
-                    color: query.length == 0 ? "grey" : "white",
-                  }}>
-                  Subreddit
-                </Text>
-              </View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  color: query.length == 0 ? "grey" : "white",
-                }}>
-                Search for subreddits by name or topic
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={s.searchType}
-              onPress={() =>
-                props.navigation.navigate("SearchResults", {
-                  query: query,
-                  sub: "all",
-                })
-              }
-              disabled={query.length === 0}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon
-                  name="group-work"
-                  color={query.length == 0 ? "grey" : "white"}
-                  style={{ marginRight: 10 }}
-                  size={50}
-                />
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 30,
-                    color: query.length == 0 ? "grey" : "white",
-                  }}>
-                  All Submissions
-                </Text>
-              </View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  color: query.length == 0 ? "grey" : "white",
-                }}>
-                Search all of reddit
-              </Text>
-            </TouchableOpacity>
+              enabled={query.length > 0}
+            />
+            <SearchType
+              title="All Submissions"
+              subtitle="Search all of Reddit"
+              icon="group-work"
+              onPress={searchAllSubmissions}
+              enabled={query.length > 0}
+            />
+            <SearchType
+              title="Users"
+              subtitle="Enter a user's name"
+              icon="account-box"
+              onPress={searchUsers}
+              enabled={query.length > 0}
+            />
           </>
         ) : (
           <SearchSubsPlaceholder />
         )}
-      </View>
+      </KeyboardAvoidingView>
     );
   }, [query, searching, searchFocused]);
 
@@ -284,9 +269,10 @@ const Explore: React.FC<Props> = (props) => {
   );
 
   return (
-    <KeyboardAvoidingView
+    <View
       style={{ flex: 1, backgroundColor: "rgb(20,20,20)" }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      // behavior={Platform.OS === "ios" ? "padding" : "height"}>
+    >
       {searchFocused || searching ? (
         renderListEmpty()
       ) : results.length > 0 ? (
@@ -305,18 +291,58 @@ const Explore: React.FC<Props> = (props) => {
           stickySectionHeadersEnabled={false}
           ListHeaderComponent={<View style={{ marginTop: HEADER_HEIGHT }} />}
           renderSectionHeader={renderSectionHeader}
-          // renderSectionFooter={renderSectionFooter}
           renderSectionFooter={renderSectionFooter}
           ListFooterComponent={renderFooter}
         />
       ) : (
-        <SearchSubsPlaceholder />
+        <View style={{ flex: 1, marginTop: HEADER_HEIGHT }}>
+          <SearchSubsPlaceholder />
+        </View>
       )}
 
       <View style={{ position: "absolute", top: 0, width: "100%" }}>
         {renderHeader()}
       </View>
-    </KeyboardAvoidingView>
+    </View>
+  );
+};
+
+const SearchType = (props: {
+  title: string;
+  subtitle: string;
+  icon: string;
+  onPress: any;
+  enabled: boolean;
+}) => {
+  const { title, subtitle, icon, onPress, enabled } = props;
+  return (
+    <TouchableOpacity
+      style={s.searchType}
+      onPress={onPress}
+      disabled={!enabled}>
+      <View style={s.searchTypeTitleContainer}>
+        <Icon
+          name={icon}
+          color={enabled ? "white" : "grey"}
+          style={s.searchTypeIcon}
+          size={50}
+        />
+        <Text
+          style={{
+            ...s.searchTypeTitleText,
+            color: enabled ? "white" : "grey",
+          }}>
+          {title}
+        </Text>
+      </View>
+      <Text
+        style={{
+          ...s.searchTypeSubtitleText,
+          color: enabled ? "white" : "grey",
+        }}>
+        {subtitle}
+      </Text>
+    </TouchableOpacity>
   );
 };
 
@@ -339,8 +365,18 @@ const s = StyleSheet.create({
   },
   searchTypeContainer: {
     width: "100%",
-    flex: 1,
     marginTop: HEADER_HEIGHT,
+    height: TAB_CONTENT_AREA_HEIGHT,
+  },
+  searchTypeTitleContainer: { flexDirection: "row", alignItems: "center" },
+  searchTypeIcon: { marginRight: 10 },
+  searchTypeTitleText: {
+    fontWeight: "bold",
+    fontSize: 30,
+    color: "white",
+  },
+  searchTypeSubtitleText: {
+    marginTop: 10,
   },
   headerContainer: {
     width: "100%",

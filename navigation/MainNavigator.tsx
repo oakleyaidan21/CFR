@@ -15,6 +15,7 @@ import SubmissionSearchResults from "../screens/SubmissionSearchResults";
 import LoadPost from "../screens/LoadPost";
 import Settings from "../screens/Settings";
 import RedditVideo from "../screens/RedditVideo";
+import UserPage from "../screens/UserPage";
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,7 @@ const MainNavigator: React.FC = () => {
             component={SubmissionSearchResults}
           />
           <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="UserPage" component={UserPage} />
           <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </NavigationContainer>

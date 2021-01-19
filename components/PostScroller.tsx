@@ -117,7 +117,7 @@ const PostScroller: React.FC<Props> = (props) => {
     <View style={s.container}>
       {failed ? (
         <TouchableOpacity onPress={getPosts}>
-          <Text style={s.errorText}>An error occurred :( Try again?</Text>
+          <Text style={s.errorText}>An error occurred. Try again?</Text>
           <Icon name="refresh" color="grey" size={50} />
         </TouchableOpacity>
       ) : (

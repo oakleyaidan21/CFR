@@ -28,25 +28,21 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
     SubmissionListingContext,
   );
 
-  const isFocused = useIsFocused();
+  const scrollerIsFocused = useIsFocused();
 
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [flatlistHeight, setFlatlistHeight] = useState(0);
   const [viewableItems, setViewableItems] = useState<any>([]);
 
-  const itemIsViewable = useCallback(
-    (items, index) => {
-      if (!isFocused) return false;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].index == index) {
-          return true;
-        }
+  const itemIsViewable = useCallback((items, index) => {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].index == index) {
+        return true;
       }
-      return false;
-    },
-    [isFocused],
-  );
+    }
+    return false;
+  }, []);
 
   const renderItem = useCallback(
     ({ item, index }) => {
@@ -55,11 +51,11 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
           data={item}
           onPress={(index: number) => props.onPress(listing, index)}
           index={index}
-          viewable={itemIsViewable(viewableItems, index)}
+          viewable={scrollerIsFocused && itemIsViewable(viewableItems, index)}
         />
       );
     },
-    [listing, viewableItems],
+    [listing, viewableItems, scrollerIsFocused],
   );
 
   const onScroll = (e: any) => {
