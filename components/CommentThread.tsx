@@ -6,7 +6,8 @@ import {
   StyleSheet,
   LayoutAnimation,
 } from "react-native";
-import { Comment, RedditUser } from "snoowrap";
+import Snoowrap, { Comment, RedditUser } from "snoowrap";
+import { getUserByName } from "../util/snoowrap/snoowrapFunctions";
 import { getTimeSincePosted } from "../util/util";
 import MDRenderer from "./MDRenderer";
 import Score from "./Score";
@@ -16,16 +17,31 @@ type Props = {
   level: number;
   op: RedditUser;
   onLinkPress: any;
+  snoowrap: Snoowrap | null;
+  navigation: any;
 };
 
 const CommentThread: React.FC<Props> = (props) => {
-  const { data, level, op } = props;
+  const { data, level, op, snoowrap } = props;
 
   const [showReplies, setShowReplies] = useState(false);
 
   const animateReplies = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShowReplies(!showReplies);
   };
+
+  const onUserPress = useCallback(() => {
+    if (snoowrap) {
+      getUserByName(snoowrap, data.author.name)
+        .then((user) => {
+          props.navigation.navigate("UserPage", { userData: user });
+        })
+        .catch((error) => {
+          console.log("error getting user:", error);
+        });
+    }
+  }, []);
 
   const renderReply = useCallback((comment: Comment) => {
     return (
@@ -35,28 +51,28 @@ const CommentThread: React.FC<Props> = (props) => {
         op={op}
         key={comment.id}
         onLinkPress={props.onLinkPress}
+        snoowrap={snoowrap}
+        navigation={props.navigation}
       />
     );
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={animateReplies}>
-      <View
-        style={{
-          margin: level === 0 ? 5 : 0,
-          marginTop: 0,
-          borderRadius: 3,
-          borderTopLeftRadius: level === 0 ? 3 : 0,
-          borderBottomLeftRadius: level === 0 ? 3 : 0,
-          paddingLeft: 10,
+    <View
+      style={[
+        s.container,
+        {
+          margin: level == 0 ? 5 : 0,
+          borderTopLeftRadius: level == 0 ? 3 : 0,
+          borderBottomLeftRadius: level == 0 ? 3 : 0,
           borderLeftWidth: level > 0 ? 2 : 0,
-          borderColor: "rgb(50,50,50)",
-          backgroundColor: "rgb(30,30,30)",
-        }}>
-        {/* BODY */}
-        <View style={s.bodyContainer}>
-          {/* COMMENTER INFO */}
-          <View style={s.commenterInfoContainer}>
+        },
+      ]}>
+      {/* BODY */}
+      <View style={s.bodyContainer}>
+        {/* COMMENTER INFO */}
+        <View style={s.commenterInfoContainer}>
+          <TouchableWithoutFeedback onPress={onUserPress}>
             <Text
               style={{
                 color:
@@ -69,36 +85,49 @@ const CommentThread: React.FC<Props> = (props) => {
               }}>
               {data.author.name}
             </Text>
+          </TouchableWithoutFeedback>
 
-            <Text style={s.timestampText}>
-              {getTimeSincePosted(data.created_utc)}
-            </Text>
-          </View>
-          {/* HERE TO SPACE MDRENDER EVENLY. SEEMS JANK, TRUST ME IT'S NEEDED */}
-          <Text></Text>
-          <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
-          {/* COMMENT INFO */}
-          <View style={s.commentInfoContainer}>
-            <Score data={data} iconSize={20} hidden={data.score_hidden} />
-            <Text style={s.numReplyText}>
-              {data.replies.length == 1
-                ? "1 reply"
-                : data.replies.length == 0
-                ? ""
-                : data.replies.length + " replies"}
-            </Text>
-          </View>
+          <Text style={s.timestampText}>
+            {getTimeSincePosted(data.created_utc)}
+            {data.edited && "*"}
+          </Text>
         </View>
-        {/* REPLIES */}
-        {showReplies && data.replies.length > 0 && (
-          <View style={s.replyContainer}>{data.replies.map(renderReply)}</View>
-        )}
+        <TouchableWithoutFeedback onPress={animateReplies}>
+          <View>
+            {/* HERE TO SPACE MDRENDER EVENLY. SEEMS JANK, TRUST ME IT'S NEEDED */}
+            <Text></Text>
+            <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
+            {/* COMMENT INFO */}
+
+            <View style={s.commentInfoContainer}>
+              <Score data={data} iconSize={20} hidden={data.score_hidden} />
+              <Text style={s.numReplyText}>
+                {data.replies.length == 1
+                  ? "1 reply"
+                  : data.replies.length == 0
+                  ? ""
+                  : data.replies.length + " replies"}
+              </Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
-    </TouchableWithoutFeedback>
+      {/* REPLIES */}
+      {showReplies && data.replies.length > 0 && (
+        <View style={s.replyContainer}>{data.replies.map(renderReply)}</View>
+      )}
+    </View>
   );
 };
 
 const s = StyleSheet.create({
+  container: {
+    marginTop: 0,
+    borderRadius: 3,
+    paddingLeft: 10,
+    borderColor: "rgb(50,50,50)",
+    backgroundColor: "rgb(30,30,30)",
+  },
   userIconImg: {
     width: 20,
     height: 20,

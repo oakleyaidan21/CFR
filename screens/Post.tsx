@@ -13,6 +13,7 @@ import PostHeader from "../components/PostHeader";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { parseLink } from "../util/util";
 import { HEADER_HEIGHT } from "../constants/constants";
+import SnooContext from "../context/SnooContext";
 
 type Props = {
   navigation: any;
@@ -20,6 +21,8 @@ type Props = {
 };
 
 const Post: React.FC<Props> = (props) => {
+  const { snoowrap } = useContext(SnooContext);
+
   const [data, setData] = useState<Submission>(props.route.params.data);
   const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
@@ -106,6 +109,8 @@ const Post: React.FC<Props> = (props) => {
             level={0}
             op={data.author}
             onLinkPress={openLink}
+            snoowrap={snoowrap}
+            navigation={props.navigation}
           />
         </View>
       );

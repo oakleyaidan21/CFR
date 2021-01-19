@@ -26,7 +26,10 @@ import VideoPlayer from "./VideoPlayer";
 import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
 import CrossPostItem from "./CrossPostItem";
-import { POST_CONTENT_HEIGHT } from "../constants/constants";
+import {
+  POST_CONTENT_HEIGHT,
+  POST_INFO_CONTAINER_HEIGHT,
+} from "../constants/constants";
 
 type Props = {
   data: Submission;
@@ -283,7 +286,7 @@ const s = StyleSheet.create({
   titleContainer: {
     alignItems: "flex-start",
   },
-  postInfoContainer: { height: 130 },
+  postInfoContainer: { minHeight: POST_INFO_CONTAINER_HEIGHT },
   row: {
     flexDirection: "row",
     height: 30,
@@ -301,7 +304,11 @@ const s = StyleSheet.create({
   imageContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
   videoContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
   subNameText: { color: "grey", fontWeight: "bold" },
-  mainContentContainer: { flexDirection: "row", flex: 1, width: "100%" },
+  mainContentContainer: {
+    flexDirection: "row",
+    flex: 1,
+    width: "100%",
+  },
   topBarText: { color: "grey", fontWeight: "bold" },
   postTextContainer: { flexDirection: "row", flex: 1, width: "100%" },
   contentContainer: { marginTop: 10 },

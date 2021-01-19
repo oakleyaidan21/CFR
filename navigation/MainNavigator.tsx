@@ -1,11 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from "@react-navigation/stack";
 import TabNavigator from "./TabNavigator";
+import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import Login from "../screens/Login";
 import Post from "../screens/Post";
 import Web from "../screens/Web";
@@ -16,8 +13,10 @@ import LoadPost from "../screens/LoadPost";
 import Settings from "../screens/Settings";
 import RedditVideo from "../screens/RedditVideo";
 import UserPage from "../screens/UserPage";
+import { enableScreens } from "react-native-screens";
 
-const Stack = createStackNavigator();
+enableScreens();
+const Stack = createNativeStackNavigator();
 
 export type MainStackParamList = {
   Tabs: undefined;
@@ -31,8 +30,7 @@ const MainNavigator: React.FC = () => {
           screenOptions={({ route }) => ({
             headerShown: false,
             cardStyle: { backgroundColor: "black" },
-            cardStyleInterpolator:
-              CardStyleInterpolators.forScaleFromCenterAndroid,
+            stackAnimation: "default",
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="PostSwiper" component={PostSwiper} />
