@@ -41,23 +41,26 @@ const User: React.FC<Props> = (props) => {
     );
   }, [userData]);
 
-  const onSubmissionPress = useCallback((index) => {
+  const onSubmissionPress = (index: number) => {
     props.navigation.navigate("PostSwiper", {
       posts: submissions,
       index: index,
       prevScreen: userData.name,
     });
-  }, []);
+  };
 
-  const renderSubmission = useCallback(({ item, index }) => {
-    return (
-      <PostListItem
-        data={item}
-        onPress={() => onSubmissionPress(index)}
-        index={index}
-      />
-    );
-  }, []);
+  const renderSubmission = useCallback(
+    ({ item, index }) => {
+      return (
+        <PostListItem
+          data={item}
+          onPress={() => onSubmissionPress(index)}
+          index={index}
+        />
+      );
+    },
+    [submissions],
+  );
 
   return (
     <FlatList

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -26,6 +26,8 @@ import SimpleVideo from "./SimpleVideo";
 import Flair from "./style/Flair";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useNavigation } from "@react-navigation/native";
+import Spin from "./animations/Spin";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 const options = {
   enableVibrateFallback: true,
@@ -43,6 +45,8 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
   const { data, index } = props;
 
   const [imageCover, setImageCover] = useState<boolean>(true);
+  const [saving, setSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(props.data.saved);
 
   const navigation = useNavigation();
 
@@ -56,7 +60,6 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       : data.thumbnail;
 
   const { subreddit } = data;
-
   const isSelf = data.is_self;
 
   const mapRedditGalleryImages = useCallback(() => {
@@ -81,6 +84,19 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       title,
     });
   }, []);
+
+  const savePost = useCallback(() => {
+    setSaving(true);
+    !isSaved
+      ? data.save().then(() => {
+          setSaving(false);
+          setIsSaved(true);
+        })
+      : data.unsave().then(() => {
+          setSaving(false);
+          setIsSaved(false);
+        });
+  }, [saving, isSaved]);
 
   const onImagePress = useCallback(() => {
     ReactNativeHapticFeedback.trigger("impactLight", options);
@@ -208,6 +224,12 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       {/* BOTTOM BAR */}
       <View style={s.bottomBarContainer}>
         <Score data={data} iconSize={20} />
+        <Spin spinning={saving}>
+          <TouchableNativeFeedback onPress={savePost} disabled={saving}>
+            <Icon name="star" color={isSaved ? "#00af64" : "grey"} size={20} />
+          </TouchableNativeFeedback>
+        </Spin>
+        <Icon name="flag" color="grey" size={20} />
         <View style={s.numCommentContainer}>
           <Icon name="comment" color="grey" size={15} />
           {/* COMMENTS */}
