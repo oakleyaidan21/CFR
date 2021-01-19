@@ -42,14 +42,11 @@ const Login: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-      }}>
+    <SafeAreaView style={s.container}>
       <StandardHeader navigation={props.navigation} relative safe />
       <WebView
         source={{ uri: url }}
-        style={{ backgroundColor: "black" }}
+        style={s.webView}
         renderLoading={() => <ActivityIndicator color="red" />}
         incognito={true}
         onNavigationStateChange={(newNavState) => {
@@ -58,7 +55,7 @@ const Login: React.FC<Props> = (props) => {
             const code = newNavState.url.slice(start_i + 5);
             dispatch({ type: "SET_REFRESH_TOKEN", refreshToken: null });
             dispatch({ type: "SET_AUTH_CODE", authCode: code });
-            props.navigation.navigate("Home");
+            props.navigation.goBack();
           }
         }}
         renderError={() => <ActivityIndicator />}
@@ -68,13 +65,9 @@ const Login: React.FC<Props> = (props) => {
 };
 
 const s = StyleSheet.create({
-  header: {
-    height: 70,
-    width: "100%",
-    backgroundColor: "rgba(0,0,0,0.8)",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: 10,
+  container: { flex: 1 },
+  webView: {
+    backgroundColor: "black",
   },
 });
 

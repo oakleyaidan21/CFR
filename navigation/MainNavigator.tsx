@@ -14,6 +14,7 @@ import Settings from "../screens/Settings";
 import RedditVideo from "../screens/RedditVideo";
 import UserPage from "../screens/UserPage";
 import { enableScreens } from "react-native-screens";
+import { OS } from "../constants/constants";
 
 enableScreens();
 const Stack = createNativeStackNavigator();
@@ -29,8 +30,9 @@ const MainNavigator: React.FC = () => {
         <Stack.Navigator
           screenOptions={({ route }) => ({
             headerShown: false,
-            cardStyle: { backgroundColor: "black" },
-            stackAnimation: "default",
+            contentStyle: { backgroundColor: "black" },
+            stackAnimation:
+              route.name == "RedditVideo" ? "fade" : "slide_from_right",
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="PostSwiper" component={PostSwiper} />

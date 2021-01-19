@@ -133,17 +133,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         );
       case "GIF":
         return (
-          /* <ImageWithIndicator
-              source={{ uri: data.url }}
-              style={s.imageContainer}
-              resizeMode={
-                imageCover
-                  ? FastImage.resizeMode.cover
-                  : FastImage.resizeMode.contain
-              } 
-            /> */
-          /* Will use above version if they fix resize change issue */
-          <Image
+          <ImageWithIndicator
             source={{ uri: data.url }}
             style={s.imageContainer}
             resizeMode={
@@ -151,8 +141,18 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
                 ? FastImage.resizeMode.cover
                 : FastImage.resizeMode.contain
             }
-            fadeDuration={0}
           />
+          /* Will use above version if they fix resize change issue */
+          // <Image
+          //   source={{ uri: data.url }}
+          //   style={s.imageContainer}
+          //   resizeMode={
+          //     imageCover
+          //       ? FastImage.resizeMode.cover
+          //       : FastImage.resizeMode.contain
+          //   }
+          //   fadeDuration={0}
+          // />
         );
 
       case "VID":

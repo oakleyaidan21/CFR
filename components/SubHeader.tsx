@@ -127,7 +127,9 @@ const SubHeader: React.FC<Props> = (props) => {
             style={{ flexDirection: "row", alignItems: "center" }}
             onPress={() => setShowCatPicker(!showCatPicker)}>
             <Text style={{ color: "grey", fontWeight: "bold" }}>
-              {category}
+              {category == "Top" || category == "Cont."
+                ? category + " of " + timeframe
+                : category}
             </Text>
             <Icon name="arrow-drop-down" color="grey" />
           </TouchableOpacity>

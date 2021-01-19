@@ -21,22 +21,32 @@ const Score: React.FC<Props> = (props) => {
 
   const upvote = useCallback(() => {
     setUpvoting(true);
-    data.upvote().then(() => {
-      setLiked(liked == true ? null : true);
-      setScore(liked == true ? score - 1 : score + 1);
-      setUpvoting(false);
-      console.log("done");
-    });
+    liked == true
+      ? data.unvote().then(() => {
+          setLiked(null);
+          setScore(score - 1);
+          setUpvoting(false);
+        })
+      : data.upvote().then(() => {
+          setLiked(true);
+          setScore(score + 1);
+          setUpvoting(false);
+        });
   }, [liked, score]);
 
   const downvote = useCallback(() => {
     setDownvoting(true);
-    data.downvote().then(() => {
-      setLiked(liked == false ? null : false);
-      setScore(liked == false ? score + 1 : score - 1);
-      setDownvoting(false);
-      console.log("done");
-    });
+    liked == true
+      ? data.unvote().then(() => {
+          setLiked(null);
+          setScore(score + 1);
+          setDownvoting(false);
+        })
+      : data.downvote().then(() => {
+          setLiked(false);
+          setScore(score - 1);
+          setDownvoting(false);
+        });
   }, [liked, score]);
 
   return (

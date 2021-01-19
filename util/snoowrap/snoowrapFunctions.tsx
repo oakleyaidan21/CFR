@@ -88,7 +88,7 @@ export const getGeneralPosts = async (
         /**
          * TO-DO: cont. posts function
          */
-        return [];
+        return getControversial(snoowrap, name, timeFrame);
       }
       case "New": {
         /**
@@ -99,6 +99,30 @@ export const getGeneralPosts = async (
       case "Rising": {
         return getRising(snoowrap, name);
       }
+    }
+  }
+};
+
+export const getControversial = async (
+  snoowrap: snoowrap | undefined | null,
+  subName: string,
+  timeframe: any,
+) => {
+  if (!snoowrap) return [];
+  switch (subName) {
+    case "Front Page": {
+      return snoowrap
+        .getControversial("", { time: timeframe })
+        .then((posts: Listing<Submission>) => {
+          return posts;
+        });
+    }
+    default: {
+      return snoowrap
+        .getControversial(subName, { time: timeframe })
+        .then((posts: Listing<Submission>) => {
+          return posts;
+        });
     }
   }
 };

@@ -23,6 +23,7 @@
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-collapsible-header-views": "^1.1.2",
+    "react-native-detect-navbar-android": "^0.3.0",
     "react-native-elements": "^3.0.1",
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.9.0",
