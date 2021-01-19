@@ -7,10 +7,11 @@ type Props = {
   data: Comment | Submission;
   iconSize: number;
   disabled?: boolean;
+  hidden?: boolean;
 };
 
 const Score: React.FC<Props> = (props) => {
-  const { data } = props;
+  const { data, hidden } = props;
 
   const [liked, setLiked] = useState(data.likes);
   const [score, setScore] = useState(data.score);
@@ -43,7 +44,11 @@ const Score: React.FC<Props> = (props) => {
           fontWeight: "bold",
           marginHorizontal: 10,
         }}>
-        {score > 9999 ? (score / 1000).toPrecision(3) + "k" : score}
+        {hidden
+          ? "•"
+          : score > 9999
+          ? (score / 1000).toPrecision(3) + "k"
+          : score}
       </Text>
       <View style={s.downvote}>
         <Icon

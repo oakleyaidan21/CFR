@@ -98,7 +98,7 @@ const Profile: React.FC<Props> = (props) => {
       {/* HEADER */}
       {renderHeader()}
       {/* USER INFO */}
-      {user && <User userData={user} />}
+      {user && <User userData={user} navigation={props.navigation} />}
 
       {/* USER DROPDOWN */}
       {showUserDropdown && renderDropdown()}

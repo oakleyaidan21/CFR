@@ -79,7 +79,7 @@ const CommentThread: React.FC<Props> = (props) => {
           <MDRenderer data={data.body_html} onLinkPress={props.onLinkPress} />
           {/* COMMENT INFO */}
           <View style={s.commentInfoContainer}>
-            <Score data={data} iconSize={20} />
+            <Score data={data} iconSize={20} hidden={data.score_hidden} />
             <Text style={s.numReplyText}>
               {data.replies.length == 1
                 ? "1 reply"

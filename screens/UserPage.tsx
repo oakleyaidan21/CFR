@@ -13,7 +13,10 @@ const UserPage: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
       <StandardHeader navigation={props.navigation} relative />
-      <User userData={props.route.params.userData} />
+      <User
+        userData={props.route.params.userData}
+        navigation={props.navigation}
+      />
     </View>
   );
 };

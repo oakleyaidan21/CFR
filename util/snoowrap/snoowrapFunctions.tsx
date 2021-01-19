@@ -1,4 +1,4 @@
-import snoowrap, { Listing, Submission, Subreddit } from "snoowrap";
+import snoowrap, { Listing, RedditUser, Submission, Subreddit } from "snoowrap";
 import snoowrapConfig from "./snoowrapConfig";
 
 export const initializeSnoowrap = async (authCode: string) => {
@@ -275,6 +275,18 @@ export const getUserByName = (snoowrap: snoowrap, name: string) => {
     })
     .catch((error) => {
       console.log("error getting user", error);
+      return null;
+    });
+};
+
+export const getUsersPosts = (user: RedditUser) => {
+  return user
+    .getSubmissions()
+    .then((submissions) => {
+      return submissions;
+    })
+    .catch((error) => {
+      console.log("error getting user's submissions");
       return null;
     });
 };
