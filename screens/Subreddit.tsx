@@ -16,6 +16,10 @@ type Props = {
 const Sub: React.FC<Props> = (props) => {
   const { data } = props.route.params;
 
+  const onSubPress = useCallback(() => {
+    props.navigation.navigate("SubSidebar", { subData: data });
+  }, []);
+
   const renderHeader = useCallback(() => {
     return (
       <View
@@ -28,7 +32,7 @@ const Sub: React.FC<Props> = (props) => {
           data={data}
           navigation={props.navigation}
           fromHome={false}
-          onSubPress={null}
+          onSubPress={onSubPress}
         />
       </View>
     );

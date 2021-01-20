@@ -30,11 +30,12 @@ const Post: React.FC<Props> = (props) => {
   const [transitionOver, setTransitionOver] = useState(false);
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const unsubscribe = props.navigation.addListener("transitionEnd", () => {
       getComments();
       setTransitionOver(true);
     });
-  }, []);
+    return unsubscribe;
+  }, [props.navigation]);
 
   const getComments = () => {
     setFetchingComments(true);

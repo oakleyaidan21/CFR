@@ -21,10 +21,11 @@ const LoadPost: React.FC<Props> = (props) => {
   const [postData, setPostData] = useState<Submission>();
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const unsubscribe = props.navigation.addListener("transitionEnd", () => {
       getPostData();
     });
-  }, []);
+    return unsubscribe;
+  }, [props.navigation]);
 
   const getPostData = () => {
     snoowrap

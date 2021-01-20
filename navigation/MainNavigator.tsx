@@ -14,12 +14,33 @@ import Settings from "../screens/Settings";
 import RedditVideo from "../screens/RedditVideo";
 import UserPage from "../screens/UserPage";
 import { enableScreens } from "react-native-screens";
+import SubSidebar from "../screens/SubSidebar";
 
 enableScreens();
 const Stack = createNativeStackNavigator();
 
 export type MainStackParamList = {
   Tabs: undefined;
+};
+
+const routeAnimationHandler = (routeName: string) => {
+  switch (routeName) {
+    case "RedditVideo":
+      return "fade";
+    // case "SubSidebar":
+    //   return "fade";
+    default:
+      return "slide_from_right";
+  }
+};
+
+const routeTransitionHandler = (routeName: string) => {
+  switch (routeName) {
+    case "SubSidebar":
+      return "modal";
+    default:
+      return "push";
+  }
 };
 
 const MainNavigator: React.FC = () => {
@@ -30,8 +51,8 @@ const MainNavigator: React.FC = () => {
           screenOptions={({ route }) => ({
             headerShown: false,
             contentStyle: { backgroundColor: "black" },
-            stackAnimation:
-              route.name == "RedditVideo" ? "fade" : "slide_from_right",
+            stackAnimation: routeAnimationHandler(route.name),
+            stackPresentation: routeTransitionHandler(route.name),
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="PostSwiper" component={PostSwiper} />
@@ -39,6 +60,7 @@ const MainNavigator: React.FC = () => {
           <Stack.Screen name="Web" component={Web} />
           <Stack.Screen name="LoadPost" component={LoadPost} />
           <Stack.Screen name="Subreddit" component={Subreddit} />
+          <Stack.Screen name="SubSidebar" component={SubSidebar} />
           <Stack.Screen name="RedditVideo" component={RedditVideo} />
           <Stack.Screen
             name="SearchResults"

@@ -27,10 +27,11 @@ const Web: React.FC<Props> = (props) => {
   const [showWeb, setShowWeb] = useState(false);
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const unsubscribe = props.navigation.addListener("transitionEnd", () => {
       setShowWeb(true);
     });
-  });
+    return unsubscribe;
+  }, [props.navigation]);
 
   const onNavigationStateChange = useCallback((navState) => {
     if (currUrl !== navState.url) {

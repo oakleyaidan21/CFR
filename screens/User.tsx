@@ -42,7 +42,7 @@ const User: React.FC<Props> = (props) => {
   }, [userData]);
 
   const onSubmissionPress = (index: number) => {
-    props.navigation.navigate("PostSwiper", {
+    props.navigation.push("PostSwiper", {
       posts: submissions,
       index: index,
       prevScreen: userData.name,

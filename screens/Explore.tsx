@@ -160,6 +160,7 @@ const Explore: React.FC<Props> = (props) => {
           <Icon name="search" color="white" style={{ width: 50 }} />
           <TextInput
             ref={searchRef}
+            returnKeyType={"done"}
             onChangeText={onValueChange}
             placeholderTextColor={"rgb(200,200,200)"}
             onFocus={onFocus}

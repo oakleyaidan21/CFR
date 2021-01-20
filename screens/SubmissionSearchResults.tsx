@@ -36,10 +36,11 @@ const SubmissionSearchResults: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const unsubscribe = props.navigation.addListener("transitionEnd", () => {
       searchSubmissions();
     });
-  }, []);
+    return unsubscribe;
+  }, [props.navigation]);
 
   const renderHeader = useCallback(() => {
     return (
