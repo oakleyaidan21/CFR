@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import { Icon } from "react-native-elements";
 import { Comment, Submission } from "snoowrap";
 import Spin from "./animations/Spin";
@@ -19,7 +19,13 @@ const Score: React.FC<Props> = (props) => {
   const [upvoting, setUpvoting] = useState(false);
   const [downvoting, setDownvoting] = useState(false);
 
+  const archived = data.archived;
+
   const upvote = useCallback(() => {
+    if (archived) {
+      Alert.alert("This post is archived and can no longer be voted on");
+      return;
+    }
     setUpvoting(true);
     liked == true
       ? data.unvote().then(() => {
@@ -35,8 +41,12 @@ const Score: React.FC<Props> = (props) => {
   }, [liked, score]);
 
   const downvote = useCallback(() => {
+    if (archived) {
+      Alert.alert("This post is archived and can no longer be voted on");
+      return;
+    }
     setDownvoting(true);
-    liked == true
+    liked == false
       ? data.unvote().then(() => {
           setLiked(null);
           setScore(score + 1);
@@ -52,14 +62,16 @@ const Score: React.FC<Props> = (props) => {
   return (
     <View style={s.container}>
       <Spin spinning={upvoting}>
-        <View style={s.upvote}>
+        <TouchableOpacity
+          style={s.upvote}
+          onPress={upvote}
+          disabled={upvoting || downvoting}>
           <Icon
             name="forward"
             color={liked ? "#ff8b5f" : "grey"}
             size={props.iconSize}
-            onPress={upvote}
           />
-        </View>
+        </TouchableOpacity>
       </Spin>
       <Text
         style={{
@@ -74,14 +86,16 @@ const Score: React.FC<Props> = (props) => {
           : score}
       </Text>
       <Spin spinning={downvoting}>
-        <View style={s.downvote}>
+        <TouchableOpacity
+          style={s.downvote}
+          onPress={downvote}
+          disabled={upvoting || downvoting}>
           <Icon
             name="forward"
             color={liked == false ? "#9494ff" : "grey"}
             size={props.iconSize}
-            onPress={downvote}
           />
-        </View>
+        </TouchableOpacity>
       </Spin>
     </View>
   );

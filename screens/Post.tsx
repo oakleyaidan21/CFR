@@ -30,12 +30,12 @@ const Post: React.FC<Props> = (props) => {
   const [transitionOver, setTransitionOver] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener("transitionEnd", () => {
-      getComments();
-      setTransitionOver(true);
-    });
-    return unsubscribe;
-  }, [props.navigation]);
+    // const unsubscribe = props.navigation.addListener("transitionEnd", () => {
+    getComments();
+    setTransitionOver(true);
+    // });
+    // return unsubscribe;
+  }, []);
 
   const getComments = () => {
     setFetchingComments(true);
@@ -95,7 +95,7 @@ const Post: React.FC<Props> = (props) => {
         {!comments ? (
           <ActivityIndicator color="white" />
         ) : (
-          <Text>No comments</Text>
+          <Text style={{ fontWeight: "bold", color: "grey" }}>No comments</Text>
         )}
       </View>
     );

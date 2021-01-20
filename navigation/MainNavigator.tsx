@@ -27,8 +27,8 @@ const routeAnimationHandler = (routeName: string) => {
   switch (routeName) {
     case "RedditVideo":
       return "fade";
-    // case "SubSidebar":
-    //   return "fade";
+    case "SubSidebar":
+      return "fade";
     default:
       return "slide_from_right";
   }
@@ -36,8 +36,6 @@ const routeAnimationHandler = (routeName: string) => {
 
 const routeTransitionHandler = (routeName: string) => {
   switch (routeName) {
-    case "SubSidebar":
-      return "modal";
     default:
       return "push";
   }
@@ -52,7 +50,7 @@ const MainNavigator: React.FC = () => {
             headerShown: false,
             contentStyle: { backgroundColor: "black" },
             stackAnimation: routeAnimationHandler(route.name),
-            stackPresentation: routeTransitionHandler(route.name),
+            // stackPresentation: routeTransitionHandler(route.name),
           })}>
           <Stack.Screen name="Tabs" component={TabNavigator} />
           <Stack.Screen name="PostSwiper" component={PostSwiper} />

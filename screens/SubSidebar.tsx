@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Subreddit } from "snoowrap";
 import MDRenderer from "../components/MDRenderer";
 import StandardHeader from "../components/StandardHeader";
 import Text from "../components/style/Text";
 import { HEADER_HEIGHT } from "../constants/constants";
+import { parseLink } from "../util/util";
 
 type Props = {
   route: { params: { subData: Subreddit } };
@@ -16,6 +18,8 @@ const SubSidebar: React.FC<Props> = (props) => {
   const { subData } = props.route.params;
 
   const [showDescription, setShowDescription] = useState(false);
+  const [subscribed, setSubscribed] = useState(subData.user_is_subscriber);
+  const [changingSubscription, setChangingSubscription] = useState(false);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("transitionEnd", () => {
@@ -24,38 +28,104 @@ const SubSidebar: React.FC<Props> = (props) => {
     return unsubscribe;
   }, [props.navigation]);
 
+  const toggleSubscribed = useCallback(() => {
+    setChangingSubscription(true);
+    if (subscribed) {
+      subData.unsubscribe().then(() => {
+        setChangingSubscription(false);
+        setSubscribed(false);
+      });
+    } else {
+      subData.subscribe().then(() => {
+        setChangingSubscription(false);
+        setSubscribed(true);
+      });
+    }
+  }, [subscribed]);
+
   const iconImg = subData.icon_img
     ? subData.icon_img
     : subData.community_icon
     ? subData.community_icon
     : "https://cdn.iconscout.com/icon/free/png-256/reddit-74-434748.png";
 
+  const bannerImage = subData.banner_img ? subData.banner_img : false;
+
+  const openLink = useCallback(
+    (url) => {
+      // check if it's a reddit post
+      const r = parseLink(url);
+      switch (r.type) {
+        case "post":
+          props.navigation.navigate("LoadPost", { id: r.id });
+          break;
+        case "sub":
+          props.navigation.navigate("Subreddit", { data: r.sub });
+          break;
+        default:
+          props.navigation.navigate("Web", { url: url });
+          break;
+      }
+    },
+
+    [],
+  );
+
   return (
     <View style={s.container}>
-      <ScrollView
-        style={s.scrollContainer}
-        contentContainerStyle={s.scrollContentContainer}>
-        {/* Top margin to make translucent header nicer */}
-        {/* <View style={s.topMargin} /> */}
-        <FastImage
-          style={s.topImage}
-          source={{
-            uri:
-              "https://i.kym-cdn.com/entries/icons/mobile/000/026/489/crying.jpg",
-          }}
-          resizeMode={"cover"}
-        />
-        <View style={s.nameContainer}>
-          <FastImage style={s.iconImg} source={{ uri: iconImg }} />
-          <Text style={s.subNameText} numberOfLines={1}>
-            {subData.display_name}
-          </Text>
-        </View>
-        {showDescription && (
-          <MDRenderer data={subData.description_html} onLinkPress={null} />
+      <ScrollView style={s.scrollContainer} bounces={false}>
+        {bannerImage ? (
+          <FastImage
+            style={s.bannerContainer}
+            source={{
+              uri: bannerImage,
+            }}
+            resizeMode={"cover"}
+          />
+        ) : (
+          <View
+            style={[
+              s.bannerContainer,
+              { backgroundColor: subData.banner_background_color },
+            ]}
+          />
         )}
+
+        <View style={s.infoContainer}>
+          <View style={s.nameContainer}>
+            <FastImage style={s.iconImg} source={{ uri: iconImg }} />
+            <View style={s.subNameInfo}>
+              <Text style={s.subNameText} numberOfLines={1}>
+                {subData.display_name}
+              </Text>
+              <Text style={s.numSubscriberText}>
+                {subData.subscribers} subscribers
+              </Text>
+              <TouchableOpacity
+                style={s.subscribeButton}
+                onPress={toggleSubscribed}>
+                <Text style={s.subscribedText}>
+                  {subscribed ? "Unsubscribe" : "Subscribe"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          {showDescription ? (
+            <MDRenderer
+              data={subData.description_html}
+              onLinkPress={openLink}
+            />
+          ) : (
+            <View style={s.activityIndicatorContainer}>
+              <ActivityIndicator color="white" size="large" />
+            </View>
+          )}
+        </View>
       </ScrollView>
-      <StandardHeader navigation={props.navigation} />
+      <StandardHeader
+        navigation={props.navigation}
+        backgroundColor="transparent"
+      />
     </View>
   );
 };
@@ -65,14 +135,40 @@ const s = StyleSheet.create({
   topMargin: { marginTop: HEADER_HEIGHT },
   scrollContainer: { flex: 1 },
   scrollContentContainer: { padding: 10 },
-  topImage: { width: "100%", height: HEADER_HEIGHT + 50 },
+  bannerContainer: { width: "100%", height: HEADER_HEIGHT + 50 },
+  subNameInfo: { marginLeft: 10 },
   nameContainer: {
     paddingVertical: 10,
     flexDirection: "row",
     alignItems: "center",
   },
-  iconImg: { width: 100, height: 100, borderRadius: 50 },
-  subNameText: { fontWeight: "bold", marginLeft: 10, fontSize: 35 },
+  iconImg: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: "white",
+  },
+  subNameText: { fontWeight: "bold", fontSize: 35 },
+  numSubscriberText: { marginVertical: 5 },
+  subscribedText: { fontWeight: "bold" },
+  subscribeButton: {
+    padding: 5,
+    borderRadius: 3,
+    borderWidth: 2,
+    borderColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 110,
+
+    flexDirection: "row",
+  },
+  activityIndicatorContainer: {
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  infoContainer: { padding: 10 },
 });
 
 export default SubSidebar;

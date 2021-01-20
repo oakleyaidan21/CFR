@@ -10,6 +10,7 @@ type Props = {
   label?: string;
   safe?: boolean;
   content?: any;
+  backgroundColor?: string;
 };
 
 const StandardHeader: React.FC<Props> = (props) => {
@@ -17,7 +18,12 @@ const StandardHeader: React.FC<Props> = (props) => {
     <View
       style={[
         !props.safe ? s.paddingContainer : {},
-        { position: props.relative ? "relative" : "absolute" },
+        {
+          position: props.relative ? "relative" : "absolute",
+          backgroundColor: props.backgroundColor
+            ? props.backgroundColor
+            : "rgba(0,0,0,0.8)",
+        },
       ]}>
       <View style={s.container}>
         <Icon
