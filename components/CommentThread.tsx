@@ -72,24 +72,27 @@ const CommentThread: React.FC<Props> = (props) => {
       <View style={s.bodyContainer}>
         {/* COMMENTER INFO */}
         <View style={s.commenterInfoContainer}>
-          <TouchableWithoutFeedback onPress={onUserPress}>
-            <Text
-              style={{
-                color:
-                  data.distinguished == "moderator"
-                    ? "lightgreen"
-                    : data.author.name == op.name
-                    ? "lightblue"
-                    : "grey",
-                fontWeight: "bold",
-              }}>
-              {data.author.name}
+          <View style={s.commenterNameContainer}>
+            <TouchableWithoutFeedback onPress={onUserPress}>
+              <Text
+                style={{
+                  color:
+                    data.distinguished == "moderator"
+                      ? "lightgreen"
+                      : data.author.name == op.name
+                      ? "lightblue"
+                      : "grey",
+                  fontWeight: "bold",
+                }}>
+                {data.author.name}
+              </Text>
+            </TouchableWithoutFeedback>
+            <Text style={{ fontStyle: "italic", color: "grey" }}>
+              {data.edited && " (edited)"}
             </Text>
-          </TouchableWithoutFeedback>
-
+          </View>
           <Text style={s.timestampText}>
             {getTimeSincePosted(data.created_utc)}
-            {data.edited && "*"}
           </Text>
         </View>
         <TouchableWithoutFeedback onPress={animateReplies}>
@@ -147,6 +150,9 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  commenterNameContainer: {
+    flexDirection: "row",
   },
   numReplyText: { color: "grey" },
   replyContainer: { marginBottom: 5 },

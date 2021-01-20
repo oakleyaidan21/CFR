@@ -96,7 +96,7 @@ const Web: React.FC<Props> = (props) => {
       {showWeb && (
         <WebView
           javaScriptCanOpenWindowsAutomatically={false}
-          style={{ flex: 1, opacity: 0.99 }} // Opacity set to 0.99 to fix completely random bug: https://github.com/react-native-webview/react-native-webview/issues/811
+          style={{ flex: 1, opacity: 0.9, backgroundColor: "black" }} // Opacity set to 0.99 to fix completely random bug: https://github.com/react-native-webview/react-native-webview/issues/811
           onNavigationStateChange={onNavigationStateChange}
           source={{ uri: props.route.params.url }}
           ref={webRef}

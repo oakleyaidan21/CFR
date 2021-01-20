@@ -79,6 +79,7 @@ export const determinePostType = (data: Submission) => {
   const fourExt = matches[4]
     ? matches[4].substring(matches[4].length - 5, matches[4].length)
     : false;
+
   if (
     threeExt == ".jpg" ||
     threeExt == ".png" ||

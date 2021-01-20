@@ -14,7 +14,6 @@ import Settings from "../screens/Settings";
 import RedditVideo from "../screens/RedditVideo";
 import UserPage from "../screens/UserPage";
 import { enableScreens } from "react-native-screens";
-import { OS } from "../constants/constants";
 
 enableScreens();
 const Stack = createNativeStackNavigator();

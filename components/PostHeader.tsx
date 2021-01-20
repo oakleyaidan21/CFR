@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
+  Share,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
@@ -27,6 +28,7 @@ import ImgurAlbumViewer from "./ImgurAlbumViewer";
 import Score from "./Score";
 import CrossPostItem from "./CrossPostItem";
 import {
+  OS,
   POST_CONTENT_HEIGHT,
   POST_INFO_CONTAINER_HEIGHT,
 } from "../constants/constants";
@@ -72,7 +74,7 @@ const PostHeader: React.FC<Props> = (props) => {
   const openLink = useCallback(
     (url) => {
       // check if it's a reddit post
-      if (typeof url === "string") {
+      if (typeof url == "string") {
         const r = parseLink(url);
         switch (r.type) {
           case "post":
@@ -95,6 +97,13 @@ const PostHeader: React.FC<Props> = (props) => {
     [],
   );
 
+  const sharePost = useCallback(() => {
+    Share.share(
+      { message: OS == "ios" ? data.title : data.url, url: data.url },
+      { dialogTitle: data.title },
+    );
+  }, []);
+
   const mapRedditGalleryImages = useCallback(() => {
     let urls = [];
 
@@ -105,8 +114,17 @@ const PostHeader: React.FC<Props> = (props) => {
     return urls;
   }, []);
 
+  const getPostType = useCallback(() => {
+    return determinePostType(data);
+  }, []);
+
+  const openSub = useCallback(
+    () => props.navigation.navigate("Subreddit", { data: subreddit }),
+    [],
+  );
+
   const renderContent = useCallback(() => {
-    const postType = determinePostType(data);
+    const postType = getPostType();
     switch (postType.code) {
       case "SLF":
         return data.selftext_html ? (
@@ -186,7 +204,6 @@ const PostHeader: React.FC<Props> = (props) => {
             <ImgurAlbumViewer imgurHash={postType.hash as string} />
           </View>
         );
-
       default:
         return false;
     }
@@ -199,10 +216,7 @@ const PostHeader: React.FC<Props> = (props) => {
       {/* POST INFO */}
       <View style={s.postInfoContainer}>
         <View style={s.row}>
-          <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate("Subreddit", { data: subreddit })
-            }>
+          <TouchableOpacity onPress={openSub}>
             <Text style={s.subNameText}>{subreddit.display_name}</Text>
           </TouchableOpacity>
           <Text style={s.topBarText}>
@@ -258,8 +272,12 @@ const PostHeader: React.FC<Props> = (props) => {
               </View>
             </TouchableNativeFeedback>
           </Spin>
-          <Icon name="flag" color="grey" />
-          <Icon name="more-horiz" color="grey" />
+          <TouchableOpacity>
+            <Icon name="flag" color="grey" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={sharePost}>
+            <Icon name="share" color="grey" />
+          </TouchableOpacity>
         </View>
         <View style={s.commentInfoContainer}>
           <Icon name="comment" color="grey" style={s.commentIcon} size={20} />

@@ -37,7 +37,7 @@ const PostListItem: React.FC<Props> = (props) => {
     <TouchableOpacity style={s.container} onPress={onPress}>
       {/* POST INFO */}
       <View style={s.row}>
-        <Text style={s.topText}>
+        <Text style={s.topText} numberOfLines={1}>
           <Text>{subreddit.display_name}</Text>
           <Text> | </Text>
           <Text>{data.author.name}</Text>

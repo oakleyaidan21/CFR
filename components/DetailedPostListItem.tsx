@@ -192,7 +192,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       {/* // onPress={() => props.onPress(index)}> */}
       {/* POST INFO */}
       <View style={s.row}>
-        <Text style={s.postInfoText}>
+        <Text style={s.postInfoText} numberOfLines={1}>
           <Text>{subreddit.display_name}</Text>
           <Text> | </Text>
           <Text>{data.author.name}</Text>
