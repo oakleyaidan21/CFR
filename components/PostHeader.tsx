@@ -217,11 +217,13 @@ const PostHeader: React.FC<Props> = (props) => {
       <View style={s.postInfoContainer}>
         <View style={s.row}>
           <TouchableOpacity onPress={openSub}>
-            <Text style={s.subNameText}>{subreddit.display_name}</Text>
+            <Text style={s.topBarText}>{subreddit.display_name}</Text>
+          </TouchableOpacity>
+          <Text style={s.topBarText}> | </Text>
+          <TouchableOpacity onPress={undefined}>
+            <Text style={s.topBarText}>{data.author.name}</Text>
           </TouchableOpacity>
           <Text style={s.topBarText}>
-            <Text> | </Text>
-            <Text>{data.author.name}</Text>
             <Text> | </Text>
             {!isSelf && <Text>{data.domain}</Text>}
             {!isSelf && <Text> | </Text>}
@@ -321,7 +323,6 @@ const s = StyleSheet.create({
   placeholderContainer: { height: POST_CONTENT_HEIGHT },
   imageContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
   videoContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
-  subNameText: { color: "grey", fontWeight: "bold" },
   mainContentContainer: {
     flexDirection: "row",
     flex: 1,

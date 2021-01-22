@@ -12,7 +12,11 @@ type Props = {
 const UserPage: React.FC<Props> = (props) => {
   return (
     <View style={{ flex: 1 }}>
-      <StandardHeader navigation={props.navigation} relative />
+      <StandardHeader
+        navigation={props.navigation}
+        relative
+        backgroundColor={"rgb(10,10,10)"}
+      />
       <User
         userData={props.route.params.userData}
         navigation={props.navigation}
