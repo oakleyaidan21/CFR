@@ -1,7 +1,9 @@
-import React from "react";
-import { View, Vibration, Alert } from "react-native";
+import React, { useCallback } from "react";
+import { Alert, StyleSheet, View } from "react-native";
+import Text from "./style/Text";
 import ImageView from "react-native-image-viewing";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import { HEADER_HEIGHT, OS } from "../constants/constants";
 
 const options = {
   enableVibrateFallback: true,
@@ -27,15 +29,36 @@ const ImageViewer: React.FC<Props> = (props) => {
     ]);
   };
 
+  const renderHeader = useCallback(({ imageIndex }) => {
+    return props.images.length > 1 ? (
+      <View style={s.headerContainer}>
+        <Text style={s.indexText}>
+          {imageIndex + "/" + props.images.length}
+        </Text>
+      </View>
+    ) : null;
+  }, []);
+
   return (
     <ImageView
       {...props}
       imageIndex={0}
       onLongPress={onLongPress}
       onRequestClose={props.close}
-      swipeToCloseEnabled={true}
+      swipeToCloseEnabled={OS == "ios"}
+      HeaderComponent={renderHeader}
     />
   );
 };
+
+const s = StyleSheet.create({
+  headerContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    top: HEADER_HEIGHT,
+  },
+  indexText: { fontWeight: "bold", fontSize: 20 },
+});
 
 export default ImageViewer;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { useDispatch } from "react-redux";
 import { WebView } from "react-native-webview";
@@ -7,6 +7,7 @@ import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
 import { Icon } from "react-native-elements";
 import StandardHeader from "../components/StandardHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Text from "../components/style/Text";
 
 interface Props {
   navigation: any;
@@ -43,7 +44,12 @@ const Login: React.FC<Props> = (props) => {
 
   return (
     <SafeAreaView style={s.container}>
-      <StandardHeader navigation={props.navigation} relative safe />
+      <StandardHeader
+        navigation={props.navigation}
+        relative
+        safe
+        label={"Reddit Login"}
+      />
       <WebView
         source={{ uri: url }}
         style={s.webView}

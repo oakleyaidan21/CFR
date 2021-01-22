@@ -26,9 +26,11 @@ export type MainStackParamList = {
 const routeAnimationHandler = (routeName: string) => {
   switch (routeName) {
     case "RedditVideo":
-      return "fade";
     case "SubSidebar":
+    case "Login":
+    case "Web":
       return "fade";
+
     default:
       return "slide_from_right";
   }

@@ -32,7 +32,7 @@ const StandardHeader: React.FC<Props> = (props) => {
           onPress={props.navigation.goBack}
         />
         {props.label && (
-          <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+          <Text style={{ fontWeight: "bold", marginLeft: 15, fontSize: 20 }}>
             {props.label}
           </Text>
         )}

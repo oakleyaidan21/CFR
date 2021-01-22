@@ -45,16 +45,6 @@ const PostSwiper: React.FC<Props> = (props) => {
     });
   }, [currPosts]);
 
-  const renderHeaderContent = useCallback(() => {
-    return (
-      <View style={{ marginLeft: 5 }}>
-        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-          {props.route.params.prevScreen}
-        </Text>
-      </View>
-    );
-  }, []);
-
   return (
     <View style={{ flex: 1 }}>
       <Swiper
@@ -68,7 +58,7 @@ const PostSwiper: React.FC<Props> = (props) => {
       {/* HEADER */}
       <StandardHeader
         navigation={props.navigation}
-        content={renderHeaderContent()}
+        label={props.route.params.prevScreen}
       />
     </View>
   );
