@@ -16,8 +16,8 @@ type Props = {
 const Sub: React.FC<Props> = (props) => {
   const { data } = props.route.params;
 
-  const onSubPress = useCallback(() => {
-    props.navigation.navigate("SubSidebar", { subData: data });
+  const onSubPress = useCallback((sub) => {
+    props.navigation.navigate("SubSidebar", { subData: sub });
   }, []);
 
   const renderHeader = useCallback(() => {

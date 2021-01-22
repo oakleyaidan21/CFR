@@ -87,6 +87,10 @@ const SubHeader: React.FC<Props> = (props) => {
     }
   }, [data]);
 
+  const openSubSidebar = useCallback(() => {
+    props.navigation.navigate("SubSidebar", { subData: data });
+  }, [data]);
+
   const imgUrl = getImageString();
 
   return (
@@ -100,12 +104,14 @@ const SubHeader: React.FC<Props> = (props) => {
           />
         )}
         <TouchableOpacity
-          onPress={props.onSubPress}
+          onPress={() => props.onSubPress(data)}
           style={{ flexDirection: "row", alignItems: "center" }}>
           {loadingSub ? (
             <ActivityIndicator color="white" style={s.imgIcon} />
           ) : !isString ? (
-            <FastImage source={{ uri: imgUrl }} style={s.imgIcon} />
+            <TouchableOpacity onPress={openSubSidebar}>
+              <FastImage source={{ uri: imgUrl }} style={s.imgIcon} />
+            </TouchableOpacity>
           ) : (
             <GlobalSubBubble
               sub={data}

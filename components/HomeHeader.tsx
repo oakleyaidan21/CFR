@@ -1,11 +1,5 @@
 import React, { useContext, useRef, memo, useCallback, useState } from "react";
-import {
-  LayoutAnimation,
-  SectionList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
 import GlobalSubBubble from "./GlobalSubBubble";
 import SubBubble from "./SubBubble";
 import SnooContext from "../context/SnooContext";
@@ -35,21 +29,24 @@ const HomeHeader: React.FC<Props> = (props) => {
 
   const currentSub = subreddit;
 
+  const onSubPress = useCallback((sub) => {
+    console.log("pressed!");
+    animateHeaderChange();
+    setSubreddit(sub);
+    scrollRef.current?.scrollToLocation({
+      viewOffset: 0,
+      itemIndex: 0,
+      sectionIndex: 0,
+    });
+  }, []);
+
   const renderGlobalSub = useCallback(
     (sub: any, index: number, size: number) => {
       return (
         <GlobalSubBubble
           sub={sub}
           size={size}
-          onPress={() => {
-            animateHeaderChange();
-            setSubreddit(sub);
-            scrollRef.current?.scrollToLocation({
-              viewOffset: 0,
-              itemIndex: 0,
-              sectionIndex: 0,
-            });
-          }}
+          onPress={() => onSubPress(sub)}
         />
       );
     },
@@ -59,19 +56,7 @@ const HomeHeader: React.FC<Props> = (props) => {
   const renderSub = useCallback(
     (sub: any, index: number, size: number) => {
       return (
-        <SubBubble
-          sub={sub}
-          size={size}
-          onPress={() => {
-            animateHeaderChange();
-            setSubreddit(sub);
-            scrollRef.current?.scrollToLocation({
-              viewOffset: 0,
-              itemIndex: 0,
-              sectionIndex: 0,
-            });
-          }}
-        />
+        <SubBubble sub={sub} size={size} onPress={() => onSubPress(sub)} />
       );
     },
     [userSubs],
