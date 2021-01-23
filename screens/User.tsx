@@ -13,6 +13,7 @@ import TabBarIndicator from "../components/animations/TabBarIndicator";
 import CommentThread from "../components/CommentThread";
 import PostListItem from "../components/PostListItem";
 import Text from "../components/style/Text";
+import UserTabs from "../components/UserTabs";
 import {
   TAB_CONTAINER_HEIGHT,
   TAB_CONTENT_AREA_HEIGHT,
@@ -32,39 +33,6 @@ type Props = {
 
 const User: React.FC<Props> = (props) => {
   const { userData } = props;
-  const [submissions, setSubmissions] = useState<Array<Submission> | null>();
-  const [currentTab, setCurrentTab] = useState<number>(0);
-  const [comments, setComments] = useState<Array<Comment> | null>();
-
-  const userScreenIsFocused = useIsFocused();
-
-  useEffect(() => {
-    setSubmissions(null);
-    getSubmissions();
-  }, [userData.id]);
-
-  useEffect(() => {
-    if (currentTab == 0) return;
-    switch (currentTab) {
-      case 1: //COMMENTS
-        if (comments) return;
-        return getComments();
-      default:
-        return;
-    }
-  }, [currentTab]);
-
-  const getSubmissions = useCallback(() => {
-    getUsersPosts(userData).then((results) => {
-      setSubmissions(results);
-    });
-  }, [userData.id]);
-
-  const getComments = useCallback(() => {
-    getUsersComments(userData).then((results) => {
-      setComments(results);
-    });
-  }, [userData.id]);
 
   const renderHeader = useCallback(() => {
     return (
@@ -83,135 +51,11 @@ const User: React.FC<Props> = (props) => {
     );
   }, [userData]);
 
-  const onSubmissionPress = (index: number) => {
-    props.navigation.push("PostSwiper", {
-      posts: submissions,
-      index: index,
-      prevScreen: userData.name,
-    });
-  };
-
-  const renderSubmission = useCallback(
-    ({ item, index }) => {
-      return (
-        <PostListItem
-          data={item}
-          onPress={() => onSubmissionPress(index)}
-          index={index}
-        />
-      );
-    },
-    [submissions],
-  );
-
-  const renderTabs = useCallback(() => {
-    return tabTypes.map((type, index) => {
-      const selected = currentTab == index;
-      return (
-        <TouchableOpacity
-          onPress={() => setCurrentTab(index)}
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            borderBottomWidth: 4,
-            borderColor: selected ? "#00af64" : "transparent",
-          }}>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 18,
-            }}>
-            {type}
-          </Text>
-        </TouchableOpacity>
-      );
-    });
-  }, [currentTab]);
-
-  const renderComment = useCallback(
-    ({ item, index }) => {
-      return (
-        <CommentThread
-          data={item}
-          op={item.author}
-          level={0}
-          snoowrap={null}
-          navigation={props.navigation}
-          onLinkPress={null}
-        />
-      );
-    },
-    [comments],
-  );
-
-  const renderComments = useCallback(() => {
-    return comments ? (
-      <FlatList
-        style={{ flex: 1 }}
-        data={comments}
-        keyExtractor={(item) => item.id}
-        renderItem={renderComment}
-        ListEmptyComponent={
-          <View style={s.emptyListContainer}>
-            <Text style={{ fontWeight: "bold", color: "grey" }}>
-              No comments
-            </Text>
-          </View>
-        }
-      />
-    ) : (
-      <View style={s.defaultContentContainer}>
-        {userScreenIsFocused && (
-          <ActivityIndicator color="white" size="large" />
-        )}
-      </View>
-    );
-  }, [comments]);
-
-  const renderTabContent = useCallback(() => {
-    switch (currentTab) {
-      case 0: // USER POSTS
-        return renderSubmissions();
-      case 1: // USER COMMENTS
-        return renderComments();
-      default:
-        return (
-          <View style={s.defaultContentContainer}>
-            <Text>impl</Text>
-          </View>
-        );
-    }
-  }, [currentTab, submissions, comments]);
-
-  const renderSubmissions = useCallback(() => {
-    return submissions ? (
-      <FlatList
-        style={{ flex: 1 }}
-        data={submissions}
-        ListEmptyComponent={
-          <View style={s.emptyListContainer}>
-            <Text style={{ fontWeight: "bold", color: "grey" }}>No posts</Text>
-          </View>
-        }
-        keyExtractor={(item) => item.id}
-        renderItem={renderSubmission}
-      />
-    ) : (
-      <View style={s.defaultContentContainer}>
-        {userScreenIsFocused && (
-          <ActivityIndicator color="white" size="large" />
-        )}
-      </View>
-    );
-  }, [submissions]);
-
   return (
     <View style={s.container}>
       {renderHeader()}
-      {/* TABS */}
-      <View style={s.tabContainer}>{renderTabs()}</View>
       {/* TAB CONTENT */}
-      {renderTabContent()}
+      <UserTabs user={userData} navigation={props.navigation} />
     </View>
   );
 };
