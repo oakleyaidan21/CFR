@@ -136,7 +136,7 @@ const s = StyleSheet.create({
   scrollContainer: { flex: 1 },
   scrollContentContainer: { padding: 10 },
   bannerContainer: { width: "100%", height: HEADER_HEIGHT + 50 },
-  subNameInfo: { marginLeft: 10 },
+  subNameInfo: { paddingLeft: 10, width: "100%" },
   nameContainer: {
     paddingVertical: 10,
     flexDirection: "row",
@@ -149,7 +149,7 @@ const s = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
   },
-  subNameText: { fontWeight: "bold", fontSize: 35 },
+  subNameText: { fontWeight: "bold", fontSize: 30 },
   numSubscriberText: { marginVertical: 5 },
   subscribedText: { fontWeight: "bold" },
   subscribeButton: {
@@ -168,7 +168,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  infoContainer: { padding: 10 },
+  infoContainer: { padding: 10, width: "100%" },
 });
 
 export default SubSidebar;

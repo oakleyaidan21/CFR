@@ -310,7 +310,19 @@ export const getUsersPosts = (user: RedditUser) => {
       return submissions;
     })
     .catch((error) => {
-      console.log("error getting user's submissions");
+      console.log("error getting user's submissions", error);
+      return null;
+    });
+};
+
+export const getUsersComments = (user: RedditUser) => {
+  return user
+    .getComments()
+    .then((comments) => {
+      return comments;
+    })
+    .catch((error) => {
+      console.log("error getting user's comments", error);
       return null;
     });
 };

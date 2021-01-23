@@ -29,12 +29,14 @@ const ImageViewer: React.FC<Props> = (props) => {
     ]);
   };
 
-  const renderHeader = useCallback(({ imageIndex }) => {
+  const renderFooter = useCallback(({ imageIndex }) => {
     return props.images.length > 1 ? (
-      <View style={s.headerContainer}>
-        <Text style={s.indexText}>
-          {imageIndex + "/" + props.images.length}
-        </Text>
+      <View style={s.footerContainer}>
+        <View style={s.indexContainer}>
+          <Text style={s.indexText}>
+            {imageIndex + 1 + "/" + props.images.length}
+          </Text>
+        </View>
       </View>
     ) : null;
   }, []);
@@ -46,17 +48,21 @@ const ImageViewer: React.FC<Props> = (props) => {
       onLongPress={onLongPress}
       onRequestClose={props.close}
       swipeToCloseEnabled={OS == "ios"}
-      HeaderComponent={renderHeader}
+      FooterComponent={renderFooter}
     />
   );
 };
 
 const s = StyleSheet.create({
-  headerContainer: {
-    width: "100%",
+  footerContainer: {
     justifyContent: "center",
     alignItems: "center",
-    top: HEADER_HEIGHT,
+    bottom: 50,
+  },
+  indexContainer: {
+    padding: 10,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    borderRadius: 3,
   },
   indexText: { fontWeight: "bold", fontSize: 20 },
 });
