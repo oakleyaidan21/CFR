@@ -105,12 +105,25 @@ const PostHeader: React.FC<Props> = (props) => {
   }, []);
 
   const mapRedditGalleryImages = useCallback(() => {
-    let urls = [];
+    let idMap = {};
+    const gallery_data = (data as any).gallery_data.items;
+    let urls = new Array(gallery_data.length);
+    for (let i = 0; i < gallery_data.length; i++) {
+      const key = gallery_data[i].media_id;
+      idMap[key] = { index: i, data: gallery_data[i] };
+    }
 
     const metadata = (data as any).media_metadata;
+    console.log("meta:", Object.entries(metadata)[0][0]);
     for (const i of Object.entries(metadata)) {
-      urls.push({ uri: (i[1] as any).s.u });
+      urls[idMap[i[0]].index] = {
+        uri: (i[1] as any).s.u,
+        data: idMap[i[0]].data,
+      };
     }
+
+    console.log(urls);
+
     return urls;
   }, []);
 

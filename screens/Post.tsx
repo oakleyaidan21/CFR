@@ -48,7 +48,6 @@ const Post: React.FC<Props> = (props) => {
         setFetchingComments(false);
         return true;
       });
-    return false;
   };
 
   const openLink = useCallback((url) => {
