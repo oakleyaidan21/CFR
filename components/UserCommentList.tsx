@@ -7,6 +7,7 @@ import {
 import { Comment, RedditUser } from "snoowrap";
 import { TAB_CONTAINER_HEIGHT } from "../constants/constants";
 import { getUsersComments } from "../util/snoowrap/snoowrapFunctions";
+import { parseLink } from "../util/util";
 import CommentThread from "./CommentThread";
 import Text from "./style/Text";
 
@@ -47,7 +48,7 @@ const UserCommentList: React.FC<Props> = (props) => {
 
   const renderItem = useCallback(({ item, index }) => {
     return (
-      <TouchableWithoutFeedback onPress={() => onCommentPress(item.parent_id)}>
+      <TouchableWithoutFeedback onPress={() => onCommentPress(item.link_id)}>
         <CommentThread
           data={item}
           level={0}
