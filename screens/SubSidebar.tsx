@@ -71,6 +71,8 @@ const SubSidebar: React.FC<Props> = (props) => {
     [],
   );
 
+  const showBannerColor = subData.banner_background_color.length > 0;
+
   return (
     <View style={s.container}>
       <ScrollView style={s.scrollContainer} bounces={false}>
@@ -82,13 +84,17 @@ const SubSidebar: React.FC<Props> = (props) => {
             }}
             resizeMode={"cover"}
           />
-        ) : (
+        ) : showBannerColor ? (
           <View
             style={[
               s.bannerContainer,
-              { backgroundColor: subData.banner_background_color },
+              {
+                backgroundColor: subData.banner_background_color,
+              },
             ]}
           />
+        ) : (
+          <View style={s.emptyBannerContainer} />
         )}
 
         <View style={s.infoContainer}>
@@ -169,6 +175,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   infoContainer: { padding: 10, width: "100%" },
+  emptyBannerContainer: { marginTop: HEADER_HEIGHT },
 });
 
 export default SubSidebar;

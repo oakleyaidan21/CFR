@@ -15,6 +15,7 @@ import RedditVideo from "../screens/RedditVideo";
 import UserPage from "../screens/UserPage";
 import { enableScreens } from "react-native-screens";
 import SubSidebar from "../screens/SubSidebar";
+import PostCreation from "../screens/PostCreation";
 
 enableScreens();
 const Stack = createNativeStackNavigator();
@@ -29,6 +30,7 @@ const routeAnimationHandler = (routeName: string) => {
     case "SubSidebar":
     case "Login":
     case "Web":
+    case "SelfPostCreation":
       return "fade";
 
     default:
@@ -66,6 +68,7 @@ const MainNavigator: React.FC = () => {
             name="SearchResults"
             component={SubmissionSearchResults}
           />
+          <Stack.Screen name="PostCreation" component={PostCreation} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="UserPage" component={UserPage} />
           <Stack.Screen name="Settings" component={Settings} />

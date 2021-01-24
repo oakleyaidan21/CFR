@@ -326,3 +326,26 @@ export const getUsersComments = (user: RedditUser) => {
       return null;
     });
 };
+
+export const submitSelfPost = (
+  snoowrap: snoowrap,
+  subName: string,
+  title: string,
+  body: string,
+  sendReplies: boolean,
+) => {
+  return snoowrap
+    .submitSelfpost({
+      subredditName: subName,
+      title: title,
+      text: body,
+      sendReplies: sendReplies,
+    })
+    .then((post) => {
+      return post;
+    })
+    .catch((error) => {
+      console.log("error submitting self post", error);
+      return null;
+    });
+};
