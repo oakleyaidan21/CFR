@@ -30,8 +30,6 @@ const DetailedPostScroller: React.FC<Props> = (props) => {
 
   const scrollerIsFocused = useIsFocused();
 
-  console.log("focused!!!:", scrollerIsFocused);
-
   const [fetchingMore, setFetchingMore] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [flatlistHeight, setFlatlistHeight] = useState(0);

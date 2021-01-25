@@ -156,16 +156,20 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         );
 
       case "VID":
-        const videoSource =
-          postType.fourExt == ".gifv"
-            ? data.url.substring(0, data.url.length - 4) + "mp4"
-            : (data.media?.reddit_video?.fallback_url as string);
+        const videoSourceIsGifv = postType.fourExt == ".gifv";
+        const simpleSource = videoSourceIsGifv
+          ? data.url.substring(0, data.url.length - 4) + "mp4"
+          : (data.media?.reddit_video?.fallback_url as string);
+        const naviSource = videoSourceIsGifv
+          ? data.url.substring(0, data.url.length - 4) + "mp4"
+          : (data.media?.reddit_video?.hls_url as string);
+
         return (
           <TouchableWithoutFeedback
-            onPress={() => onVideoPress(videoSource, imgUrl, data.title)}>
+            onPress={() => onVideoPress(naviSource, imgUrl, data.title)}>
             <View style={s.flex}>
               <SimpleVideo
-                source={videoSource}
+                source={simpleSource}
                 play={props.viewable}
                 posterSource={imgUrl}
               />
@@ -226,7 +230,9 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         <Score data={data} iconSize={20} />
         <Spin spinning={saving}>
           <TouchableNativeFeedback onPress={savePost} disabled={saving}>
-            <Icon name="star" color={isSaved ? "#00af64" : "grey"} size={20} />
+            <View>
+              <Icon name="star" color={isSaved ? "#00af64" : "grey"} />
+            </View>
           </TouchableNativeFeedback>
         </Spin>
         <Icon name="flag" color="grey" size={20} />
