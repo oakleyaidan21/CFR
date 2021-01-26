@@ -2,14 +2,20 @@ import React, { useCallback, useState } from "react";
 import { View } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { RedditUser } from "snoowrap";
-import { WINDOW_WIDTH } from "../constants/constants";
+import { WINDOW_WIDTH } from "../../constants/constants";
 import UserPostList from "./UserPostList";
 import UserCommentList from "./UserCommentList";
+import UserUpvotedList from "./UserUpvotedList";
+import UserDownvotedList from "./UserDownvotedList";
+import UserTrophyList from "./UserTrophyList";
 
 const routes = [
   { key: "posts", title: "Posts" },
   { key: "comments", title: "Comments" },
-  { key: "awards", title: "Awards" },
+  { key: "upvoted", title: "Upvoted" },
+  { key: "downvoted", title: "Downvoted" },
+  { key: "trophies", title: "Trophies" },
+  { key: "hidden", title: "Hidden" },
 ];
 
 const initialLayout = { width: WINDOW_WIDTH };
@@ -33,19 +39,37 @@ const UserTabs: React.FC<Props> = (props) => {
     [user],
   );
 
-  const AwardRoute = useCallback(() => <View style={{ flex: 1 }}></View>, [
-    user,
-  ]);
+  const UpvoteRoute = useCallback(
+    () => <UserUpvotedList user={user} navigation={props.navigation} />,
+    [user],
+  );
+
+  const DownvoteRoute = useCallback(
+    () => <UserDownvotedList user={user} navigation={props.navigation} />,
+    [user],
+  );
+
+  const TrophyRoute = useCallback(
+    () => <UserTrophyList user={user} navigation={props.navigation} />,
+    [user],
+  );
+
+  const HiddenRoute = useCallback(() => <View></View>, [user]);
 
   const renderScene = SceneMap({
     posts: PostRoute,
     comments: CommentRoute,
-    awards: AwardRoute,
+    upvoted: UpvoteRoute,
+    downvoted: DownvoteRoute,
+    trophies: TrophyRoute,
+    hidden: HiddenRoute,
   });
 
   const renderTabBar = (props: any) => (
     <TabBar
       {...props}
+      scrollEnabled={true}
+      tabStyle={{ width: 130 }}
       indicatorStyle={{ backgroundColor: "white" }}
       style={{ backgroundColor: "rgb(10,10,10)" }}
     />

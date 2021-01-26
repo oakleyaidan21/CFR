@@ -1,30 +1,11 @@
-import { useIsFocused } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useCallback } from "react";
+import { StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import { Comment, Listing, RedditUser, Submission } from "snoowrap";
-import TabBarIndicator from "../components/animations/TabBarIndicator";
-import CommentThread from "../components/CommentThread";
-import PostListItem from "../components/PostListItem";
+import { RedditUser } from "snoowrap";
 import Text from "../components/style/Text";
-import UserTabs from "../components/UserTabs";
-import {
-  TAB_CONTAINER_HEIGHT,
-  TAB_CONTENT_AREA_HEIGHT,
-} from "../constants/constants";
-import {
-  getUsersComments,
-  getUsersPosts,
-} from "../util/snoowrap/snoowrapFunctions";
+import UserTabs from "../components/user_related/UserTabs";
+import { TAB_CONTAINER_HEIGHT } from "../constants/constants";
 import { getTimeSincePosted } from "../util/util";
-
-const tabTypes = ["Posts", "Comments", "Awards", "Other"];
 
 type Props = {
   userData: RedditUser;

@@ -327,6 +327,42 @@ export const getUsersComments = (user: RedditUser) => {
     });
 };
 
+export const getUsersUpvotedContent = (user: RedditUser) => {
+  return user
+    .getUpvotedContent()
+    .then((content) => {
+      return content;
+    })
+    .catch((error) => {
+      console.log("error getting user's upvoted content", error);
+      return null;
+    });
+};
+
+export const getUsersDownvotedContent = (user: RedditUser) => {
+  return user
+    .getDownvotedContent()
+    .then((content) => {
+      return content;
+    })
+    .catch((error) => {
+      console.log("error getting user's downvoted content", error);
+      return null;
+    });
+};
+
+export const getUsersTrophies = (user: RedditUser) => {
+  return user
+    .getTrophies()
+    .then((trophies) => {
+      return trophies.trophies;
+    })
+    .catch((error) => {
+      console.log("error getting user's trophies", error);
+      return null;
+    });
+};
+
 export const submitSelfPost = (
   snoowrap: snoowrap,
   subName: string,

@@ -5,10 +5,10 @@ import {
   TouchableWithoutFeedback,
 } from "react-native-gesture-handler";
 import { Comment, RedditUser } from "snoowrap";
-import { TAB_CONTAINER_HEIGHT } from "../constants/constants";
-import { getUsersComments } from "../util/snoowrap/snoowrapFunctions";
-import CommentThread from "./CommentThread";
-import Text from "./style/Text";
+import { TAB_CONTAINER_HEIGHT } from "../../constants/constants";
+import { getUsersComments } from "../../util/snoowrap/snoowrapFunctions";
+import CommentThread from "../CommentThread";
+import Text from "../style/Text";
 
 type Props = {
   user: RedditUser;
