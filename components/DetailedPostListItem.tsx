@@ -109,15 +109,6 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       case "IMG":
         return (
           <TouchableWithoutFeedback onPress={onImagePress}>
-            {/* <ImageWithIndicator
-              source={{ uri: data.url }}
-              style={s.imageContainer}
-              resizeMode={
-                imageCover
-                  ? FastImage.resizeMode.cover
-                  : FastImage.resizeMode.contain
-              } 
-            /> */}
             {/* Will use above version if they fix resize change issue */}
             <Image
               source={{ uri: data.url }}
@@ -136,23 +127,8 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
           <ImageWithIndicator
             source={{ uri: data.url }}
             style={s.imageContainer}
-            resizeMode={
-              imageCover
-                ? FastImage.resizeMode.cover
-                : FastImage.resizeMode.contain
-            }
+            resizeMode={FastImage.resizeMode.contain}
           />
-          /* Will use above version if they fix resize change issue */
-          // <Image
-          //   source={{ uri: data.url }}
-          //   style={s.imageContainer}
-          //   resizeMode={
-          //     imageCover
-          //       ? FastImage.resizeMode.cover
-          //       : FastImage.resizeMode.contain
-          //   }
-          //   fadeDuration={0}
-          // />
         );
 
       case "VID":
@@ -229,11 +205,11 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       <View style={s.bottomBarContainer}>
         <Score data={data} iconSize={20} />
         <Spin spinning={saving}>
-          <TouchableNativeFeedback onPress={savePost} disabled={saving}>
+          <TouchableOpacity onPress={savePost} disabled={saving}>
             <View>
               <Icon name="star" color={isSaved ? "#00af64" : "grey"} />
             </View>
-          </TouchableNativeFeedback>
+          </TouchableOpacity>
         </Spin>
         <Icon name="flag" color="grey" size={20} />
         <View style={s.numCommentContainer}>
