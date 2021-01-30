@@ -6,6 +6,7 @@ import {
   StyleSheet,
   LayoutAnimation,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Snoowrap, { Comment, RedditUser } from "snoowrap";
 import { getUserByName } from "../util/snoowrap/snoowrapFunctions";
 import { getTimeSincePosted } from "../util/util";
@@ -25,9 +26,10 @@ const CommentThread: React.FC<Props> = (props) => {
   const { data, level, op, snoowrap } = props;
 
   const [showReplies, setShowReplies] = useState(false);
-
+  const [showAllReplies, setShowAllReplies] = useState(false);
   const animateReplies = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setShowAllReplies(false);
     setShowReplies(!showReplies);
   };
 
@@ -56,6 +58,35 @@ const CommentThread: React.FC<Props> = (props) => {
       />
     );
   }, []);
+
+  const renderCommentReplies = () => {
+    const moreThanFiveReplies = data.replies.length > 5;
+    const replies = moreThanFiveReplies
+      ? showAllReplies
+        ? data.replies
+        : data.replies.slice(4)
+      : data.replies;
+
+    return (
+      <>
+        {replies.map(renderReply)}
+        {moreThanFiveReplies && !showAllReplies && (
+          <TouchableOpacity
+            style={s.showAllRepliesButton}
+            onPress={() => {
+              LayoutAnimation.configureNext(
+                LayoutAnimation.Presets.easeInEaseOut,
+              );
+              setShowAllReplies(true);
+            }}>
+            <Text style={{ color: "grey" }}>
+              Show remaining {data.replies.length - 5} replies
+            </Text>
+          </TouchableOpacity>
+        )}
+      </>
+    );
+  };
 
   return (
     <View
@@ -116,9 +147,10 @@ const CommentThread: React.FC<Props> = (props) => {
         </TouchableWithoutFeedback>
       </View>
       {/* REPLIES */}
-      {showReplies && data.replies.length > 0 && (
-        <View style={s.replyContainer}>{data.replies.map(renderReply)}</View>
-      )}
+      {showReplies &&
+        data.replies.length > 0 &&
+        // <View style={s.replyContainer}>{data.replies.map(renderReply)}</View>
+        renderCommentReplies()}
     </View>
   );
 };
@@ -156,6 +188,12 @@ const s = StyleSheet.create({
   },
   numReplyText: { color: "grey" },
   replyContainer: { marginBottom: 5 },
+  showAllRepliesButton: {
+    width: "100%",
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 function commentsAreEqual(prevComment: Props, nextComment: Props) {

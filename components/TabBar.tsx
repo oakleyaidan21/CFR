@@ -100,8 +100,10 @@ const s = StyleSheet.create({
     alignContent: "center",
   },
   iconGroupContainer: {
-    width: 350,
+    maxWidth: 350,
+    flex: 1,
     height: 50,
+    marginHorizontal: 10,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
