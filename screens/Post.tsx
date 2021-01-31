@@ -4,13 +4,12 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  InteractionManager,
+  TouchableOpacity,
 } from "react-native";
 import { Comment, Listing, Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { parseLink } from "../util/util";
 import { HEADER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";

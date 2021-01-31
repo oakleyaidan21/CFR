@@ -5,8 +5,8 @@ import {
   Text,
   StyleSheet,
   LayoutAnimation,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Snoowrap, { Comment, RedditUser } from "snoowrap";
 import { getUserByName } from "../util/snoowrap/snoowrapFunctions";
 import { getTimeSincePosted } from "../util/util";
@@ -64,7 +64,7 @@ const CommentThread: React.FC<Props> = (props) => {
     const replies = moreThanFiveReplies
       ? showAllReplies
         ? data.replies
-        : data.replies.slice(4)
+        : data.replies.slice(0, 4)
       : data.replies;
 
     return (
