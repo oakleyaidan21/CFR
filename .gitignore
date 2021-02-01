@@ -84,6 +84,7 @@ web-build/
 util/snoowrap/snoowrapConfig.tsx
 util/imgur/imgurConfig.tsx
 util/youtube/youtubeConfig.tsx
+util/gfy/gfyConfig.tsx
 
 /android/androidbuilds/
 

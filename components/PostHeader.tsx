@@ -32,6 +32,7 @@ import {
   POST_CONTENT_HEIGHT,
   POST_INFO_CONTAINER_HEIGHT,
 } from "../constants/constants";
+import GfyPlayer from "./GfyPlayer";
 
 type Props = {
   data: Submission;
@@ -217,6 +218,12 @@ const PostHeader: React.FC<Props> = (props) => {
             <ImgurAlbumViewer imgurHash={postType.hash as string} />
           </View>
         );
+      case "GFY":
+        return (
+          <View style={s.gfyContainer}>
+            <GfyPlayer url={data.url} />
+          </View>
+        );
       default:
         return false;
     }
@@ -352,6 +359,7 @@ const s = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  gfyContainer: { width: "100%", height: POST_CONTENT_HEIGHT },
 });
 
 function postsAreEqual(prevComment: Props, nextComment: Props) {

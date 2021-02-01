@@ -80,6 +80,10 @@ export const determinePostType = (data: Submission) => {
     ? matches[4].substring(matches[4].length - 5, matches[4].length)
     : false;
 
+  if (data.domain == "gfycat.com") {
+    return { code: "GFY" };
+  }
+
   if (
     threeExt == ".jpg" ||
     threeExt == ".png" ||

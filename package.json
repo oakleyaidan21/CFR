@@ -20,6 +20,8 @@
     "@types/react-redux": "^7.1.12",
     "base-64": "^1.0.0",
     "events": "^3.2.0",
+    "gfycat-sdk": "^1.4.18",
+    "https": "^1.0.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-collapsible-header-views": "^1.1.2",
