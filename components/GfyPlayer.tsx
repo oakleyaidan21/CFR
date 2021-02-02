@@ -1,9 +1,6 @@
-import { request } from "https";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Icon } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { gfyConfig } from "../util/gfy/gfyConfig";
 import Text from "./style/Text";
 import VideoPlayer from "./VideoPlayer";
 
@@ -41,10 +38,6 @@ const GyfyPlayer: React.FC<Props> = (props) => {
         setGyfyDetails(json.gfyItem);
       });
   };
-
-  if (gfyDetails) {
-    console.log(gfyDetails.content_urls.mp4.url);
-  }
 
   return (
     <View style={{ flex: 1 }}>
