@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import HTMLView from "react-native-htmlview";
 import SpoilerText from "./SpoilerText";
 
@@ -17,9 +17,10 @@ const MDRenderer: React.FC<Props> = (props) => {
         if (node.attribs.class) {
           if (node.attribs.class === "md-spoiler-text") {
             return (
-              <View style={{ alignSelf: "center" }}>
-                <SpoilerText node={node} />
-              </View>
+              // / <View style={{ alignSelf: "center" }}>
+              <SpoilerText node={node} />
+              // <Text style={{ color: "blue" }}>hi</Text>
+              // </View>
             );
           }
         }

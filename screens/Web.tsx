@@ -102,6 +102,7 @@ const Web: React.FC<Props> = (props) => {
           onNavigationStateChange={onNavigationStateChange}
           source={{ uri: props.route.params.url }}
           ref={webRef}
+          allowsFullscreenVideo={true}
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}
         />
