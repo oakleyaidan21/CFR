@@ -42,7 +42,7 @@ const PostScroller: React.FC<Props> = (props) => {
 
   const renderItem = useCallback(
     ({ item, index }) => {
-      return (
+      return !item.url ? null : ( // done so that comments are not listed
         <PostListItem
           data={item}
           onPress={(index: number) => props.onPress(listing, index)}

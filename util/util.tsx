@@ -61,6 +61,7 @@ export const determinePostType = (data: Submission) => {
   if (data.crosspost_parent_list) {
     return { code: "XPT", xpst: data.crosspost_parent_list[0] };
   }
+  if(!data.url) return {code: "IDK"}
   const matches = data.url.match(postRegex);
   if (!matches) {
     return { code: "IDK" };

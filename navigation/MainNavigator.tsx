@@ -31,6 +31,7 @@ const routeAnimationHandler = (routeName: string) => {
     case "Login":
     case "Web":
     case "SelfPostCreation":
+    case "PostSwiper":
       return "fade";
 
     default:

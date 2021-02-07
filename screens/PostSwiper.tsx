@@ -17,6 +17,16 @@ const PostSwiper: React.FC<Props> = (props) => {
   const [currPosts, setCurrPosts] = useState<Listing<Submission>>(
     props.route.params.posts,
   );
+  const [loadAdjacent, setLoadAdjacent] = useState<boolean>(false); 
+
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener("appear", () => {
+      //only load extra posts when we've navigated
+      console.log("yeet");
+      setLoadAdjacent(true);
+    });
+    return unsubscribe; 
+  }, [props.navigation])
 
   const onIndexChanged = useCallback(
     (index) => {
@@ -49,6 +59,7 @@ const PostSwiper: React.FC<Props> = (props) => {
     <View style={{ flex: 1 }}>
       <Swiper
         loadMinimal={true}
+        loadMinimalSize={loadAdjacent ? 1 : 0}
         showsPagination={false}
         loop={false}
         onIndexChanged={onIndexChanged}
