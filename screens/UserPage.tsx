@@ -20,6 +20,7 @@ const UserPage: React.FC<Props> = (props) => {
       <User
         userData={props.route.params.userData}
         navigation={props.navigation}
+        showUserTabs={true}
       />
     </View>
   );

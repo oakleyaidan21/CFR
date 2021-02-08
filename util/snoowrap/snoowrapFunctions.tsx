@@ -240,6 +240,8 @@ export const getUserData = (snoowrap: snoowrap | undefined | null) => {
 export const getUserSubs = async (snoowrap: snoowrap | undefined | null) => {
   if (!snoowrap) return null;
   const subs = snoowrap.getSubscriptions();
+
+ 
   return subs;
 };
 

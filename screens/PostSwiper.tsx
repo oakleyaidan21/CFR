@@ -22,7 +22,6 @@ const PostSwiper: React.FC<Props> = (props) => {
   React.useEffect(() => {
     const unsubscribe = props.navigation.addListener("appear", () => {
       //only load extra posts when we've navigated
-      console.log("yeet");
       setLoadAdjacent(true);
     });
     return unsubscribe; 
