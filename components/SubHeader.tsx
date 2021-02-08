@@ -125,6 +125,7 @@ const SubHeader: React.FC<Props> = (props) => {
               {typeof data === "string" ? data : data.display_name}
             </Text>
           )}
+          {props.fromHome && <Icon name="arrow-drop-down" color="white" />}
         </TouchableOpacity>
       </View>
       {!showSearchBar && (

@@ -10,7 +10,7 @@ const PlaceholderContainer: React.FC<any> = (props) => {
   const start = (end: number) => {
     Animated.timing(flashAnimation.current, {
       toValue: end,
-      duration: 300,
+      duration: 500,
       easing: Easing.linear,
     }).start((e) => {
       if (e.finished) {

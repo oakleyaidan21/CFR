@@ -9,6 +9,7 @@ import Text from "./style/Text";
 import SubHeader from "./SubHeader";
 import { HEADER_HEIGHT } from "../constants/constants";
 import Fade from "./animations/Fade";
+import { Icon } from "react-native-elements";
 
 const globalSubs = ["Front Page", "Popular", "All", "Saved"];
 const anonSubs = ["Front Page", "Popular", "All"];
@@ -97,6 +98,22 @@ const HomeHeader: React.FC<Props> = (props) => {
     );
   }, [currentSub, category]);
 
+  const renderSectionListHeader = () => {
+    return (
+      <TouchableOpacity
+        style={{
+          height: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          marginLeft: 15,
+          marginRight: 10,
+        }}
+        onPress={animateHeaderChange}>
+        <Icon name="close" color="white" size={30} />
+      </TouchableOpacity>
+    );
+  };
+
   const animateHeaderChange = useCallback(() => {
     setShowSubs(!showSubs);
   }, [showSubs]);
@@ -130,6 +147,7 @@ const HomeHeader: React.FC<Props> = (props) => {
                 showsHorizontalScrollIndicator={false}
                 sections={sections as any}
                 ListFooterComponent={renderFooter}
+                ListHeaderComponent={renderSectionListHeader}
               />
             </Fade>
           ) : (
