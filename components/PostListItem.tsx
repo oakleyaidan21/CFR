@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
@@ -50,7 +50,7 @@ const PostListItem: React.FC<Props> = (props) => {
       {/* MAIN CONTENT */}
       <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
-        <FastImage style={s.image} source={{ uri: imgUrl }} />
+        <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
         {/* TITLE/FLAIR/POINTS*/}
         <View style={s.titleContainer}>
           <Text style={s.titleText} numberOfLines={4}>

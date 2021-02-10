@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
   Share,
+  Image,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
@@ -254,7 +255,7 @@ const PostHeader: React.FC<Props> = (props) => {
         <View style={s.mainContentContainer}>
           {/* THUMBNAIL */}
           <TouchableOpacity onPress={openLink}>
-            <FastImage style={s.image} source={{ uri: imgUrl }} />
+            <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
           </TouchableOpacity>
           {/* TITLE/FLAIR/POINTS*/}
           <TouchableOpacity

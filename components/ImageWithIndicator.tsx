@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Dimensions, Animated, Easing } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Animated,
+  Easing,
+  Image,
+} from "react-native";
 import FastImage from "react-native-fast-image";
 
 type Props = {
@@ -34,7 +41,12 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
 
   return (
     <View style={{ ...props.style }}>
-      <FastImage {...props} onLoadEnd={onLoadEnd} onProgress={onProgress} />
+      <Image
+        {...props}
+        onLoadEnd={onLoadEnd}
+        onProgress={onProgress}
+        fadeDuration={0}
+      />
       {progress !== 1 && (
         <View style={s.progressBarContainer}>
           <Animated.View

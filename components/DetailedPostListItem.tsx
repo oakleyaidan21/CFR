@@ -185,7 +185,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       {/* MAIN CONTENT */}
       <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
-        <FastImage style={s.image} source={{ uri: imgUrl }} />
+        <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
         {/* TITLE/FLAIR/POINTS*/}
 
         <TouchableOpacity style={s.titleContainer} onPress={onMainContentPress}>

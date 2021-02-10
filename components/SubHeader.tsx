@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Image,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -110,7 +111,11 @@ const SubHeader: React.FC<Props> = (props) => {
             <ActivityIndicator color="white" style={s.imgIcon} />
           ) : !isString ? (
             <TouchableOpacity onPress={openSubSidebar}>
-              <FastImage source={{ uri: imgUrl }} style={s.imgIcon} />
+              <Image
+                source={{ uri: imgUrl }}
+                style={s.imgIcon}
+                fadeDuration={0}
+              />
             </TouchableOpacity>
           ) : (
             <GlobalSubBubble
