@@ -28,6 +28,7 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
   };
 
   const onProgress = (e: any) => {
+    console.log("progress!!!!");
     setProgress(e.nativeEvent.loaded / e.nativeEvent.total);
   };
 
@@ -41,12 +42,7 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
 
   return (
     <View style={{ ...props.style }}>
-      <Image
-        {...props}
-        onLoadEnd={onLoadEnd}
-        onProgress={onProgress}
-        fadeDuration={0}
-      />
+      <FastImage {...props} onLoadEnd={onLoadEnd} onProgress={onProgress} />
       {progress !== 1 && (
         <View style={s.progressBarContainer}>
           <Animated.View

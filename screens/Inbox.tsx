@@ -66,11 +66,12 @@ const Inbox: React.FC<Props> = (props) => {
         <InboxItem
           messageData={item}
           read={!showUnread}
-          onPress={() =>
+          onPress={() => {
+            console.log(item.parent_id);
             item.parent_id
               ? props.navigation.navigate("LoadPost", { id: item.parent_id })
-              : console.log("press")
-          }
+              : console.log("press");
+          }}
         />
       );
     },

@@ -111,11 +111,7 @@ const SubHeader: React.FC<Props> = (props) => {
             <ActivityIndicator color="white" style={s.imgIcon} />
           ) : !isString ? (
             <TouchableOpacity onPress={openSubSidebar}>
-              <Image
-                source={{ uri: imgUrl }}
-                style={s.imgIcon}
-                fadeDuration={0}
-              />
+              <FastImage source={{ uri: imgUrl }} style={s.imgIcon} />
             </TouchableOpacity>
           ) : (
             <GlobalSubBubble

@@ -50,7 +50,7 @@ const PostListItem: React.FC<Props> = (props) => {
       {/* MAIN CONTENT */}
       <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
-        <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
+        <FastImage style={s.image} source={{ uri: imgUrl }} />
         {/* TITLE/FLAIR/POINTS*/}
         <View style={s.titleContainer}>
           <Text style={s.titleText} numberOfLines={4}>

@@ -19,6 +19,7 @@ const LoadPost: React.FC<Props> = (props) => {
   const { snoowrap } = useContext(SnooContext);
 
   const [postData, setPostData] = useState<Submission>();
+  const [errored, setErrored] = useState<boolean>(false);
 
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("transitionEnd", () => {
@@ -33,6 +34,9 @@ const LoadPost: React.FC<Props> = (props) => {
       .fetch()
       .then((s) => {
         setPostData(s);
+      })
+      .catch(() => {
+        setErrored(true);
       });
   };
 
@@ -53,6 +57,12 @@ const LoadPost: React.FC<Props> = (props) => {
           navigation={props.navigation}
           route={{ params: { data: postData } }}
         />
+      ) : errored ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontSize: 50, marginBottom: 10 }}>:(</Text>
+          <Text>An error occurred</Text>
+        </View>
       ) : (
         <PostPlaceholder navigation={props.navigation} />
       )}

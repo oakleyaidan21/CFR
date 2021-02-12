@@ -110,7 +110,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
         return (
           <TouchableWithoutFeedback onPress={onImagePress}>
             {/* Will use above version if they fix resize change issue */}
-            <Image
+            <FastImage
               source={{ uri: data.url }}
               style={s.imageContainer}
               resizeMode={
@@ -118,7 +118,6 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
                   ? FastImage.resizeMode.cover
                   : FastImage.resizeMode.contain
               }
-              fadeDuration={0}
             />
           </TouchableWithoutFeedback>
         );
@@ -185,7 +184,7 @@ const DetailedPostListItem: React.FC<Props> = (props) => {
       {/* MAIN CONTENT */}
       <View style={s.mainContentContainer}>
         {/* THUMBNAIL */}
-        <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
+        <FastImage style={s.image} source={{ uri: imgUrl }} />
         {/* TITLE/FLAIR/POINTS*/}
 
         <TouchableOpacity style={s.titleContainer} onPress={onMainContentPress}>

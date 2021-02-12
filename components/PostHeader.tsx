@@ -255,7 +255,7 @@ const PostHeader: React.FC<Props> = (props) => {
         <View style={s.mainContentContainer}>
           {/* THUMBNAIL */}
           <TouchableOpacity onPress={openLink}>
-            <Image style={s.image} source={{ uri: imgUrl }} fadeDuration={0} />
+            <FastImage style={s.image} source={{ uri: imgUrl }} />
           </TouchableOpacity>
           {/* TITLE/FLAIR/POINTS*/}
           <TouchableOpacity
