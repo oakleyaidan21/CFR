@@ -24,9 +24,11 @@ const CFR: React.FC = () => {
   const getSubs = (r: Snoowrap) => {
     getUserSubs(r).then((subs: any) => {
       if (subs) {
-        subs.sort((a: Subreddit, b: Subreddit) => {
-          return a.display_name.localeCompare(b.display_name)
-        });
+        subs.sort((a: Subreddit, b: Subreddit) =>
+          a.display_name.localeCompare(b.display_name, undefined, {
+            sensitivity: "base",
+          }),
+        );
         setUserSubs(subs);
       }
     });
