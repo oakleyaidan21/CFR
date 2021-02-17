@@ -4,8 +4,8 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
+  FlatList,
 } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
 import { Comment, RedditUser, Submission } from "snoowrap";
 import { TAB_CONTAINER_HEIGHT } from "../../constants/constants";
 import { getUsersDownvotedContent } from "../../util/snoowrap/snoowrapFunctions";

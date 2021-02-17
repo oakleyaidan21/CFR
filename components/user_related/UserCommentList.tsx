@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
 import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
   FlatList,
   TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+} from "react-native";
+
 import { Comment, RedditUser } from "snoowrap";
 import { TAB_CONTAINER_HEIGHT } from "../../constants/constants";
 import { getUsersComments } from "../../util/snoowrap/snoowrapFunctions";

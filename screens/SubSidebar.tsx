@@ -1,12 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import FastImage from "react-native-fast-image";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { Subreddit } from "snoowrap";
 import MDRenderer from "../components/MDRenderer";
 import StandardHeader from "../components/StandardHeader";
 import Text from "../components/style/Text";
 import { HEADER_HEIGHT } from "../constants/constants";
+import SnooContext from "../context/SnooContext";
 import { parseLink } from "../util/util";
 
 type Props = {
@@ -16,6 +22,7 @@ type Props = {
 
 const SubSidebar: React.FC<Props> = (props) => {
   const { subData } = props.route.params;
+  const { userSubs, setUserSubs } = useContext(SnooContext);
 
   const [showDescription, setShowDescription] = useState(false);
   const [subscribed, setSubscribed] = useState(subData.user_is_subscriber);
@@ -110,9 +117,13 @@ const SubSidebar: React.FC<Props> = (props) => {
               <TouchableOpacity
                 style={s.subscribeButton}
                 onPress={toggleSubscribed}>
-                <Text style={s.subscribedText}>
-                  {subscribed ? "Unsubscribe" : "Subscribe"}
-                </Text>
+                {changingSubscription ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text style={s.subscribedText}>
+                    {subscribed ? "Unsubscribe" : "Subscribe"}
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -161,6 +172,7 @@ const s = StyleSheet.create({
   subscribeButton: {
     padding: 5,
     borderRadius: 3,
+    height: 40,
     borderWidth: 2,
     borderColor: "white",
     justifyContent: "center",

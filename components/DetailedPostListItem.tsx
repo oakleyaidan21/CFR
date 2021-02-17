@@ -27,7 +27,6 @@ import Flair from "./style/Flair";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useNavigation } from "@react-navigation/native";
 import Spin from "./animations/Spin";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 const options = {
   enableVibrateFallback: true,

@@ -7,8 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  FlatList,
+  TextInput,
 } from "react-native";
-import { FlatList, TextInput } from "react-native-gesture-handler";
 import StandardHeader from "../components/StandardHeader";
 import { OS } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
