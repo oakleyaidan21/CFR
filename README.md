@@ -5,11 +5,13 @@ Clear is an open-sourced, cross-platform mobile application for browsing reddit.
 So far, Clear is mostly contained to mass browsing, but features will be added as time goes on.
 
 <p float="left">
-  <img src="https://github.com/oakleyaidan21/clearForReddit/blob/master/screenshots/Simulator%20Screen%20Shot%20-%20iPhone%2011%20-%202020-10-12%20at%2017.05.57.png?raw=true"  width="45%"/>      
-  <img src="https://github.com/oakleyaidan21/clearForReddit/blob/master/screenshots/Simulator%20Screen%20Shot%20-%20iPhone%2011%20-%202020-10-12%20at%2017.06.19.png?raw=true" width="45%"/> 
+  <img src="https://raw.githubusercontent.com/oakleyaidan21/CFR/master/Screenshot_20210517-173247.png"  width="45%"/>      
+  <img src="https://github.com/oakleyaidan21/CFR/blob/master/Screenshot_20210517-173307.png" width="45%"/> 
 </p>
 
-<img src="https://github.com/oakleyaidan21/clearForReddit/blob/master/screenshots/Simulator%20Screen%20Shot%20-%20iPad%20Pro%20(9.7-inch)%20-%202020-10-12%20at%2017.16.47.png?raw=true"  />
+<img src="https://raw.githubusercontent.com/oakleyaidan21/CFR/master/Screenshot_20210517-173334.png"  />
+
+(screenshots have large head and footer due to them being taken on the pixel 5, which has no bezel. The app detects if a bezel is present and changes the header and footer size accordingly) 
 
 ## Setup
 
@@ -83,17 +85,9 @@ export const apiKey = "AIzaSyB56c605jONMlWRn0OzTTvLy6_p00Hgro4";
 - themeing (just light and dark)
 - imgur and gfycat integration
 - youtube integration
-- tablet version
 - can vote on posts
 
 ## TO-DO (that I currently have thought of)
 
-- add ability to retrieve other sections of a user's page
-- add better UI
 - add comment/reply functionality
 - add report functionality
-- optimize post rendering
-- add swiper functionality to tablet version
-- add dynamic header to posts
-- improve styling
-- combine the two sorting types into one type
