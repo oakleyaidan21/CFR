@@ -1,6 +1,6 @@
 import React, { useCallback, useContext } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { WebView } from "react-native-webview";
 import Snoowrap from "snoowrap";
 import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
@@ -58,7 +58,11 @@ const Login: React.FC<Props> = (props) => {
         onNavigationStateChange={(newNavState) => {
           if (newNavState.url.includes("https://localhost:8080")) {
             const start_i = newNavState.url.indexOf("code");
-            const code = newNavState.url.slice(start_i + 5);
+            const code = newNavState.url.slice(
+              start_i + 5,
+              newNavState.url.length - 2,
+            );
+            console.log(newNavState.url);
             dispatch({ type: "SET_REFRESH_TOKEN", refreshToken: null });
             dispatch({ type: "SET_AUTH_CODE", authCode: code });
             props.navigation.goBack();

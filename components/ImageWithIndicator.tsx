@@ -28,7 +28,6 @@ const ImageWithIndicator: React.FC<Props> = (props) => {
   };
 
   const onProgress = (e: any) => {
-    console.log("progress!!!!");
     setProgress(e.nativeEvent.loaded / e.nativeEvent.total);
   };
 

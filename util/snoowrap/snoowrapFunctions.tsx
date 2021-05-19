@@ -241,7 +241,6 @@ export const getUserSubs = async (snoowrap: snoowrap | undefined | null) => {
   if (!snoowrap) return null;
   const subs = snoowrap.getSubscriptions();
 
- 
   return subs;
 };
 

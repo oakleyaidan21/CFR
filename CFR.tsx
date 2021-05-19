@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, SafeAreaView, StatusBar, Text } from "react-native";
+import { View, SafeAreaView, StatusBar, Text, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MainNavigator from "./navigation/MainNavigator";
 import SnooContext from "./context/SnooContext";
@@ -56,6 +56,15 @@ const CFR: React.FC = () => {
       } else {
         console.log("creating snoowrap with authCode", authCode);
         initializeSnoowrap(authCode).then((r: any) => {
+          if (!r) {
+            console.log("error in making user snoowrap; making default one");
+            initializeDefaultSnoowrap().then((r) => {
+              Alert.alert("Error logging in. Please try again");
+              setSnoowrap(r);
+              dispatch({ type: "SET_AUTH_CODE", code: null });
+            });
+            return;
+          }
           let newUsers = users;
           r.getMe().then((me: any) => {
             r.getUnreadMessages().then((ib: any) => setUnreadInbox(ib));
