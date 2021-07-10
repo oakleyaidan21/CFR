@@ -84,7 +84,6 @@ export const determinePostType = (data: Submission) => {
   if (data.domain == "gfycat.com") {
     return { code: "GFY" };
   }
-
   if (
     threeExt == ".jpg" ||
     threeExt == ".png" ||
@@ -97,8 +96,8 @@ export const determinePostType = (data: Submission) => {
   if (threeExt == ".gif") {
     return { code: "GIF" };
   }
-
-  if (fourExt == ".gifv" || matches[2] == ".redd") {
+  
+  if (fourExt == ".gifv" || data.is_video) {
     return { code: "VID", fourExt: fourExt };
   }
 
