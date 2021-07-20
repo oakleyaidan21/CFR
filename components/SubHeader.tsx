@@ -141,7 +141,7 @@ const SubHeader: React.FC<Props> = (props) => {
             </Text>
             <Icon name="arrow-drop-down" color="grey" />
           </TouchableOpacity>
-          {subreddit !== "Front Page" && subreddit !== "Saved" && (
+          {subreddit !== "Saved" && (
             <TouchableOpacity onPress={() => setShowSearchBar(true)}>
               <Icon name="search" color="grey" style={{ marginLeft: 10 }} />
             </TouchableOpacity>

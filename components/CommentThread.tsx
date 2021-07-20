@@ -34,15 +34,7 @@ const CommentThread: React.FC<Props> = (props) => {
   };
 
   const onUserPress = useCallback(() => {
-    if (snoowrap) {
-      getUserByName(snoowrap, data.author.name)
-        .then((user) => {
-          props.navigation.navigate("UserPage", { userData: user });
-        })
-        .catch((error) => {
-          console.log("error getting user:", error);
-        });
-    }
+    props.navigation.navigate("UserPage", { userName: data.author.name });
   }, []);
 
   const renderReply = useCallback((comment: Comment) => {

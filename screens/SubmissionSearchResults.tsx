@@ -7,7 +7,10 @@ import PostScroller from "../components/PostScroller";
 import StandardHeader from "../components/StandardHeader";
 import SnooContext from "../context/SnooContext";
 import SubmissionListingProvider from "../providers/ListingProvider";
-import { searchPosts } from "../util/snoowrap/snoowrapFunctions";
+import {
+  searchFrontPage,
+  searchPosts,
+} from "../util/snoowrap/snoowrapFunctions";
 
 type Props = {
   route: { params: { query: string; sub: Subreddit | string } };
@@ -15,23 +18,31 @@ type Props = {
 };
 
 const SubmissionSearchResults: React.FC<Props> = (props) => {
-  const { snoowrap } = useContext(SnooContext);
+  const { snoowrap, userSubs } = useContext(SnooContext);
 
   const [data, setData] = useState();
 
   const searchSubmissions = useCallback(() => {
     console.log("searching");
     if (snoowrap) {
-      searchPosts(
-        snoowrap,
-        typeof props.route.params.sub === "string"
-          ? props.route.params.sub
-          : props.route.params.sub.display_name,
-        props.route.params.query,
-      ).then((r: any) => {
-        console.log("searched!", r.length);
-        setData(r);
-      });
+      if (props.route.params.sub == "Front Page") {
+        searchFrontPage(snoowrap, props.route.params.query, userSubs).then(
+          (results: any) => {
+            setData(results);
+          },
+        );
+      } else {
+        searchPosts(
+          snoowrap,
+          typeof props.route.params.sub === "string"
+            ? props.route.params.sub
+            : props.route.params.sub.display_name,
+          props.route.params.query,
+        ).then((r: any) => {
+          console.log("searched!", r.length);
+          setData(r);
+        });
+      }
     }
   }, []);
 

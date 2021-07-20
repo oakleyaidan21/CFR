@@ -241,7 +241,12 @@ const PostHeader: React.FC<Props> = (props) => {
             <Text style={s.topBarText}>{subreddit.display_name}</Text>
           </TouchableOpacity>
           <Text style={s.topBarText}> | </Text>
-          <TouchableOpacity onPress={undefined}>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("UserPage", {
+                userName: data.author.name,
+              })
+            }>
             <Text style={s.topBarText}>{data.author.name}</Text>
           </TouchableOpacity>
           <Text style={s.topBarText}>

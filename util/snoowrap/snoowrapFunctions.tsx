@@ -250,6 +250,31 @@ export const getPostById = (snoowrap: snoowrap, id: string) => {
   return post;
 };
 
+export const searchFrontPage = async (
+  snoowrap: snoowrap,
+  query: string,
+  subs: [Subreddit],
+) => {
+  const promises = subs.map((s) => {
+    return snoowrap.search({
+      query,
+      time: "all",
+      subreddit: s.display_name,
+      sort: "relevance",
+    });
+  });
+
+  return Promise.all(promises).then((posts) => {
+    const p = [];
+    posts.map((s) => {
+      s.map((yee) => {
+        p.push(yee);
+      });
+    });
+    return p;
+  });
+};
+
 export const searchPosts = async (
   snoowrap: snoowrap,
   subName: string,
@@ -259,6 +284,7 @@ export const searchPosts = async (
   return snoowrap
     .search({ query, time: "all", subreddit: subName, sort: "relevance" })
     .then((results) => {
+      console.log(results.length);
       return results;
     })
     .catch((error) => {
