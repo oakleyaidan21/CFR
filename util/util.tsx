@@ -61,7 +61,7 @@ export const determinePostType = (data: Submission) => {
   if (data.crosspost_parent_list) {
     return { code: "XPT", xpst: data.crosspost_parent_list[0] };
   }
-  if(!data.url) return {code: "IDK"}
+  if (!data.url) return { code: "IDK" };
   const matches = data.url.match(postRegex);
   if (!matches) {
     return { code: "IDK" };
@@ -81,6 +81,10 @@ export const determinePostType = (data: Submission) => {
     ? matches[4].substring(matches[4].length - 5, matches[4].length)
     : false;
 
+  if (data.domain == "redgifs.com") {
+    return { code: "RED" };
+  }
+
   if (data.domain == "gfycat.com") {
     return { code: "GFY" };
   }
@@ -96,7 +100,7 @@ export const determinePostType = (data: Submission) => {
   if (threeExt == ".gif") {
     return { code: "GIF" };
   }
-  
+
   if (fourExt == ".gifv" || data.is_video) {
     return { code: "VID", fourExt: fourExt };
   }

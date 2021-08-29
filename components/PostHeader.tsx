@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
   Share,
-  Image,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
@@ -222,7 +221,13 @@ const PostHeader: React.FC<Props> = (props) => {
       case "GFY":
         return (
           <View style={s.gfyContainer}>
-            <GfyPlayer url={data.url} />
+            <GfyPlayer url={data.url} red={false} />
+          </View>
+        );
+      case "RED":
+        return (
+          <View style={s.gfyContainer}>
+            <GfyPlayer url={data.url} red={true} />
           </View>
         );
       default:

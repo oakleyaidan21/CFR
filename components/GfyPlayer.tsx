@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import { View, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
+import CFRText from "./style/Text";
 import Text from "./style/Text";
 import VideoPlayer from "./VideoPlayer";
 
 type Props = {
   url: String;
+  red: boolean;
 };
 
 const GyfyPlayer: React.FC<Props> = (props) => {
-  const { url } = props;
+  const { url, red } = props;
 
   const [gfyDetails, setGyfyDetails] = useState(null);
   const [errored, setErrored] = useState(false);
@@ -17,17 +19,22 @@ const GyfyPlayer: React.FC<Props> = (props) => {
   const tokens = url.split("/");
   const gfyId = tokens[tokens.length - 1];
 
+  useEffect(() => {
+    getGfyInfo();
+  }, []);
+
   const getGfyInfo = () => {
     setErrored(false);
-    fetch("https://api.gfycat.com/v1/gfycats/" + gfyId, {
+    const apiUrl = red
+      ? "https://api.redgifs.com/v1/gfycats/"
+      : "https://api.gfycat.com/v1/gfycats/";
+    fetch(apiUrl + gfyId, {
       method: "GET",
     })
       .then((res) => {
-        // console.log(res);r
         return res.json();
       })
       .catch((error) => {
-        // console.log("yeet");
         setErrored(true);
       })
       .then((json) => {
@@ -66,17 +73,13 @@ const GyfyPlayer: React.FC<Props> = (props) => {
           canFullscreen={true}
         />
       ) : (
-        <TouchableOpacity
-          onPress={getGfyInfo}
-          style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-          <Icon name="movie" color="grey" size={200} />
-          <Text style={{ color: "grey" }}>Tap to get gif</Text>
-        </TouchableOpacity>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <CFRText style={{ marginBottom: 10, fontWeight: "bold" }}>
+            Getting gif...
+          </CFRText>
+          <ActivityIndicator color={"white"} size={"large"} />
+        </View>
       )}
     </View>
   );
