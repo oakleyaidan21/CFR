@@ -81,10 +81,10 @@ buck-out/
 web-build/
 
 # Secrets
-; src/util/snoowrap/snoowrapConfig.tsx
-; src/util/imgur/imgurConfig.tsx
-; src/util/youtube/youtubeConfig.tsx
-; src/util/gfy/gfyConfig.tsx
+src/util/snoowrap/snoowrapConfig.tsx
+src/util/imgur/imgurConfig.tsx
+src/util/youtube/youtubeConfig.tsx
+src/util/gfy/gfyConfig.tsx
 
 /android/androidbuilds/
 
