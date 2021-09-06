@@ -44,7 +44,7 @@ const SubmissionListingProvider: React.FC<Props> = (props) => {
         return true;
       })
       .catch((error) => {
-        console.log("error here:", error);
+        console.log("error getting posts:", error);
         setFailed(true);
         return false;
       });

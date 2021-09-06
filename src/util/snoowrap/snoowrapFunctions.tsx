@@ -11,7 +11,6 @@ export const handleTokenChange = async (
   // logging in an existing user
   if (refreshToken) {
     const snoowrap = initializeUserSnoowrap(refreshToken);
-    const user = snoowrap.getMe();
     try {
       const results = await Promise.all([
         snoowrap.getMe(),
@@ -30,8 +29,12 @@ export const handleTokenChange = async (
     // logging in default snoowrap
   } else if (!authCode) {
     console.log("creating default snoowrap!");
-    const snoowrap = initializeDefaultSnoowrap();
-    return { snoowrap: snoowrap, user: null, unreadMessages: [], subs: [] };
+    try {
+      const snoowrap = await initializeDefaultSnoowrap();
+      return { snoowrap: snoowrap, user: null, unreadMessages: [], subs: [] };
+    } catch (error) {
+      console.log("error creating default snoowrap", error);
+    }
   }
   // logging in a new user with an auth code
   try {
@@ -39,12 +42,17 @@ export const handleTokenChange = async (
     if (!snoowrap) {
       Alert.alert("Error logging in, please try again.");
       dispatch({ type: "SET_AUTH_CODE", code: null });
-      return {
-        snoowrap: initializeDefaultSnoowrap(),
-        user: null,
-        unreadMessages: [],
-        subs: [],
-      };
+      try {
+        const snoowrap = await initializeDefaultSnoowrap();
+        return {
+          snoowrap: snoowrap,
+          user: null,
+          unreadMessages: [],
+          subs: [],
+        };
+      } catch (error) {
+        console.log("error initializing default snoowrap", e);
+      }
     }
     let newUsers = existingUsers;
     const results = await Promise.all([
@@ -103,17 +111,19 @@ export const initializeSnoowrap = async (authCode: string) => {
   return r;
 };
 
-export const initializeDefaultSnoowrap = () => {
-  const auth = {
-    clientId: snoowrapConfig.clientId,
-    userAgent: snoowrapConfig.userAgent,
-    clientSecret: snoowrapConfig.clientSecret,
-    refreshToken: snoowrapConfig.refreshToken,
-  };
-  const r = new snoowrap(auth);
-  r._nextRequestTimestamp = -1;
-  r.config({ proxies: false });
-  return r;
+export const initializeDefaultSnoowrap = async () => {
+  try {
+    const r = await snoowrap.fromApplicationOnlyAuth({
+      userAgent: snoowrapConfig.userAgent,
+      clientId: snoowrapConfig.clientId,
+      deviceId: "DO_NOT_TRACK_THIS_DEVICE",
+    });
+    r._nextRequestTimestamp = -1;
+    r.config({ proxies: false });
+    return r;
+  } catch (error) {
+    console.log("error creating default snoowrap", error);
+  }
 };
 
 export const initializeUserSnoowrap = (token: string) => {
