@@ -10,7 +10,7 @@ export const handleTokenChange = async (
 ) => {
   // logging in an existing user
   if (refreshToken) {
-    const snoowrap = tempinitializeUserSnoowrap(refreshToken);
+    const snoowrap = initializeUserSnoowrap(refreshToken);
     const user = snoowrap.getMe();
     try {
       const results = await Promise.all([
@@ -116,7 +116,7 @@ export const initializeDefaultSnoowrap = () => {
   return r;
 };
 
-export const initializeUserSnoowrap = async (token: string) => {
+export const initializeUserSnoowrap = (token: string) => {
   const auth = {
     clientId: snoowrapConfig.clientId,
     clientSecret: snoowrapConfig.clientSecret,
