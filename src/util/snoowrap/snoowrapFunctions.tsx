@@ -1,5 +1,74 @@
+import { Alert } from "react-native";
 import snoowrap, { Listing, RedditUser, Submission, Subreddit } from "snoowrap";
 import snoowrapConfig from "./snoowrapConfig";
+
+export const handleTokenChange = async (
+  authCode: string,
+  refreshToken: string,
+  dispatch: any,
+  existingUsers: any,
+) => {
+  // logging in an existing user
+  if (refreshToken) {
+    const snoowrap = tempinitializeUserSnoowrap(refreshToken);
+    const user = snoowrap.getMe();
+    try {
+      const results = await Promise.all([
+        snoowrap.getMe(),
+        snoowrap.getUnreadMessages(),
+        snoowrap.getSubscriptions(),
+      ]);
+      return {
+        snoowrap: snoowrap,
+        user: results[0],
+        unreadMessages: results[1],
+        subs: results[2],
+      };
+    } catch (error) {
+      console.log("error initializing user snoowrap:", error);
+    }
+    // logging in default snoowrap
+  } else if (!authCode) {
+    const snoowrap = initializeDefaultSnoowrap();
+    return { snoowrap: snoowrap, user: null, unreadMessages: [], subs: [] };
+  }
+  // logging in a new user with an auth code
+  try {
+    const snoowrap = await initializeSnoowrap(authCode);
+    if (!snoowrap) {
+      Alert.alert("Error logging in, please try again.");
+      dispatch({ type: "SET_AUTH_CODE", code: null });
+      return {
+        snoowrap: initializeDefaultSnoowrap(),
+        user: null,
+        unreadMessages: [],
+        subs: [],
+      };
+    }
+    let newUsers = existingUsers;
+    const results = await Promise.all([
+      snoowrap.getMe(),
+      snoowrap.getUnreadMessages(),
+      snoowrap.getSubscriptions(),
+    ]);
+    const user = results[0];
+    newUsers[user.name] = snoowrap.refreshToken;
+    dispatch({ type: "SET_USERS", users: newUsers });
+    dispatch({
+      type: "SET_REFRESH_TOKEN",
+      refreshToken: snoowrap.refreshToken,
+    });
+    return {
+      snoowrap: snoowrap,
+      user: user,
+      unreadMessages: results[1],
+      subs: results[2],
+    };
+  } catch (e) {
+    console.log("error creating snoowrap from auth code:", e);
+  }
+  return { snoowrap: null, user: null, unreadMessages: [], subs: [] };
+};
 
 export const initializeSnoowrap = async (authCode: string) => {
   let r = null;
@@ -33,14 +102,13 @@ export const initializeSnoowrap = async (authCode: string) => {
   return r;
 };
 
-export const initializeDefaultSnoowrap = async () => {
+export const initializeDefaultSnoowrap = () => {
   const auth = {
     clientId: snoowrapConfig.clientId,
     userAgent: snoowrapConfig.userAgent,
     clientSecret: snoowrapConfig.clientSecret,
     refreshToken: snoowrapConfig.refreshToken,
   };
-
   const r = new snoowrap(auth);
   r._nextRequestTimestamp = -1;
   r.config({ proxies: false });
@@ -48,6 +116,18 @@ export const initializeDefaultSnoowrap = async () => {
 };
 
 export const initializeUserSnoowrap = async (token: string) => {
+  const auth = {
+    clientId: snoowrapConfig.clientId,
+    clientSecret: snoowrapConfig.clientSecret,
+    refreshToken: token,
+    userAgent: snoowrapConfig.userAgent,
+  };
+  let r = new snoowrap(auth);
+  r._nextRequestTimestamp = -1;
+  r.config({ proxies: false });
+  return r;
+};
+export const tempinitializeUserSnoowrap = (token: string) => {
   const auth = {
     clientId: snoowrapConfig.clientId,
     clientSecret: snoowrapConfig.clientSecret,
@@ -237,13 +317,6 @@ export const getUserData = (snoowrap: snoowrap | undefined | null) => {
   });
 };
 
-export const getUserSubs = async (snoowrap: snoowrap | undefined | null) => {
-  if (!snoowrap) return null;
-  const subs = snoowrap.getSubscriptions();
-
-  return subs;
-};
-
 export const getPostById = (snoowrap: snoowrap, id: string) => {
   if (!snoowrap) return null;
   const post = snoowrap.getSubmission(id);
@@ -411,4 +484,12 @@ export const submitSelfPost = (
       console.log("error submitting self post", error);
       return null;
     });
+};
+
+export const sortSubs = (subs: Array<Subreddit>) => {
+  subs.sort((a: Subreddit, b: Subreddit) =>
+    a.display_name.localeCompare(b.display_name, undefined, {
+      sensitivity: "base",
+    }),
+  );
 };
