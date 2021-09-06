@@ -4,7 +4,7 @@ import { LogBox, Platform, UIManager } from "react-native";
 import { PersistGate } from "redux-persist/integration/react";
 import CFR from "./CFR";
 import { decode, encode } from "base-64";
-import { persistor, store } from "./redux/store";
+import { persistor, store } from "./src/redux/store";
 import { changeBarColors } from "react-native-immersive-bars";
 
 // These next three blocks are for snoowrap shenannigans

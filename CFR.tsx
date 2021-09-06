@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, SafeAreaView, StatusBar, Text, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import MainNavigator from "./navigation/MainNavigator";
-import SnooContext from "./context/SnooContext";
+import MainNavigator from "./src/navigation/MainNavigator";
+import SnooContext from "./src/context/SnooContext";
 import {
   getUserSubs,
   initializeDefaultSnoowrap,
   initializeSnoowrap,
   initializeUserSnoowrap,
-} from "./util/snoowrap/snoowrapFunctions";
+} from "./src/util/snoowrap/snoowrapFunctions";
 import SplashScreen from "react-native-splash-screen";
 import Snoowrap, { RedditUser, Subreddit } from "snoowrap";
 

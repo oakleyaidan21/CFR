@@ -1,5 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { StyleSheet, View, TouchableOpacity, InteractionManager } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  InteractionManager,
+} from "react-native";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +33,8 @@ const Profile: React.FC<Props> = (props) => {
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       setRenderUserTabs(true);
-    })
-  })
+    });
+  });
 
   const renderHeader = useCallback(() => {
     return (
@@ -105,7 +110,13 @@ const Profile: React.FC<Props> = (props) => {
       {/* HEADER */}
       {renderHeader()}
       {/* USER INFO */}
-      {user && <User userData={user} navigation={props.navigation} showUserTabs={renderUserTabs} />}
+      {user && (
+        <User
+          userData={user}
+          navigation={props.navigation}
+          showUserTabs={renderUserTabs}
+        />
+      )}
       {/* USER DROPDOWN */}
       {showUserDropdown && renderDropdown()}
     </View>
