@@ -29,6 +29,7 @@ export const handleTokenChange = async (
     }
     // logging in default snoowrap
   } else if (!authCode) {
+    console.log("creating default snoowrap!");
     const snoowrap = initializeDefaultSnoowrap();
     return { snoowrap: snoowrap, user: null, unreadMessages: [], subs: [] };
   }
@@ -116,18 +117,6 @@ export const initializeDefaultSnoowrap = () => {
 };
 
 export const initializeUserSnoowrap = async (token: string) => {
-  const auth = {
-    clientId: snoowrapConfig.clientId,
-    clientSecret: snoowrapConfig.clientSecret,
-    refreshToken: token,
-    userAgent: snoowrapConfig.userAgent,
-  };
-  let r = new snoowrap(auth);
-  r._nextRequestTimestamp = -1;
-  r.config({ proxies: false });
-  return r;
-};
-export const tempinitializeUserSnoowrap = (token: string) => {
   const auth = {
     clientId: snoowrapConfig.clientId,
     clientSecret: snoowrapConfig.clientSecret,

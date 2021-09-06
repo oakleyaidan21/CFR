@@ -38,7 +38,6 @@ const GyfyPlayer: React.FC<Props> = (props) => {
         setErrored(true);
       })
       .then((json) => {
-        console.log(json);
         if (json.errorMessage) {
           setErrored(true);
         }
