@@ -53,26 +53,27 @@ export const handleTokenChange = async (
       } catch (error) {
         console.log("error initializing default snoowrap", e);
       }
+    } else {
+      let newUsers = existingUsers;
+      const results = await Promise.all([
+        snoowrap.getMe(),
+        snoowrap.getUnreadMessages(),
+        snoowrap.getSubscriptions(),
+      ]);
+      const user = results[0];
+      newUsers[user.name] = snoowrap.refreshToken;
+      dispatch({ type: "SET_USERS", users: newUsers });
+      dispatch({
+        type: "SET_REFRESH_TOKEN",
+        refreshToken: snoowrap.refreshToken,
+      });
+      return {
+        snoowrap: snoowrap,
+        user: user,
+        unreadMessages: results[1],
+        subs: results[2],
+      };
     }
-    let newUsers = existingUsers;
-    const results = await Promise.all([
-      snoowrap.getMe(),
-      snoowrap.getUnreadMessages(),
-      snoowrap.getSubscriptions(),
-    ]);
-    const user = results[0];
-    newUsers[user.name] = snoowrap.refreshToken;
-    dispatch({ type: "SET_USERS", users: newUsers });
-    dispatch({
-      type: "SET_REFRESH_TOKEN",
-      refreshToken: snoowrap.refreshToken,
-    });
-    return {
-      snoowrap: snoowrap,
-      user: user,
-      unreadMessages: results[1],
-      subs: results[2],
-    };
   } catch (e) {
     console.log("error creating snoowrap from auth code:", e);
   }
@@ -158,21 +159,12 @@ export const getGeneralPosts = async (
         return getHot(snoowrap, name);
       }
       case "Top": {
-        /**
-         * TO-DO: top posts function
-         */
         return getTop(snoowrap, name, timeFrame);
       }
       case "Cont.": {
-        /**
-         * TO-DO: cont. posts function
-         */
         return getControversial(snoowrap, name, timeFrame);
       }
       case "New": {
-        /**
-         * TO-DO: new posts function
-         */
         return getNew(snoowrap, name);
       }
       case "Rising": {
@@ -310,7 +302,6 @@ export const getSaved = (snoowrap: snoowrap | undefined | null) => {
 
 export const getUserData = (snoowrap: snoowrap | undefined | null) => {
   if (!snoowrap) return null;
-
   return snoowrap.getMe().then((me) => {
     return me;
   });
@@ -337,7 +328,7 @@ export const searchFrontPage = async (
   });
 
   return Promise.all(promises).then((posts) => {
-    const p = [];
+    const p: Array<Submission> = [];
     posts.map((s) => {
       s.map((yee) => {
         p.push(yee);
