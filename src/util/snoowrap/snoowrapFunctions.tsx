@@ -51,7 +51,7 @@ export const handleTokenChange = async (
           subs: [],
         };
       } catch (error) {
-        console.log("error initializing default snoowrap", e);
+        console.log("error initializing default snoowrap", error);
       }
     } else {
       let newUsers = existingUsers;
@@ -124,6 +124,7 @@ export const initializeDefaultSnoowrap = async () => {
     return r;
   } catch (error) {
     console.log("error creating default snoowrap", error);
+    return null;
   }
 };
 
