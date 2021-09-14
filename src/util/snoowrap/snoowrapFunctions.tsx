@@ -1,5 +1,84 @@
+import { Alert } from "react-native";
 import snoowrap, { Listing, RedditUser, Submission, Subreddit } from "snoowrap";
 import snoowrapConfig from "./snoowrapConfig";
+
+export const handleTokenChange = async (
+  authCode: string,
+  refreshToken: string,
+  dispatch: any,
+  existingUsers: any,
+) => {
+  // logging in an existing user
+  if (refreshToken) {
+    const snoowrap = initializeUserSnoowrap(refreshToken);
+    try {
+      const results = await Promise.all([
+        snoowrap.getMe(),
+        snoowrap.getUnreadMessages(),
+        snoowrap.getSubscriptions(),
+      ]);
+      return {
+        snoowrap: snoowrap,
+        user: results[0],
+        unreadMessages: results[1],
+        subs: results[2],
+      };
+    } catch (error) {
+      console.log("error initializing user snoowrap:", error);
+    }
+    // logging in default snoowrap
+  } else if (!authCode) {
+    console.log("creating default snoowrap!");
+    try {
+      const snoowrap = await initializeDefaultSnoowrap();
+      return { snoowrap: snoowrap, user: null, unreadMessages: [], subs: [] };
+    } catch (error) {
+      console.log("error creating default snoowrap", error);
+    }
+  }
+  // logging in a new user with an auth code
+  try {
+    const snoowrap = await initializeSnoowrap(authCode);
+    if (!snoowrap) {
+      Alert.alert("Error logging in, please try again.");
+      dispatch({ type: "SET_AUTH_CODE", code: null });
+      try {
+        const snoowrap = await initializeDefaultSnoowrap();
+        return {
+          snoowrap: snoowrap,
+          user: null,
+          unreadMessages: [],
+          subs: [],
+        };
+      } catch (error) {
+        console.log("error initializing default snoowrap", e);
+      }
+    } else {
+      let newUsers = existingUsers;
+      const results = await Promise.all([
+        snoowrap.getMe(),
+        snoowrap.getUnreadMessages(),
+        snoowrap.getSubscriptions(),
+      ]);
+      const user = results[0];
+      newUsers[user.name] = snoowrap.refreshToken;
+      dispatch({ type: "SET_USERS", users: newUsers });
+      dispatch({
+        type: "SET_REFRESH_TOKEN",
+        refreshToken: snoowrap.refreshToken,
+      });
+      return {
+        snoowrap: snoowrap,
+        user: user,
+        unreadMessages: results[1],
+        subs: results[2],
+      };
+    }
+  } catch (e) {
+    console.log("error creating snoowrap from auth code:", e);
+  }
+  return { snoowrap: null, user: null, unreadMessages: [], subs: [] };
+};
 
 export const initializeSnoowrap = async (authCode: string) => {
   let r = null;
@@ -34,20 +113,21 @@ export const initializeSnoowrap = async (authCode: string) => {
 };
 
 export const initializeDefaultSnoowrap = async () => {
-  const auth = {
-    clientId: snoowrapConfig.clientId,
-    userAgent: snoowrapConfig.userAgent,
-    clientSecret: snoowrapConfig.clientSecret,
-    refreshToken: snoowrapConfig.refreshToken,
-  };
-
-  const r = new snoowrap(auth);
-  r._nextRequestTimestamp = -1;
-  r.config({ proxies: false });
-  return r;
+  try {
+    const r = await snoowrap.fromApplicationOnlyAuth({
+      userAgent: snoowrapConfig.userAgent,
+      clientId: snoowrapConfig.clientId,
+      deviceId: "DO_NOT_TRACK_THIS_DEVICE",
+    });
+    r._nextRequestTimestamp = -1;
+    r.config({ proxies: false });
+    return r;
+  } catch (error) {
+    console.log("error creating default snoowrap", error);
+  }
 };
 
-export const initializeUserSnoowrap = async (token: string) => {
+export const initializeUserSnoowrap = (token: string) => {
   const auth = {
     clientId: snoowrapConfig.clientId,
     clientSecret: snoowrapConfig.clientSecret,
@@ -79,21 +159,12 @@ export const getGeneralPosts = async (
         return getHot(snoowrap, name);
       }
       case "Top": {
-        /**
-         * TO-DO: top posts function
-         */
         return getTop(snoowrap, name, timeFrame);
       }
       case "Cont.": {
-        /**
-         * TO-DO: cont. posts function
-         */
         return getControversial(snoowrap, name, timeFrame);
       }
       case "New": {
-        /**
-         * TO-DO: new posts function
-         */
         return getNew(snoowrap, name);
       }
       case "Rising": {
@@ -231,17 +302,9 @@ export const getSaved = (snoowrap: snoowrap | undefined | null) => {
 
 export const getUserData = (snoowrap: snoowrap | undefined | null) => {
   if (!snoowrap) return null;
-
   return snoowrap.getMe().then((me) => {
     return me;
   });
-};
-
-export const getUserSubs = async (snoowrap: snoowrap | undefined | null) => {
-  if (!snoowrap) return null;
-  const subs = snoowrap.getSubscriptions();
-
-  return subs;
 };
 
 export const getPostById = (snoowrap: snoowrap, id: string) => {
@@ -265,7 +328,7 @@ export const searchFrontPage = async (
   });
 
   return Promise.all(promises).then((posts) => {
-    const p = [];
+    const p: Array<Submission> = [];
     posts.map((s) => {
       s.map((yee) => {
         p.push(yee);
@@ -411,4 +474,12 @@ export const submitSelfPost = (
       console.log("error submitting self post", error);
       return null;
     });
+};
+
+export const sortSubs = (subs: Array<Subreddit>) => {
+  subs.sort((a: Subreddit, b: Subreddit) =>
+    a.display_name.localeCompare(b.display_name, undefined, {
+      sensitivity: "base",
+    }),
+  );
 };

@@ -17,15 +17,15 @@ const PostSwiper: React.FC<Props> = (props) => {
   const [currPosts, setCurrPosts] = useState<Listing<Submission>>(
     props.route.params.posts,
   );
-  const [loadAdjacent, setLoadAdjacent] = useState<boolean>(false); 
+  const [loadAdjacent, setLoadAdjacent] = useState<boolean>(false);
 
   React.useEffect(() => {
     const unsubscribe = props.navigation.addListener("appear", () => {
       //only load extra posts when we've navigated
       setLoadAdjacent(true);
     });
-    return unsubscribe; 
-  }, [props.navigation])
+    return unsubscribe;
+  }, [props.navigation]);
 
   const onIndexChanged = useCallback(
     (index) => {

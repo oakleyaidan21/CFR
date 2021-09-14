@@ -10,7 +10,7 @@ import { getTimeSincePosted } from "../util/util";
 type Props = {
   userData: RedditUser;
   navigation: any;
-  showUserTabs: boolean; 
+  showUserTabs: boolean;
 };
 
 const User: React.FC<Props> = (props) => {
@@ -37,7 +37,9 @@ const User: React.FC<Props> = (props) => {
     <View style={s.container}>
       {renderHeader()}
       {/* TAB CONTENT */}
-      {props.showUserTabs && <UserTabs user={userData} navigation={props.navigation} />}
+      {props.showUserTabs && (
+        <UserTabs user={userData} navigation={props.navigation} />
+      )}
     </View>
   );
 };
