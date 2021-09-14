@@ -6,6 +6,8 @@ import CFR from "./CFR";
 import { decode, encode } from "base-64";
 import { persistor, store } from "./src/redux/store";
 import { changeBarColors } from "react-native-immersive-bars";
+import { loadFoundation } from "./src/rnui/FoundationConfig";
+import { loadComponentConfig } from "./src/rnui/ComponentConfig";
 
 // These next three blocks are for snoowrap shenannigans
 declare var global: any;
@@ -28,13 +30,11 @@ if (
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const App = () => {
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      changeBarColors(true, "#50000000", "transparent");
-    }
-  }, []);
+// set up RNUI
+loadFoundation();
+loadComponentConfig();
 
+const App = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

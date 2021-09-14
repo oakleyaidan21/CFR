@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import MainNavigator from "./src/navigation/MainNavigator";
+import { Colors, View } from "react-native-ui-lib";
 import SnooContext from "./src/context/SnooContext";
 import {
   handleTokenChange,
@@ -46,7 +47,7 @@ const CFR: React.FC = () => {
         unreadInbox: unreadInbox,
         setUnreadInbox: setUnreadInbox,
       }}>
-      <View style={{ flex: 1, backgroundColor: "black" }}>
+      <View flex backgroundColor={Colors.primaryBackground} useSafeArea>
         <StatusBar
           barStyle="light-content"
           translucent
