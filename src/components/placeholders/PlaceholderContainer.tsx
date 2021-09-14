@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import Animated, { Easing } from "react-native-reanimated";
+import Animated, { EasingNode } from "react-native-reanimated";
 
 const START_VALUE = 0.0;
 const END_VALUE = 1.0;
@@ -11,7 +11,7 @@ const PlaceholderContainer: React.FC<any> = (props) => {
     Animated.timing(flashAnimation.current, {
       toValue: end,
       duration: 500,
-      easing: Easing.linear,
+      easing: EasingNode.linear,
     }).start((e) => {
       if (e.finished) {
         start(end === 1.0 ? 0.0 : 1.0);

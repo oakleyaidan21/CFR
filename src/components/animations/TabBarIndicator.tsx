@@ -14,7 +14,6 @@ const TabBarIndicator: React.FC<Props> = (props) => {
       toValue: 1,
       duration: 200,
       useNativeDriver: true,
-      // easing: Easing.elastic(1),
     }).start();
   }, []);
 

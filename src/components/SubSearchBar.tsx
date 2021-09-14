@@ -5,15 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { Icon } from "react-native-elements";
-import Animated, { Easing } from "react-native-reanimated";
+import Animated, { EasingNode } from "react-native-reanimated";
 
 import { Subreddit } from "snoowrap";
 import SnooContext from "../context/SnooContext";
@@ -36,8 +30,7 @@ const SubSearchBar: React.FC<Props> = (props) => {
     Animated.timing(expandAnimation, {
       toValue: value,
       duration: 150,
-      easing: Easing.linear,
-      // useNativeDriver: false,
+      easing: EasingNode.linear,
     }).start((e) => {
       if (e.finished) {
         callback();
