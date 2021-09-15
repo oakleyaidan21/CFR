@@ -16,10 +16,10 @@ jobs:
           SNOO_REFRESH_TOKEN: ${{ secrets.SNOO_REFRESH_TOOKEN }}
         run: |
           unset IMGUR_CLIENT_ID && printf "IMGUR_CLIENT_ID=$IMGUR_CLIENT_ID
-            SNOO_USER_AGENT=$SNOO_USER_AGENT 
-            SNOO_CLIENT_ID=$SNOO_CLIENT_ID 
-            SNOO_CLIENT_SECRET=$SNOO_CLIENT_SECRET 
-            SNOO_REFRESH_TOKEN=$SNOO_REFRESH_TOKEN" >> .env && cat .env
+SNOO_USER_AGENT=$SNOO_USER_AGENT 
+SNOO_CLIENT_ID=$SNOO_CLIENT_ID 
+SNOO_CLIENT_SECRET=$SNOO_CLIENT_SECRET 
+SNOO_REFRESH_TOKEN=$SNOO_REFRESH_TOKEN" >> .env && cat .env
   install-and-test:
     needs: setup
     runs-on: ubuntu-latest
