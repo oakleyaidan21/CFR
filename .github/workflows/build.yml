@@ -4,30 +4,43 @@ on:
     branches:
       - master
 jobs:
-  Temp:
+  setup:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Will add automatic building once a secure way to build with secrets remotely is found."
-  # install-and-test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install npm dependencies
-  #       run: |
-  #         npm install
-  # build-android:
-  #   needs: install-and-test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install npm dependencies
-  #       run: |
-  #         npm install
-  #     - name: Build Android Release
-  #       run: |
-  #         cd android && ./gradlew assembleRelease
-  #     - name: Upload Artifact
-  #       uses: actions/upload-artifact@v1
-  #       with:
-  #         name: app-release.apk
-  #         path: android/app/build/outputs/apk/release/
+      - name: create env
+        env:
+          IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+          SNOO_USER_AGENT: ${{ secrets.SNOO_USER_AGENT }}
+          SNOO_CLIENT_ID: ${{ secrets.SNOO_CLIENT_ID }}
+          SNOO_CLIENT_SECRET: ${{ secrets.SNOO_CLIENT_SECRET }}
+          SNOO_REFRESH_TOKEN: ${{ secrets.SNOO_REFRESH_TOOKEN }}
+        run: |
+          echo "IMGUR_CLIENT_ID=$IMGUR_CLIENT_ID\nSNOO_USER_AGENT=$SNOO_USER_AGENT\nSNOO_CLIENT_ID=$SNOO_CLIENTID\nSNOO_CLIENT_SECRET=$SNOO_CLIENT_SECRET\nSNOO_REFRESH_TOKEN=$SNOO_REFRESH_TOKEN" >> .env
+  install-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install npm dependencies
+        run: |
+          npm install
+  build-android:
+    needs: install-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install npm dependencies
+        run: |
+          npm install
+      - name: Build Android Release
+        run: |
+          cd android && ./gradlew assembleRelease
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: app-release.apk
+          path: android/app/build/outputs/apk/release/
+  cleanup:
+    runs-on: ubuntu-latest
+    setps:
+      run: |
+        rm -rf .env

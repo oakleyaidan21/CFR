@@ -1,6 +1,18 @@
 import { Alert } from "react-native";
 import snoowrap, { Listing, RedditUser, Submission, Subreddit } from "snoowrap";
-import snoowrapConfig from "./snoowrapConfig";
+import {
+  SNOO_CLIENT_ID,
+  SNOO_USER_AGENT,
+  SNOO_REFRESH_TOKEN,
+  SNOO_CLIENT_SECRET,
+} from "react-native-dotenv";
+
+const snoowrapConfig = {
+  userAgent: SNOO_USER_AGENT,
+  clientId: SNOO_CLIENT_ID,
+  clientSecret: SNOO_CLIENT_SECRET,
+  refreshToken: SNOO_REFRESH_TOKEN,
+};
 
 export const handleTokenChange = async (
   authCode: string,

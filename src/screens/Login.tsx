@@ -1,13 +1,11 @@
-import React, { useCallback, useContext } from "react";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
 import { WebView } from "react-native-webview";
 import Snoowrap from "snoowrap";
-import snoowrapConfig from "../util/snoowrap/snoowrapConfig";
-import { Icon } from "react-native-elements";
 import StandardHeader from "../components/StandardHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Text from "../components/style/Text";
+import { SNOO_CLIENT_ID } from "react-native-dotenv";
 
 interface Props {
   navigation: any;
@@ -15,7 +13,7 @@ interface Props {
 }
 
 const url = Snoowrap.getAuthUrl({
-  clientId: snoowrapConfig.clientId,
+  clientId: SNOO_CLIENT_ID,
   scope: [
     "identity",
     "account",

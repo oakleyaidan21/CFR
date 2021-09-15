@@ -1,8 +1,8 @@
-import imgurConfig from "./imgurConfig";
+import { IMGUR_CLIENT_ID } from "react-native-dotenv";
 
 export const getAlbum = (hash: string): any => {
   let myHeaders = new Headers();
-  const client = "Client-ID " + imgurConfig.clientID;
+  const client = "Client-ID " + IMGUR_CLIENT_ID;
   myHeaders.append("Authorization", client);
 
   let requestOptions = {

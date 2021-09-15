@@ -88,3 +88,5 @@ src/util/gfy/gfyConfig.tsx
 
 /android/androidbuilds/
 
+.env
+
