@@ -42,5 +42,6 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      run: |
-        rm -rf .env
+      - name: "cleanup"
+        run: |
+          rm -rf .env
