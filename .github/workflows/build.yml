@@ -4,26 +4,30 @@ on:
     branches:
       - master
 jobs:
-  install-and-test:
+  Temp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Install npm dependencies
-        run: |
-          npm install
-  build-android:
-    needs: install-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install npm dependencies
-        run: |
-          npm install
-      - name: Build Android Release
-        run: |
-          cd android && ./gradlew assembleRelease
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/
+      - run: echo "Will add automatic building once a secure way to build with secrets remotely is found."
+  # install-and-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install npm dependencies
+  #       run: |
+  #         npm install
+  # build-android:
+  #   needs: install-and-test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install npm dependencies
+  #       run: |
+  #         npm install
+  #     - name: Build Android Release
+  #       run: |
+  #         cd android && ./gradlew assembleRelease
+  #     - name: Upload Artifact
+  #       uses: actions/upload-artifact@v1
+  #       with:
+  #         name: app-release.apk
+  #         path: android/app/build/outputs/apk/release/
