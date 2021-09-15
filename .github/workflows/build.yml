@@ -13,7 +13,7 @@ jobs:
           SNOO_USER_AGENT: ${{ secrets.SNOO_USER_AGENT }}
           SNOO_CLIENT_ID: ${{ secrets.SNOO_CLIENT_ID }}
           SNOO_CLIENT_SECRET: ${{ secrets.SNOO_CLIENT_SECRET }}
-          SNOO_REFRESH_TOKEN: ${{ secrets.SNOO_REFRESH_TOOKEN }}
+          SNOO_REFRESH_TOKEN: ${{ secrets.SNOO_REFRESH_TOKEN }}
         run: |
           printf "IMGUR_CLIENT_ID=$IMGUR_CLIENT_ID\nSNOO_USER_AGENT=$SNOO_USER_AGENT\nSNOO_CLIENT_ID=$SNOO_CLIENT_ID\nSNOO_CLIENT_SECRET=$SNOO_CLIENT_SECRET\nSNOO_REFRESH_TOKEN=$SNOO_REFRESH_TOKEN" >> .env && cat .env
   install-and-test:
