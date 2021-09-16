@@ -197,7 +197,9 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-    implementation 'com.android.support:multidex:1.0.3'
+    // implementation 'com.android.support:multidex:1.0.3'
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
