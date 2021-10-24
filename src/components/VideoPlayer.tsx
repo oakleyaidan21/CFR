@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import Video from "react-native-video";
@@ -33,6 +34,7 @@ const VideoPlayer: React.FC<Props> = (props) => {
   const [showControls, setShowControls] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
 
   const videoRef = useRef<Video>(null);
 
@@ -84,6 +86,8 @@ const VideoPlayer: React.FC<Props> = (props) => {
               type: "resolution",
               value: 1080,
             }}
+            fullscreen={fullscreen}
+            onFullscreenPlayerDidDismiss={() => setFullscreen(false)}
             ref={videoRef}
             onReadyForDisplay={() => setIsLoaded(true)}
             repeat={false}
@@ -152,11 +156,13 @@ const VideoPlayer: React.FC<Props> = (props) => {
               {props.canFullscreen && (
                 <TouchableOpacity
                   onPress={() =>
-                    props.navigation.navigate("RedditVideo", {
-                      source: props.source,
-                      poster: props.poster,
-                      title: props.title,
-                    })
+                    Platform.OS === "ios"
+                      ? setFullscreen(true)
+                      : props.navigation.navigate("RedditVideo", {
+                          source: props.source,
+                          poster: props.poster,
+                          title: props.title,
+                        })
                   }>
                   <Icon name={"aspect-ratio"} color="white" />
                 </TouchableOpacity>
