@@ -1,7 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { View, Text } from "react-native";
-import { Icon } from "react-native-elements";
-import FastImage from "react-native-fast-image";
+import React, { useCallback } from "react";
+import { View } from "react-native";
 import { Listing, Submission, Subreddit } from "snoowrap";
 import PostScroller from "../components/PostScroller";
 import SubHeader from "../components/SubHeader";
@@ -17,7 +15,7 @@ const Sub: React.FC<Props> = (props) => {
   const { data } = props.route.params;
 
   const onSubPress = useCallback((sub) => {
-    props.navigation.navigate("SubSidebar", { subData: sub });
+    props.navigation.push("SubSidebar", { subData: sub });
   }, []);
 
   const renderHeader = useCallback(() => {

@@ -53,10 +53,10 @@ const Post: React.FC<Props> = (props) => {
     const r = parseLink(url);
     switch (r.type) {
       case "post":
-        props.navigation.navigate("LoadPost", { id: r.id });
+        props.navigation.push("LoadPost", { id: r.id });
         break;
       case "sub":
-        props.navigation.navigate("Subreddit", { data: r.sub });
+        props.navigation.push("Subreddit", { data: r.sub });
         break;
       default:
         props.navigation.navigate("Web", { url: url });

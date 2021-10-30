@@ -1,14 +1,7 @@
-import React, { useCallback, useContext, useState } from "react";
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import React, { useCallback } from "react";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
 import { Submission } from "snoowrap";
-import SnooContext from "../context/SnooContext";
 import { getTimeSincePosted, getUriImage } from "../util/util";
 
 type Props = {
@@ -28,7 +21,7 @@ const CrossPostItem: React.FC<Props> = (props) => {
       : data.thumbnail;
 
   const getXPost = useCallback(() => {
-    props.navigation.navigate("LoadPost", {
+    props.navigation.push("LoadPost", {
       id: data.id,
       screenTitle: "Crosspost",
     });

@@ -110,7 +110,7 @@ const Explore: React.FC<Props> = (props) => {
   }, [query]);
 
   const searchAllSubmissions = useCallback(() => {
-    props.navigation.navigate("SearchResults", {
+    props.navigation.push("SearchResults", {
       query: query,
       sub: "all",
     });
@@ -120,7 +120,7 @@ const Explore: React.FC<Props> = (props) => {
     if (snoowrap) {
       getUserByName(snoowrap, query)
         .then((user) => {
-          props.navigation.navigate("UserPage", { userData: user });
+          props.navigation.push("UserPage", { userData: user });
         })
         .catch((error) => {
           console.log("error getting user:", error);
@@ -190,7 +190,7 @@ const Explore: React.FC<Props> = (props) => {
       <SubredditItem
         data={data.item}
         onPress={() => {
-          props.navigation.navigate("Subreddit", { data: data.item });
+          props.navigation.push("Subreddit", { data: data.item });
         }}
       />
     ),

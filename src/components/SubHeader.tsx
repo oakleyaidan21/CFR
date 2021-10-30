@@ -89,7 +89,7 @@ const SubHeader: React.FC<Props> = (props) => {
   }, [data]);
 
   const openSubSidebar = useCallback(() => {
-    props.navigation.navigate("SubSidebar", { subData: data });
+    props.navigation.push("SubSidebar", { subData: data });
   }, [data]);
 
   const imgUrl = getImageString();

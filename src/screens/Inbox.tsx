@@ -11,9 +11,8 @@ type Props = {
 };
 
 const Inbox: React.FC<Props> = (props) => {
-  const { unreadInbox, setUnreadInbox, snoowrap, user } = useContext(
-    SnooContext,
-  );
+  const { unreadInbox, setUnreadInbox, snoowrap, user } =
+    useContext(SnooContext);
 
   const [showUnread, setShowUnread] = useState(true);
   const [unread, setUnread] = useState(unreadInbox);
@@ -69,7 +68,7 @@ const Inbox: React.FC<Props> = (props) => {
           onPress={() => {
             console.log(item.parent_id);
             item.parent_id
-              ? props.navigation.navigate("LoadPost", { id: item.parent_id })
+              ? props.navigation.push("LoadPost", { id: item.parent_id })
               : console.log("press");
           }}
         />
