@@ -4,7 +4,8 @@ on:
     branches:
       - master
 jobs:
-  setup:
+  install-and-test:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: create env
@@ -16,10 +17,6 @@ jobs:
           SNOO_REFRESH_TOKEN: ${{ secrets.SNOO_REFRESH_TOKEN }}
         run: |
           printf "IMGUR_CLIENT_ID=$IMGUR_CLIENT_ID\nSNOO_USER_AGENT=$SNOO_USER_AGENT\nSNOO_CLIENT_ID=$SNOO_CLIENT_ID\nSNOO_CLIENT_SECRET=$SNOO_CLIENT_SECRET\nSNOO_REFRESH_TOKEN=$SNOO_REFRESH_TOKEN" >> .env && cat .env
-  install-and-test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v2
       - name: Install npm dependencies
         run: |
