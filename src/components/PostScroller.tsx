@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from "react";
 import {
+  Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -28,6 +29,7 @@ type Props = {
   header: any;
   currentSubreddit: string | Subreddit;
   onPress: any;
+  dontNavigate?: boolean;
 };
 
 const PostScroller: React.FC<Props> = (props) => {
@@ -45,17 +47,19 @@ const PostScroller: React.FC<Props> = (props) => {
       return !item.url ? null : ( // done so that comments are not listed
         <PostListItem
           data={item}
-          onPress={(index: number) => props.onPress(listing, index)}
+          onPress={(index: number) => {
+            !props.dontNavigate
+              ? props.onPress(listing, index)
+              : listing
+              ? props.onPress(listing[index])
+              : Alert.alert("Could not navigate");
+          }}
           index={index}
         />
       );
     },
     [listing],
   );
-
-  const onScroll = (e: any) => {
-    console.log(e.nativeEvent.contentOffset.y);
-  };
 
   const renderHeader = useCallback(() => props.header, [subreddit]);
 

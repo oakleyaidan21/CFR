@@ -29,12 +29,13 @@ const Post: React.FC<Props> = (props) => {
   const [transitionOver, setTransitionOver] = useState(false);
 
   useEffect(() => {
-    // const unsubscribe = props.navigation.addListener("transitionEnd", () => {
     getComments();
     setTransitionOver(true);
-    // });
-    // return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    setData(props.route.params.data);
+  }, [props.route.params.data]);
 
   const getComments = () => {
     setFetchingComments(true);
