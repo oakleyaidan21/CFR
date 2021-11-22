@@ -45,10 +45,31 @@ const routeTransitionHandler = (routeName: string) => {
   }
 };
 
+const linking = {
+  prefixes: [
+    "https://reddit.com/",
+    "reddit.com/",
+    "http://reddit.com/",
+    "www.reddit.com/",
+    "https://www.reddit.com/",
+  ],
+  config: {
+    screens: {
+      LoadPost: {
+        path: "r/:subreddit/comments/:id/:title",
+        parse: {
+          id: (id: string) => id,
+          screenTitle: (subreddit: string) => subreddit,
+        },
+      },
+    },
+  },
+};
+
 const MainNavigator: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <Stack.Navigator
           screenOptions={({ route }) => ({
             headerShown: false,

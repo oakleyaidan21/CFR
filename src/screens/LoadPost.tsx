@@ -35,8 +35,9 @@ const LoadPost: React.FC<Props> = (props) => {
       .then((s) => {
         setPostData(s);
       })
-      .catch(() => {
+      .catch((e) => {
         setErrored(true);
+        console.log("Error getting post:", e);
       });
   };
 
