@@ -119,8 +119,8 @@ const Explore: React.FC<Props> = (props) => {
   const searchUsers = useCallback(() => {
     if (snoowrap) {
       getUserByName(snoowrap, query)
-        .then((user) => {
-          props.navigation.push("UserPage", { userData: user });
+        .then((user: any) => {
+          props.navigation.push("UserPage", { userName: user.name });
         })
         .catch((error) => {
           console.log("error getting user:", error);
