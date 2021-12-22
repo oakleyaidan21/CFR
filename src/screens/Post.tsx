@@ -6,13 +6,14 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Comment, Listing, Submission } from "snoowrap";
+import { Submission } from "snoowrap";
 import CommentThread from "../components/CommentThread";
 import Text from "../components/style/Text";
 import PostHeader from "../components/PostHeader";
 import { parseLink } from "../util/util";
 import { HEADER_HEIGHT } from "../constants/constants";
 import SnooContext from "../context/SnooContext";
+import usePostComments from "../hooks/UsePostComments";
 
 type Props = {
   navigation: any;
@@ -23,32 +24,20 @@ const Post: React.FC<Props> = (props) => {
   const { snoowrap } = useContext(SnooContext);
 
   const [data, setData] = useState<Submission>(props.route.params.data);
-  const [comments, setComments] = useState<Listing<Comment> | null>(null);
   const [gettingPostInfo, setGettingPostInfo] = useState(false);
-  const [fetchingComments, setFetchingComments] = useState(false);
   const [transitionOver, setTransitionOver] = useState(false);
 
+  const { comments, getComments, fetchingComments } = usePostComments(
+    props.route.params.data.comments,
+  );
+
   useEffect(() => {
-    getComments();
     setTransitionOver(true);
   }, []);
 
   useEffect(() => {
     setData(props.route.params.data);
   }, [props.route.params.data]);
-
-  const getComments = () => {
-    setFetchingComments(true);
-    const commentList = comments ? comments : data.comments;
-    (commentList as any)
-      .fetchMore({ amount: 10, append: true })
-      .then((c: Listing<Comment>) => {
-        setComments(c);
-        setGettingPostInfo(false);
-        setFetchingComments(false);
-        return true;
-      });
-  };
 
   const openLink = useCallback((url) => {
     const r = parseLink(url);
@@ -120,9 +109,9 @@ const Post: React.FC<Props> = (props) => {
 
   const onRefresh = useCallback(() => {
     setGettingPostInfo(true);
-    data.fetch().then((r) => {
-      setData(r);
-      getComments();
+    Promise.all([data.fetch(), getComments()]).then((results) => {
+      setData(results[0]);
+      setGettingPostInfo(false);
     });
   }, []);
 
