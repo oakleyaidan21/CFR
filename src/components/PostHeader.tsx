@@ -248,7 +248,7 @@ const PostHeader: React.FC<Props> = (props) => {
           <Text style={s.topBarText}> | </Text>
           <TouchableOpacity
             onPress={() =>
-              props.navigation.navigate("UserPage", {
+              props.navigation.push("UserPage", {
                 userName: data.author.name,
               })
             }>

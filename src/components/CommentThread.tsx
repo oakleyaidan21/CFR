@@ -34,7 +34,7 @@ const CommentThread: React.FC<Props> = (props) => {
   };
 
   const onUserPress = useCallback(() => {
-    props.navigation.navigate("UserPage", { userName: data.author.name });
+    props.navigation.push("UserPage", { userName: data.author.name });
   }, []);
 
   const renderReply = useCallback((comment: Comment) => {
