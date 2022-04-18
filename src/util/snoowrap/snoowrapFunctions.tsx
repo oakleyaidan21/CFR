@@ -113,6 +113,7 @@ export const initializeSnoowrap = async (authCode: string) => {
         userAgent: snoowrapConfig.userAgent,
         clientId: snoowrapConfig.clientId,
         deviceId: "",
+        permanent: false,
       });
     } catch (error) {
       console.log("error initializing default snoowrap instance", error);
@@ -130,6 +131,7 @@ export const initializeDefaultSnoowrap = async () => {
       userAgent: snoowrapConfig.userAgent,
       clientId: snoowrapConfig.clientId,
       deviceId: "DO_NOT_TRACK_THIS_DEVICE",
+      permanent: false,
     });
     r._nextRequestTimestamp = -1;
     r.config({ proxies: false });

@@ -5,7 +5,8 @@ export const OS = Platform.OS;
 
 export const DETAILED_POST_CONTENT_HEIGHT = 400;
 
-export const STATUS_BAR_HEIGHT = getStatusBarHeight();
+export const STATUS_BAR_HEIGHT =
+  getStatusBarHeight() + (OS === "android" ? 10 : 0);
 export const DETAILED_POST_HEIGHT = DETAILED_POST_CONTENT_HEIGHT + 170;
 export const HEADER_HEIGHT = 60 + STATUS_BAR_HEIGHT;
 export const INBOX_ITEM_HEIGHT = 110;
