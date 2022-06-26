@@ -45,6 +45,18 @@ const GyfyPlayer: React.FC<Props> = (props) => {
       });
   };
 
+  const getGfyUrl = (gfy: any) => {
+    return gfy
+      ? gfy.mp4Url
+        ? gfy.mp4Url
+        : gfy.content_urls.mp4
+        ? gfy.content_urls.mp4.url
+        : gfy.content_urls.max2mbGif.url
+      : "";
+  };
+
+  const gfyUrl = getGfyUrl(gfyDetails);
+
   return (
     <View style={{ flex: 1 }}>
       {errored ? (
@@ -63,11 +75,7 @@ const GyfyPlayer: React.FC<Props> = (props) => {
         </TouchableOpacity>
       ) : gfyDetails ? (
         <VideoPlayer
-          source={
-            gfyDetails.content_urls.mp4
-              ? gfyDetails.content_urls.mp4.url
-              : gfyDetails.content_urls.mobile.url
-          }
+          source={gfyUrl}
           navigation={props.navigation}
           hasControls={true}
           autoPlay={false}
@@ -76,7 +84,6 @@ const GyfyPlayer: React.FC<Props> = (props) => {
           canFullscreen={true}
         />
       ) : (
-        // <Text>yeet!</Text>
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <CFRText style={{ marginBottom: 10, fontWeight: "bold" }}>
