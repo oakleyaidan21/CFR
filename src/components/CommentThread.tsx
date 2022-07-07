@@ -102,7 +102,7 @@ const CommentThread: React.FC<Props> = (props) => {
                   color:
                     data.distinguished == "moderator"
                       ? "lightgreen"
-                      : data.author.name == op.name
+                      : data.is_submitter
                       ? "lightblue"
                       : "grey",
                   fontWeight: "bold",
